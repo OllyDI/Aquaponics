@@ -21,48 +21,65 @@
 
 <body class="login-page">
 <div class="login-logo">
-    <a href="/"><b>아쿠팜</b></a>
+    <b>아쿠팜</b>
 </div>
 <div class="login-box">
     <!-- /.login-logo -->
     <div class="card" style="box-shadow: none">
         <div class="card-body login-card-body">
-            <form action="register" name="userRegister" method="post">
+            <form action="/register" name="userRegister" method="post">
+
                 <div class="mb-3">
                     <div class="input-group">
-                        <input type="text" name="email" id="email" class="form-control" placeholder="아이디">
+                        <select id="level" name="level" class="form-select">
+                            <option value="" selected>선택하세요</option>
+                            <option value="0">학생</option>
+                            <option value="1">교사</option>
+                        </select>
+                    </div>
+                    <label id="lLevel"></label>
+                </div>
+                <div class="mb-3">
+                    <div class="input-group">
+                        <input type="text" name="school" id="school" class="form-control" placeholder="학교명">
+                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#schoolSerch">검색</button>
+                    </div>
+                    <label id="lSchool"></label>
+                </div>
+                <div class="mb-3">
+                    <div class="input-group">
+                        <input type="text" name="name" id="uname" class="form-control" placeholder="이름">
                         <div class="input-group-append">
-                            <div class="input-group-text">
-                                <span class="fas fa-envelope"></span>
-                            </div>
                         </div>
                     </div>
-                    <label id="lEmail"></label>
+                    <label id="lUname"></label>
+                </div>
+                <div class="mb-3">
+                    <div class="input-group">
+                        <input type="text" name="number" id="number" class="form-control" placeholder="번호" pattern="[0-9]{1,2}" title="1에서 99까지 숫자만 입력가능합니다.">
+                        <div class="input-group-append">
+                        </div>
+                    </div>
+                    <label id="lUnumber"></label>
+                </div>
+                <div class="mb-3">
+                    <div class="input-group">
+                        <input type="text" name="id" id="uid" class="form-control" placeholder="아이디" pattern=".{6,12}" title="6에서 12자리까지만 입력하세요.">
+                        <div class="input-group-append">
+                        </div>
+                    </div>
+                    <label id="lUid"></label>
                 </div>
 
                 <div class="mb-3">
                     <div class="input-group">
-                        <input type="password" name="pw" id="pw" class="form-control" placeholder="비밀번호">
+                        <input type="password" name="pw" id="upw" class="form-control" placeholder="비밀번호">
                         <div class="input-group-append">
-                            <div class="input-group-text">
-                                <span class="fas fa-lock"></span>
-                            </div>
                         </div>
                     </div>
-                    <label id="lPw"></label>
+                    <label id="lUpw"></label>
                 </div>
 
-                <div class="mb-3">
-                    <div class="input-group">
-                        <input type="text" name="name" id="userName" class="form-control" placeholder="닉네임">
-                        <div class="input-group-append">
-                            <div class="input-group-text">
-                                <span class="fas fa-address-card"></span>
-                            </div>
-                        </div>
-                    </div>
-                    <label id="lName"></label>
-                </div>
                 <!-- /.col -->
                 <div class="mb-3" style="margin-top: 25px;">
                     <button type="submit" class="btn btn-success btn-block" id="reg" onclick="">회원가입</button>
@@ -79,12 +96,27 @@
                     </li>
                 </ul>
             </div>
-
         </div>
         <!-- /.login-card-body -->
     </div>
 </div>
-
+<div class="modal" id="schoolSerch" tabindex="-1">
+<div class="modal-dialog">
+    <div class="modal-content">
+    <div class="modal-header">
+        <h5 class="modal-title">학교 검색</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <p>Modal body text goes here.</p>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+        <button type="button" class="btn btn-primary">완료</button>
+    </div>
+    </div>
+</div>
+</div>
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

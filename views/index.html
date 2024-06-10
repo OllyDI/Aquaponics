@@ -100,7 +100,23 @@
         <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
         <script src="https://kit.fontawesome.com/57c8b4e229.js"></script> -->
     <script src="js/sidebar.js"></script>
-
+    <script>
+        window.onload = function() {
+            $.ajax({
+            url: "/session",
+                    method: "post",
+                    success:function(data) {
+                        if (data == '') {
+                            
+                        }
+                        else {
+                            console.log(data)
+                        }
+                    }
+            })
+        }
+        
+    </script>
 </body>
 
 </html>
