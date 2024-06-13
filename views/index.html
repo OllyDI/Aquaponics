@@ -43,10 +43,18 @@
                         </li>
                     </ul>
                 </div>
-                <form class="d-flex">
+                <!-- <form class="d-flex">
                     <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
                     <button class="btn btn-outline-success" type="submit">Search</button>
-                </form>
+                </form> -->
+                <ui class="navbar-nav ml-auto">
+                    <li class="nav-link">
+                        <span id="level">학생용</span>
+                    </li>
+                    <li class="nav-link">
+                        <span id="username">홍길동</span>
+                    </li>
+                </ui>
             </nav>
         </div>
     </header>
@@ -83,7 +91,7 @@
                 </div>
             </div>
 
-            <a href="/session_logout" class="nav_link"> <i class='bx bx-log-out nav_icon'></i>
+            <a href="#" onclick="javascript:logout()" class="nav_link"> <i class='bx bx-log-out nav_icon'></i>
                 <span class="nav_name">SignOut</span>
             </a>
         </nav>
@@ -101,18 +109,24 @@
         <script src="https://kit.fontawesome.com/57c8b4e229.js"></script> -->
     <script src="js/sidebar.js"></script>
     <script>
+        function logout() {
+            var f = document.createElement('form');
+            f.setAttribute('method', 'post');
+            f.setAttribute('action', '/session_logout');
+            document.body.appendChild(f);
+            f.submit();
+        }
+
         window.onload = function() {
             $.ajax({
             url: "/session",
-                    method: "post",
-                    success:function(data) {
-                        if (data == '') {
-                            
-                        }
-                        else {
-                            console.log(data)
-                        }
-                    }
+            method: "post",
+            success:function(data) {
+                if (data[0].auth == false) location.replace('/login');
+                else {
+                    console.log(data)
+                }
+            }
             })
         }
         

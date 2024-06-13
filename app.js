@@ -133,22 +133,31 @@ passport.use(new localStrategy(
   }
 ));
 
-app.get('/session_logout', function(req, res) {
-  req.logout(function (err) {
-    if (err) return next(err);
-    res.redirect('/login');
-  })
+
+app.post('/session', function(req, res) {
+  var data = [];
+  if (req.isAuthenticated()) {
+    data.push({
+      auth: req.isAuthenticated(),
+      id: req.user.id,
+      level: req.user.level,
+      number: req.user.number,
+      school: req.user.school
+    });
+  }
+  else data.push({auth: req.isAuthenticated()})
+  res.send(data);
 });
 
 
-app.post('/session', function(req, res) {
-  console.log("session", req.isAuthenticated())
-  if (!req.isAuthenticated()) {
-    res.send(req.user.name);
-  }
-  else {
-    res.redirect('/login')
-  }
+app.post('/session_logout', function(req, res) {
+  req.logout(function(err) {
+    if (err) { return next(err); }
+    req.session.destroy(() => {
+      res.clearCookie('connect.sid');
+      res.redirect('/login');
+  });
+  });
 });
 
 
