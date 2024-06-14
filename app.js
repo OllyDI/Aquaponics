@@ -14,6 +14,7 @@ var localStrategy = require('passport-local').Strategy;
 var crypto = require('crypto');
 var app = express();
 
+
 const options = {
   host: 'ollyc.iptime.org', 
   port: '15007',
@@ -26,6 +27,7 @@ const db = mysql.createConnection(options);
 const sessionStore = new mysqlStore(options);
 
 // view engine setup
+app.engine('html', require('ejs').renderFile);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
@@ -35,7 +37,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
-
 app.use(session({
   secret: 'AquaFarm!@#',
   resave: false,
@@ -48,15 +49,12 @@ app.use(session({
 app.use(passport.authenticate('session'));
 app.use(passport.initialize());
 app.use(passport.session());
-
-
 app.use(
   cors({
     origin: "http://localhost:3003",
     credentials: true,
   })
 );
-
 
 
 // 로그인 성공 시 유저 정보 세션에 저장
@@ -76,7 +74,6 @@ passport.deserializeUser(function(user, done) {
   )
 });
 
-
 app.post('/duplicate', function(req, res) {
   var uid = req.body.uid;
   var val = true;
@@ -89,8 +86,6 @@ app.post('/duplicate', function(req, res) {
     }
   )
 })
-
-
 app.post('/register', function(req, res) {
   var base64crypto = (password) => { return crypto.createHash('sha512').update(password).digest('base64') }
   var level = req.body.level
@@ -102,9 +97,11 @@ app.post('/register', function(req, res) {
 
   db.query('insert into members (level, school, name, number, id, pw) values (?, ?, ?, ?, ?, ?);', [Number(level), school, name, Number(number), id, pw], 
     function(err, data) {
-      if (err) throw(err)
-      console.log("1 record inserted");
-      res.redirect('/login')
+      if (err) {
+        console.log(err);
+        res.write("<script>alert('회원가입에 실패하였습니다. 다시 시도해 주세요.')</script>");
+      }
+      res.send("<script>alert('회원가입이 완료되었습니다.');location.href='/login';</script>");
     }
   )
 })
@@ -122,7 +119,7 @@ passport.use(new localStrategy(
   function(username, password, done) {
     db.query('select * from members where id=?', [username],
       function (err, res) {
-        var base64crypto = (password) => { return crypto.createHash('sha512').update(password).digest('base64') }
+        var base64crypto = (password) => { return crypto.createHash('sha512').update(password).digest('base64') };
         if (err) return done(err);
         if (!res[0]) return done(null, false, { message: 'Incorrect username.' });
         if (res[0].pw !== base64crypto(password)) return done(null, false, { message: 'Incorrect password.' });
@@ -134,18 +131,26 @@ passport.use(new localStrategy(
 ));
 
 
-app.post('/session', function(req, res) {
+// 접근 제어 페이지
+app.get('/', function (req, res, next) {
+  if (req.isAuthenticated()) res.render('index.html');
+  else res.status(301).redirect('/login');
+});
+
+
+app.get('/session', function(req, res) {
   var data = [];
   if (req.isAuthenticated()) {
     data.push({
       auth: req.isAuthenticated(),
+      name: req.user.name,
       id: req.user.id,
       level: req.user.level,
       number: req.user.number,
       school: req.user.school
     });
   }
-  else data.push({auth: req.isAuthenticated()})
+  else data.push({auth: req.isAuthenticated()});
   res.send(data);
 });
 
@@ -156,7 +161,7 @@ app.post('/session_logout', function(req, res) {
     req.session.destroy(() => {
       res.clearCookie('connect.sid');
       res.redirect('/login');
-  });
+    });
   });
 });
 
