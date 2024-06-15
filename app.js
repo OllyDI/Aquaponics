@@ -5,15 +5,16 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var mysql = require('mysql')
 var cors = require('cors');
-var indexRouter = require('./routes/index');
 var express = require('express')
 var session = require('express-session')
 var mysqlStore = require('express-mysql-session')(session);
 var passport = require('passport');
 var localStrategy = require('passport-local').Strategy;
 var crypto = require('crypto');
-var app = express();
 
+var app = express();
+var router = express.Router();
+var indexRouter = require('./routes/index');
 
 const options = {
   host: 'ollyc.iptime.org', 
@@ -29,7 +30,8 @@ const sessionStore = new mysqlStore(options);
 // view engine setup
 app.engine('html', require('ejs').renderFile);
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
+// app.set('view engine', 'ejs');
+app.set('view engine', 'html');
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -43,7 +45,9 @@ app.use(session({
   saveUninitialized: true,
   store: sessionStore,
   cookie: { 
-    secure: false
+    httpOnly: true,
+    secure: false,
+    maxAge: 30*60*1000 // 1000: 1초 -> 30분
   }
 }));
 app.use(passport.authenticate('session'));
@@ -88,20 +92,23 @@ app.post('/duplicate', function(req, res) {
 })
 app.post('/register', function(req, res) {
   var base64crypto = (password) => { return crypto.createHash('sha512').update(password).digest('base64') }
-  var level = req.body.level
-  var school = req.body.school
-  var name = req.body.name
+  var level = req.body.level;
+  var school = req.body.school;
+  var name = req.body.name;
+  var grade = req.body.grade;
+  var classNUm = req.body.class;
   var number = req.body.number
   var id = req.body.id
   var pw = base64crypto(req.body.pw)
 
-  db.query('insert into members (level, school, name, number, id, pw) values (?, ?, ?, ?, ?, ?);', [Number(level), school, name, Number(number), id, pw], 
+  db.query('insert into members (level, school, name, grade, class, number, id, pw) values (?, ?, ?, ?, ?, ?, ?, ?);', 
+    [Number(level), school, name, Number(grade), Number(classNUm), Number(number), id, pw], 
     function(err, data) {
       if (err) {
         console.log(err);
-        res.write("<script>alert('회원가입에 실패하였습니다. 다시 시도해 주세요.')</script>");
+        res.send("<script>alert('회원가입에 실패하였습니다. 다시 시도해 주세요.'); location.href='/register';</script>");
       }
-      res.send("<script>alert('회원가입이 완료되었습니다.');location.href='/login';</script>");
+      else res.send("<script>alert('회원가입이 완료되었습니다.');location.href='/login';</script>");
     }
   )
 })
@@ -133,7 +140,7 @@ passport.use(new localStrategy(
 
 // 접근 제어 페이지
 app.get('/', function (req, res, next) {
-  if (req.isAuthenticated()) res.render('index.html');
+  if (req.isAuthenticated()) res.render('index');
   else res.status(301).redirect('/login');
 });
 

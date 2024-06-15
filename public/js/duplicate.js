@@ -2,28 +2,45 @@ $(document).ready(function () {
     document.querySelector('form').addEventListener('submit', function(e){
         if(document.getElementById('level').value == '') {
             e.preventDefault(); // 폼 전송 막는 함수
-            $("#lLevel").css("color", "red").text("선택하세요.");
-        } else $("#lLevel").text("");
+            $("#lLevel").attr("hidden", false)
+        } else $("#lLevel").attr("hidden", true)
 
         if(document.getElementById('school').value == '') {
             e.preventDefault();
-            $("#lSchool").css("color", "red").text("학교명을 입력하세요..");
-        } else $("#lSchool").text("");
-
-        if(document.getElementById('uid').value == '') {
-            e.preventDefault();
-            $("#lUid").css("color", "red").text("아이디를 입력하세요.");
-        } else $("#lUpw").text("");
-
-        if(document.getElementById('upw').value == '') {
-            e.preventDefault();
-            $("#lUpw").css("color", "red").text("비밀번호를 입력하세요.");
-        } else $("#lUpw").text("");
+            $("#lSchool").attr("hidden", false)
+        } else $("#lSchool").attr("hidden", true)
 
         if(document.getElementById('uname').value == '') {
             e.preventDefault();
-            $("#lUname").css("color", "red").text("닉네임을 입력하세요.");
-        } else $("#lUname").text("");
+            $("#lUname").attr("hidden", false)
+        } else $("#lUname").attr("hidden", true)
+
+        if(document.getElementById('grade').value == '') {
+            e.preventDefault();
+            $("#lUgrade").attr("hidden", false)
+        } else $("#lUgrade").attr("hidden", true)
+
+        if(document.getElementById('class').value == '') {
+            e.preventDefault();
+            $("#lUclass").attr("hidden", false)
+        } else $("#lUclass").attr("hidden", true)
+
+        if(document.getElementById('number').value == '') {
+            e.preventDefault();
+            $("#lUnumber").attr("hidden", false)
+        } else $("#lUnumber").attr("hidden", true)
+
+        if(document.getElementById('uid').value == '') {
+            e.preventDefault();
+            $("#lUid").attr("hidden", false)
+        } else $("#lUpw").attr("hidden", true)
+
+        if(document.getElementById('upw').value == '') {
+            e.preventDefault();
+            $("#lUpw").attr("hidden", false)
+        } else $("#lUpw").attr("hidden", true)
+
+        
     });
 
 
