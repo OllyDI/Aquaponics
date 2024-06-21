@@ -19,17 +19,15 @@ const options = {
   port: '15007',
   user: 'aqua',
   password: '1518',
-  database: 'aqufarm'
+  database: 'aqufarm',
 }
 
 const db = mysql.createConnection(options);
 const sessionStore = new mysqlStore(options);
 
 // view engine setup
-// app.engine('html', require('ejs').renderFile);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
-// app.set('view engine', 'html');
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -44,7 +42,7 @@ app.use(session({
   cookie: { 
     httpOnly: true,
     secure: false,
-    maxAge: 30*60*1000 // 1000: 1초 -> 30분
+    maxAge: 30 * 60 * 1000 // 1000: 1초 -> 30분
   }
 }));
 app.use(passport.authenticate('session'));
