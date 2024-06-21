@@ -186,4 +186,7 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+# DB option
+/lib/db.txt
+
 # End of https://www.toptal.com/developers/gitignore/api/windows,node,visualstudiocode

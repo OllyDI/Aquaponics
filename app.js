@@ -9,21 +9,22 @@ var express = require('express')
 var session = require('express-session')
 var mysqlStore = require('express-mysql-session')(session);
 var passport = require('passport');
-
 var app = express();
-var router = express.Router();
 var indexRouter = require('./routes/index');
 
-const options = {
-  host: 'ollyc.iptime.org', 
-  port: '15007',
-  user: 'aqua',
-  password: '1518',
-  database: 'aqufarm',
-}
 
+var fs = require('fs');
+var txt = fs.readFileSync('lib/db.txt').toString().replace(/\r/g, "").split('\n');
+const options = {
+  host: `${txt[0]}`, 
+  port: `${txt[1]}`,
+  user: `${txt[2]}`,
+  password: `${txt[3]}`,
+  database: `${txt[4]}`
+}
 const db = mysql.createConnection(options);
 const sessionStore = new mysqlStore(options);
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -55,7 +56,7 @@ app.use(
   })
 );
 app.use('/', indexRouter);
-require('./lib/passport')(passport);
+require('./lib/passport')(passport, options);
 
 
 app.post('/duplicate', function(req, res) {
