@@ -9,8 +9,6 @@ var express = require('express')
 var session = require('express-session')
 var mysqlStore = require('express-mysql-session')(session);
 var passport = require('passport');
-var localStrategy = require('passport-local').Strategy;
-var crypto = require('crypto');
 
 var app = express();
 var router = express.Router();
@@ -28,17 +26,16 @@ const db = mysql.createConnection(options);
 const sessionStore = new mysqlStore(options);
 
 // view engine setup
-app.engine('html', require('ejs').renderFile);
+// app.engine('html', require('ejs').renderFile);
 app.set('views', path.join(__dirname, 'views'));
-// app.set('view engine', 'ejs');
-app.set('view engine', 'html');
+app.set('view engine', 'ejs');
+// app.set('view engine', 'html');
 
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use('/', indexRouter);
 app.use(session({
   secret: 'AquaFarm!@#',
   resave: false,
@@ -59,24 +56,9 @@ app.use(
     credentials: true,
   })
 );
+app.use('/', indexRouter);
+require('./lib/passport')(passport);
 
-
-// 로그인 성공 시 유저 정보 세션에 저장
-passport.serializeUser(function(user, done) {
-  done(null, user.id);
-});
-// 로그인 이후 검증 필요한 페이지마다 검사
-passport.deserializeUser(function(user, done) {
-  console.log('deserial', user)
-  db.query('select * from members where id=?', [user],
-    function (err, res) {
-      if (err) done(err);
-      if (!res[0]) done(err);
-      var user = res[0];
-      done(null, user);
-    }
-  )
-});
 
 app.post('/duplicate', function(req, res) {
   var uid = req.body.uid;
@@ -118,32 +100,6 @@ app.post('/session_login',
   passport.authenticate('local', {successRedirect: '/', failureRedirect: '/login' }
 ));
 
-passport.use(new localStrategy(
-  {
-    usernameField: 'uid',
-    passwordField: 'upw'
-  },
-  function(username, password, done) {
-    db.query('select * from members where id=?', [username],
-      function (err, res) {
-        var base64crypto = (password) => { return crypto.createHash('sha512').update(password).digest('base64') };
-        if (err) return done(err);
-        if (!res[0]) return done(null, false, { message: 'Incorrect username.' });
-        if (res[0].pw !== base64crypto(password)) return done(null, false, { message: 'Incorrect password.' });
-        var user = res[0];
-        return done(null, user);
-      }
-    )
-  }
-));
-
-
-// 접근 제어 페이지
-app.get('/', function (req, res, next) {
-  if (req.isAuthenticated()) res.render('index');
-  else res.status(301).redirect('/login');
-});
-
 
 app.get('/session', function(req, res) {
   var data = [];
@@ -166,6 +122,7 @@ app.post('/session_logout', function(req, res) {
   req.logout(function(err) {
     if (err) { return next(err); }
     req.session.destroy(() => {
+      delete req.session;
       res.clearCookie('connect.sid');
       res.redirect('/login');
     });
