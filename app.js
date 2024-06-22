@@ -35,6 +35,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+// session settings
 app.use(session({
   secret: 'AquaFarm!@#',
   resave: false,
@@ -55,6 +57,8 @@ app.use(
     credentials: true,
   })
 );
+
+
 app.use('/', indexRouter);
 require('./lib/passport')(passport, options);
 

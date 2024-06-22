@@ -1,195 +1,121 @@
-<!-- <!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>AdminLTE 3 | Dashboard</title>
+<!DOCTYPE html>
+<html lang="ko">
 
-        <!-- Google Font: Source Sans Pro -->
-        <link
-            rel="stylesheet"
-            href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-        <!-- Font Awesome -->
-        <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
-        <!-- Ionicons -->
-        <link
-            rel="stylesheet"
-            href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
-        <!-- Tempusdominus Bootstrap 4 -->
-        <link
-            rel="stylesheet"
-            href="plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
-        <!-- iCheck -->
-        <link rel="stylesheet" href="plugins/icheck-bootstrap/icheck-bootstrap.min.css">
-        <!-- JQVMap -->
-        <link rel="stylesheet" href="plugins/jqvmap/jqvmap.min.css">
-        <!-- Theme style -->
-        <link rel="stylesheet" href="dist/css/adminlte.min.css">
-        <!-- overlayScrollbars -->
-        <link
-            rel="stylesheet"
-            href="plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
-        <!-- Daterange picker -->
-        <link rel="stylesheet" href="plugins/daterangepicker/daterangepicker.css">
-        <!-- summernote -->
-        <link rel="stylesheet" href="plugins/summernote/summernote-bs4.min.css">
-    </head>
+<head>
+    <meta http-equiv="Content-Type" charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>AQUAPONICS</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="style/sidebar.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
+    <link rel="stylesheet" href="style/style.css">
+</head>
 
 
-    <body class="hold-transition sidebar-mini layout-fixed">
-        <div class="wrapper">
-
-            <!-- Navbar -->
-            <nav class="navbar navbar-expand-lg navbar-light bg-light rounded" aria-label="Eleventh navbar example">
-                <div class="container-fluid">
-                  <a class="navbar-brand" href="#">Navbar</a>
-                  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample09" aria-controls="navbarsExample09" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                  </button>
-          
-                  <div class="collapse navbar-collapse" id="navbarsExample09">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                      <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">Home</a>
-                      </li>
-                      <li class="nav-item">
-                        <a class="nav-link" href="#">Link</a>
-                      </li>
-                      <li class="nav-item">
-                        <a class="nav-link disabled">Disabled</a>
-                      </li>
-                      <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="dropdown09" data-bs-toggle="dropdown" aria-expanded="false">Dropdown</a>
-                        <ul class="dropdown-menu" aria-labelledby="dropdown09">
-                          <li><a class="dropdown-item" href="#">Action</a></li>
-                          <li><a class="dropdown-item" href="#">Another action</a></li>
-                          <li><a class="dropdown-item" href="#">Something else here</a></li>
-                        </ul>
-                      </li>
-                    </ul>
-                    <form>
-                      <input class="form-control" type="text" placeholder="Search" aria-label="Search">
-                    </form>
-                  </div>
-                </div>
-              </nav>
-            <!-- /.navbar -->
-
-            <!-- Main Sidebar Container -->
-            <aside class="main-sidebar sidebar-dark-primary elevation-4">
-                <!-- Brand Logo -->
-                <a href="/" class="brand-link" style="text-align: center;">
-                    <span class="brand-text font-weight-light">메인화면</span>
+<body id="body-pd">
+    <header class="header" id="header">
+        <div class="header_toggle"> <i class='bx bx-menu' id="header-toggle"></i> </div>
+            <nav class="navbar navbar-expand navbar-collapse navbar-light bg-light">
+                <a href="/" class="nav-link"><img src="imgs/aqufarm.png" style="height: 40px; padding: 0.5rem; margin-left: 0.5rem;"></a>
+                <ui class="navbar-nav" style="margin-left: auto;">
+                    <li class="navbar-text" style="padding: 0.5rem;">
+                        <span id="level">학생용</span>
+                    </li>
+                    <li class="navbar-text usericon" style="color: black; padding: 0.5rem;">
+                        <span id="username" style="height: 28px;">홍길동</span>
+                    </li>
+                    <!-- <li class="navbar-text" style="color: black; padding: 0.5rem;">
+                        <span id="username" >홍길동</span>
+                    </li> -->
+                    
+                    <!-- <li class="nav-link">
+                        <a href="#" onclick="javascript:logout()" style="color: rgba(var(--bs-emphasis-color-rgb), 0.65);"> <i class='bx bx-log-out nav_icon'></i></a>
+                    </li> -->
+                </ui>
+            </nav>
+    </header>
+    <div class="l-navbar" id="nav-bar">
+        <nav class="nav">
+            <div>
+                <a href="/" class="nav_logo" style="padding-left: 22px;">
+                    <i ><img src="imgs/am_h20.png" width="24px;"></i>
+                    <span class="fas-3 bi_house" style="color: aliceblue;">아쿠팜</span>
                 </a>
-
-                <!-- Sidebar -->
-                <div class="sidebar">
-                    <!-- Sidebar Menu -->
-                    <nav class="mt-2">
-                        <ul
-                            class="nav nav-pills nav-sidebar flex-column"
-                            data-widget="treeview"
-                            role="menu"
-                            data-accordion="false">
-                            <!-- Add icons to the links using the .nav-icon class with font-awesome or any
-                            other icon font library -->
-                            <li class="nav-item menu-open">
-                                <a href="#" class="nav-link active">
-                                    <i class="nav-icon fas fa-tachometer-alt"></i>
-                                    <p>레이아웃<i class="right fas fa-angle-left"></i>
-                                    </p>
-                                </a>
-                                <ul class="nav nav-treeview">
-                                    <li class="nav-item">
-                                        <a href="/" class="nav-link">
-                                            <i class="far fa-circle nav-icon"></i>
-                                            <p>연구정보입력</p>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="/search" class="nav-link active">
-                                            <i class="far fa-circle nav-icon"></i>
-                                            <p>연구정보검색</p>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="/bak" class="nav-link">
-                                            <i class="far fa-circle nav-icon"></i>
-                                            <p>doc</p>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </nav>
-                    <!-- /.sidebar-menu -->
+                <div class="nav_list">
+                    <a href="#" class="nav_link active">
+                        <i class='bx bx-grid-alt nav_icon'></i>
+                        <span class="nav_name">대시보드</span>
+                    </a>
+                    <a href="#" class="nav_link">
+                        <i class='bx bx-bar-chart-alt-2 nav_icon'></i>
+                        <span class="nav_name">차트</span>
+                    </a>
+                    <a href="#" class="nav_link">
+                        <i class='bx bx-user nav_icon'></i> <span class="nav_name">학생관리</span>
+                    </a>
+                    <a href="#" class="nav_link">
+                        <i class='bx bx-cog nav_icon'></i>
+                        <span class="nav_name">설정</span>
+                    </a>
                 </div>
-                <!-- /.sidebar -->
-            </aside>
-
-            <!-- Content Wrapper. Contains page content -->
-            <div class="content-wrapper">
-                <!-- Content Header (Page header) -->
-                <div class="content-header">
-                    <div class="container-fluid">
-                        <div class="row mb-2">
-                            <div class="col-sm-6">
-                                <h1 class="m-0">연구정보검색</h1>
-                            </div>
-                            <!-- /.col -->
-                            <div class="col-sm-6">
-                                <ol class="breadcrumb float-sm-right">
-                                    <li class="breadcrumb-item">
-                                        <a href="/">Home</a>
-                                    </li>
-                                    <li class="breadcrumb-item active">연구정보검색</li>
-                                </ol>
-                            </div>
-                            <!-- /.col -->
-                        </div>
-                        <!-- /.row -->
-                    </div>
-                    <!-- /.container-fluid -->
-                </div>
-                <!-- /.content-wrapper -->
-
-                <div class="content">
-                    <div class="container-fluid">
-                    </div>
-                    <!-- container end -->
-                </div>
-                <!-- content end -->
             </div>
-            <!-- ./wrapper -->
+
+            <a href="#" onclick="javascript:logout()" class="nav_link"> <i class='bx bx-log-out nav_icon'></i>
+                <span class="nav_name">SignOut</span>
+            </a>
+        </nav>
+    </div>
+
+    <div class="height-100 bg-light" style="padding: 1rem;">
+        <h4>기기 선택</h4>
+        <div class="wrapper">
+            <div class="card">
+                <div class="card-header">기기 이름</div>
+                <div class="card-body">
+                </div>
+            </div>
         </div>
-        <!-- jQuery -->
-        <script src="plugins/jquery/jquery.min.js"></script>
-        <!-- jQuery UI 1.11.4 -->
-        <script src="plugins/jquery-ui/jquery-ui.min.js"></script>
-        <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
-        <script> $.widget.bridge('uibutton', $.ui.button); </script>
-        <!-- Bootstrap 4 -->
-        <script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-        <!-- ChartJS -->
-        <script src="plugins/chart.js/Chart.min.js"></script>
-        <!-- Sparkline -->
-        <script src="plugins/sparklines/sparkline.js"></script>
-        <!-- JQVMap -->
-        <script src="plugins/jqvmap/jquery.vmap.min.js"></script>
-        <script src="plugins/jqvmap/maps/jquery.vmap.usa.js"></script>
-        <!-- jQuery Knob Chart -->
-        <script src="plugins/jquery-knob/jquery.knob.min.js"></script>
-        <!-- daterangepicker -->
-        <script src="plugins/moment/moment.min.js"></script>
-        <script src="plugins/daterangepicker/daterangepicker.js"></script>
-        <!-- Tempusdominus Bootstrap 4 -->
-        <script
-            src="plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
-        <!-- Summernote -->
-        <script src="plugins/summernote/summernote-bs4.min.js"></script>
-        <!-- overlayScrollbars -->
-        <script src="plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
-        <!-- AdminLTE App -->
-        <script src="dist/js/adminlte.js"></script>
-    </body>
-</html> -->
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+        <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+        <script src="https://kit.fontawesome.com/57c8b4e229.js"></script> -->
+    <script src="js/sidebar.js"></script>
+    <script>
+        const level = ['학생용', '교사용', '관리자']
+
+        function logout() {
+            var f = document.createElement('form');
+            f.setAttribute('method', 'post');
+            f.setAttribute('action', '/session_logout');
+            document.body.appendChild(f);
+            f.submit();
+        }
+        
+        $(document).ready(function() {
+            $.ajax({
+            url: "/session",
+            method: "get",
+            success:function(data) {
+                if (data[0].auth == false) {
+                    alert("로그인 후 이용해주세요.");
+                    location.replace('/login');
+                }
+                else {
+                    $("#level").text(level[data[0].level]);
+                    $("#username").text(data[0].name.slice(0, 1));
+                    console.log(data)
+                }
+            }
+            })
+        })
+        
+    </script>
+</body>
+
+</html>
