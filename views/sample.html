@@ -17,24 +17,32 @@
 <body id="body-pd">
     <header class="header" id="header">
         <div class="header_toggle"> <i class='bx bx-menu' id="header-toggle"></i> </div>
-            <nav class="navbar navbar-expand navbar-collapse navbar-light bg-light">
-                <a href="/" class="nav-link"><img src="imgs/aqufarm.png" style="height: 40px; padding: 0.5rem; margin-left: 0.5rem;"></a>
-                <ui class="navbar-nav" style="margin-left: auto;">
-                    <li class="navbar-text" style="padding: 0.5rem;">
-                        <span id="level">학생용</span>
-                    </li>
-                    <li class="navbar-text usericon" style="color: black; padding: 0.5rem;">
-                        <span id="username" style="height: 28px;">홍길동</span>
-                    </li>
-                    <!-- <li class="navbar-text" style="color: black; padding: 0.5rem;">
-                        <span id="username" >홍길동</span>
-                    </li> -->
-                    
-                    <!-- <li class="nav-link">
-                        <a href="#" onclick="javascript:logout()" style="color: rgba(var(--bs-emphasis-color-rgb), 0.65);"> <i class='bx bx-log-out nav_icon'></i></a>
-                    </li> -->
-                </ui>
-            </nav>
+        <nav class="navbar navbar-expand navbar-light" style="flex-grow: 1;">
+            <ul class="navbar-nav">
+                <a href="/"><img src="imgs/aqufarm.png" style="height: 45px; padding: 0.5rem; margin-left: 0.5rem;"></a>
+            </ul>
+        </nav>
+
+
+        <nav class="navbar navbar-expand navbar-light bg-light">
+            <ui class="d-flex navbar-nav" style="margin-left: auto !important;">
+                <li class="navbar-text" style="padding: 0.5rem;">
+                    <span id="level"></span>
+                </li>
+                <!-- <li class="navbar-text usericon" style="color: black; padding: 0.5rem;">
+                    <span id="username" style="height: 28px;">홍길동</span>
+                </li> -->
+                <li class="navbar-text usericon" style="color: black; padding: 0.5rem;">
+                    <a id="username" data-bs-toggle="dropdown" role="button" href="#" style="height: 28px; width: calc(var(--nav-width) + 156px);"></a>
+                    <ul class="dropdown-menu" aria-labelledby="username" style="width: 2rem; min-width: 100px;">
+                        <li><a class="dropdown-item" href="#">정보수정</a></li>
+                        <li><a class="dropdown-item" href="#">기기정보</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#" onclick="javascript:logout()">로그아웃</a></li>
+                    </ul>
+                </li>
+            </ui>
+        </nav>
     </header>
     <div class="l-navbar" id="nav-bar">
         <nav class="nav">
@@ -52,10 +60,10 @@
                         <i class='bx bx-bar-chart-alt-2 nav_icon'></i>
                         <span class="nav_name">차트</span>
                     </a>
-                    <a href="#" class="nav_link">
+                    <a href="#" class="nav_link" id="stumanag">
                         <i class='bx bx-user nav_icon'></i> <span class="nav_name">학생관리</span>
                     </a>
-                    <a href="#" class="nav_link">
+                    <a href="#" class="nav_link" id="settings">
                         <i class='bx bx-cog nav_icon'></i>
                         <span class="nav_name">설정</span>
                     </a>
@@ -74,6 +82,7 @@
             <div class="card">
                 <div class="card-header">기기 이름</div>
                 <div class="card-body">
+                    <span></span>
                 </div>
             </div>
         </div>
@@ -86,36 +95,6 @@
         <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
         <script src="https://kit.fontawesome.com/57c8b4e229.js"></script> -->
     <script src="js/sidebar.js"></script>
-    <script>
-        const level = ['학생용', '교사용', '관리자']
-
-        function logout() {
-            var f = document.createElement('form');
-            f.setAttribute('method', 'post');
-            f.setAttribute('action', '/session_logout');
-            document.body.appendChild(f);
-            f.submit();
-        }
-        
-        $(document).ready(function() {
-            $.ajax({
-            url: "/session",
-            method: "get",
-            success:function(data) {
-                if (data[0].auth == false) {
-                    alert("로그인 후 이용해주세요.");
-                    location.replace('/login');
-                }
-                else {
-                    $("#level").text(level[data[0].level]);
-                    $("#username").text(data[0].name.slice(0, 1));
-                    console.log(data)
-                }
-            }
-            })
-        })
-        
-    </script>
+    <script src="js/memberAuth.js"></script>
 </body>
-
 </html>

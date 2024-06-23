@@ -23,5 +23,8 @@ router.get('/forgot_id', function(req, res, next) {
 router.get('/forgot_pw', function(req, res, next) {
   res.sendFile(path.join(__dirname, "../views/members/forgot_pw.html"))
 });
+router.get('/dashboard', function(req, res, next) {
+  res.sendFile(path.join(__dirname, "../views/dashboard.html"))
+});
 
 module.exports = router;

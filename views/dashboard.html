@@ -60,6 +60,7 @@
                         <i class='bx bx-bar-chart-alt-2 nav_icon'></i>
                         <span class="nav_name">차트</span>
                     </a>
+                    <!--@if($level->학생용) -->
                     <a href="#" class="nav_link" id="stumanag">
                         <i class='bx bx-user nav_icon'></i> <span class="nav_name">학생관리</span>
                     </a>
@@ -67,6 +68,7 @@
                         <i class='bx bx-cog nav_icon'></i>
                         <span class="nav_name">설정</span>
                     </a>
+                    <!--@end-->
                 </div>
             </div>
 
@@ -78,15 +80,12 @@
 
     <div class="height-100 bg-light" style="padding: 1rem;">
         <h4>기기 선택</h4>
-        <div class="wrapper" id="device_card">
-            <!-- <div class="card" >
-                <a href="#">
-                    <div class="card-header"><h3 id="divce_name"></h3></div>
-                    <div class="card-body">
-                        <span id="device_date"></span>
-                    </div>
-                </a>
-            </div> -->
+        <div class="wrapper">
+            <div class="card">
+                <div class="card-header">기기 이름</div>
+                <div class="card-body">
+                </div>
+            </div>
         </div>
     </div>
 
@@ -98,30 +97,5 @@
         <script src="https://kit.fontawesome.com/57c8b4e229.js"></script> -->
     <script src="js/sidebar.js"></script>
     <script src="js/memberAuth.js"></script>
-    <script>
-        window.onload = function() {
-            $.ajax({
-                url: "/get_device",
-                method: "post",
-                data: { id: id },
-                success:function(data) {
-                    let html = '';
-
-                    $.each(data, (i, val) => {
-                        html += `<div class="card" style="margin-bottom: 1rem;">
-                                    <a href="#" onclick="window.open('/dashboard?${name=val.name},${device=val.device_id}')">
-                                        <div class="card-header">${val.name}</div>
-                                        <div class="card-body">
-                                            <span id="device_date_${i}">${val.time}</span>
-                                        </div>
-                                    </a>
-                                </div>`
-                        if (data.length - 1 == i) $("#device_card").append(html);
-                    })
-                }
-            })
-        }
-        
-    </script>
 </body>
 </html>

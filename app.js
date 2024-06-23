@@ -133,6 +133,18 @@ app.post('/session_logout', function(req, res) {
 });
 
 
+app.post('/get_device', function(req, res) {
+  let id = req.body.id;
+  
+  db.query('select * from link where user_id=?', [id],
+    function(err, data) {
+      if (err) throw(err);
+      res.send(data);
+    }
+  )
+});
+
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
