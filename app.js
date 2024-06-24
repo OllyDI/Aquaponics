@@ -11,16 +11,20 @@ var mysqlStore = require('express-mysql-session')(session);
 var passport = require('passport');
 var app = express();
 var indexRouter = require('./routes/index');
+var crypto = require('crypto');
 
+const { JSDOM } = require("jsdom");
+const { window } = new JSDOM("");
+const $ = require("jquery")(window);
 
 var fs = require('fs');
 var txt = fs.readFileSync('lib/db.txt').toString().replace(/\r/g, "").split('\n');
 const options = {
-  host: `${txt[0]}`, 
-  port: `${txt[1]}`,
-  user: `${txt[2]}`,
-  password: `${txt[3]}`,
-  database: `${txt[4]}`
+  host: txt[0], 
+  port: txt[1],
+  user: txt[2],
+  password: txt[3],
+  database: txt[4]
 }
 const db = mysql.createConnection(options);
 const sessionStore = new mysqlStore(options);
@@ -38,7 +42,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // session settings
 app.use(session({
-  secret: 'AquaFarm!@#',
+  secret: txt[5],
   resave: false,
   saveUninitialized: true,
   store: sessionStore,
@@ -62,7 +66,7 @@ app.use(
 app.use('/', indexRouter);
 require('./lib/passport')(passport, options);
 
-
+// 아이디 중복 검사 및 회원가입
 app.post('/duplicate', function(req, res) {
   var uid = req.body.uid;
   var val = true;
@@ -85,15 +89,18 @@ app.post('/register', function(req, res) {
   var number = req.body.number
   var id = req.body.id
   var pw = base64crypto(req.body.pw)
+  var q = ['members', 'members_temp']
 
-  db.query('insert into members (level, school, name, grade, class, number, id, pw) values (?, ?, ?, ?, ?, ?, ?, ?);', 
+  db.query(`insert into ${q[level]} (level, school, name, grade, class, number, id, pw) values (?, ?, ?, ?, ?, ?, ?, ?);`, 
     [Number(level), school, name, Number(grade), Number(classNUm), Number(number), id, pw], 
     function(err, data) {
       if (err) {
         console.log(err);
         res.send("<script>alert('회원가입에 실패하였습니다. 다시 시도해 주세요.'); location.href='/register';</script>");
+      } else {
+        if (level == 0) res.send("<script>alert('회원가입이 완료되었습니다.');location.href='/login';</script>");
+        else res.send("<script>alert('회원가입 신청이 완료되었습니다.\n회원가입 승인 후 로그인이 가능합니다.');location.href='/login';</script>");
       }
-      else res.send("<script>alert('회원가입이 완료되었습니다.');location.href='/login';</script>");
     }
   )
 })
@@ -102,8 +109,6 @@ app.post('/register', function(req, res) {
 app.post('/session_login', 
   passport.authenticate('local', {successRedirect: '/', failureRedirect: '/login' }
 ));
-
-
 app.get('/session', function(req, res) {
   var data = [];
   if (req.isAuthenticated()) {
@@ -119,8 +124,6 @@ app.get('/session', function(req, res) {
   else data.push({auth: req.isAuthenticated()});
   res.send(data);
 });
-
-
 app.post('/session_logout', function(req, res) {
   req.logout(function(err) {
     if (err) { return next(err); }
@@ -143,6 +146,39 @@ app.post('/get_device', function(req, res) {
     }
   )
 });
+
+app.post('/searchTable', function(req, res) {
+  let school = req.body.school;
+  let level = req.body.level;
+  let name = req.body.name;
+  let start = req.body.start;
+  let end = req.body.end;
+  let sql = `select * from members where school like ? and level like ? and name like ?`
+  if (start != '' && start != undefined) sql += ` and date>=str_to_date('${start}', '%Y-%m-%d')`
+  if (end != '' && end != undefined) sql += ` and date<=str_to_date('${end}', '%Y-%m-%d')`
+
+  db.query(sql, [ '%'+school+'%', '%'+level+'%', '%'+name+'%'],
+    function(err, data) {
+      if (err) throw(err);
+      else {
+        let val = [];
+        $.each(data, function(i, v) {
+          val.push({
+            id: v.id,
+            level: v.level,
+            school: v.school,
+            name: v.name,
+            grade: v.grade,
+            class: v.class,
+            number: v.number,
+            date: v.date
+          })
+          if (data.length - 1 == i) res.send(val);
+        })
+      };
+    }
+  )
+})
 
 
 // catch 404 and forward to error handler

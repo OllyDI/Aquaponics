@@ -23,8 +23,13 @@ router.get('/forgot_id', function(req, res, next) {
 router.get('/forgot_pw', function(req, res, next) {
   res.sendFile(path.join(__dirname, "../views/members/forgot_pw.html"))
 });
-router.get('/dashboard', function(req, res, next) {
+
+router.get('/dashboard', auth, function(req, res, next) {
   res.sendFile(path.join(__dirname, "../views/dashboard.html"))
+});
+
+router.get('/admin', auth, function(req, res, next) {
+  if (req.user.level == 2) res.sendFile(path.join(__dirname, "../views/admin.html"))
 });
 
 module.exports = router;

@@ -23,7 +23,7 @@ $(document).ready(function() {
             $("#level").text(level[data[0].level]);
             $("#username").text(data[0].name.slice(0, 1));
             if (level[data[0].level] == '학생용') $('#stumanag').hide();
-            if (level[data[0].level] == '학생용') $('#settings').hide();
+            if (level[data[0].level] !== '관리자') $('#settings').hide();
             id = data[0].id;
         }
     }
