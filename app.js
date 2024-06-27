@@ -30,7 +30,6 @@ const db = mysql.createConnection(options);
 const sessionStore = new mysqlStore(options);
 
 
-
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
