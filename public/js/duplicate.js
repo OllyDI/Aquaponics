@@ -47,6 +47,7 @@ $(document).ready(function () {
     $("#uid").on("focusout", function (e) {
         console.log("focus")
         var id = $("#uid").val();
+        var level = $("#level").val();
         if (id == '' || id.length == 0) { return false; }
 
         //Ajax로 전송
@@ -54,17 +55,20 @@ $(document).ready(function () {
             url: '/duplicate',
             method: 'post',
             data: {
-                uid: id
+                uid: id,
+                level: level
             },
             datatype: 'json',
             success: function (res) {
                 console.log(res)
                 if (res == true) {
+                    $("#lUid").attr("hidden", true)
                     $("#reg").attr("type", "submit");
                     $("#lUid").css("color", "black").text("사용 가능한 ID 입니다.");
                 } else {
+                    $("#lUid").attr("hidden", false)
                     $("#reg").attr("type", "button");
-                    $("#lUid").css("color", "red").text("사용 불가한 ID입니다.");
+                    $("#lUid").css("color", "red").text("사용 불가능한 ID입니다.");
                 }
             }
         });

@@ -87,17 +87,17 @@
             <!-- <div class="card"> -->
                 <ul class="nav nav-tabs" style="padding: 0 0.2rem 0 0.2rem; border-color: transparent;">
                     <li class="nav-item" role="presentation">
-                        <a class="nav-link active" data-bs-toggle="tab" data-bs-target="#manager">사용자 관리</a>
+                        <a class="nav-link active" data-bs-toggle="tab" href="#" data-bs-target="#manager">사용자 관리</a>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <a class="nav-link" data-bs-toggle="tab" data-bs-target="#submit" onclick="ap_table()">가입 승인</a>
+                        <a class="nav-link" data-bs-toggle="tab" href="#" data-bs-target="#submit" onclick="ap_table()">가입 승인</a>
                     </li>
                 </ul>
                 <div class="tab-content">
                     <div class="tab-pane fade show active" id="manager" role="tabpanel" aria-labelledby="manager-tab">
                         <div class="card">
                             <div class="card-header"> 
-                                <span class="card-title">학생 검색</span>
+                                <span class="card-title">사용자 검색</span>
                             </div>
                             <div class="card-body">
                                 <div class="row">
@@ -135,7 +135,7 @@
                             <div class="col-12">
                                 <div class="card" id="card_search" style="display: none;">
                                     <div class="card-header">
-                                        <span class="card-title">학생 검색 결과</span>
+                                        <span class="card-title">사용자 검색 결과</span>
                                     </div>
                                     <!-- card-header end -->
                                     <div class="card-body">
@@ -152,6 +152,7 @@
                                                         <th>번호</th>
                                                         <th>가입날짜</th>
                                                         <th>#</th>
+                                                        <th>관리</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody id="table_body">
@@ -226,6 +227,22 @@
     <script src="js/sidebar.js"></script>
     <script src="js/memberAuth.js"></script>
     <script>
+        $( function() { 
+            $("#stdate").daterangepicker({ 
+                autoUpdateInput: false,
+                locale: {
+                    cancelLabel: 'Clear'
+                }
+            }); 
+            
+            $("#stdate").on('apply.daterangepicker', function(ev, picker) {
+                $(this).val(picker.startDate.format('YYYY-MM-DD') + ' ~ ' + picker.endDate.format('YYYY-MM-DD'));
+            });
+
+            $("#stdate").on('cancel.daterangepicker', function(ev, picker) { $(this).val(''); });
+        });
+
+
         function ap_table() {
             var datas = [];
             $.ajax({
@@ -246,32 +263,31 @@
                             v.class,
                             v.number,
                             dayjs(v.date).format("YYYY-MM-DD"),
-                            i
+                            `<button type="button" class="btn btn-success" onclick="sign('${v.id}', 0, 1)">승인</button>
+                            <button type="button" class="btn btn-danger" onclick="sign('${v.id}', 1, 1)">거절</button>`
                         ])
                         if (data.length - 1 == i) {
                             console.log(datas)
-                            new DataTable('#ap_tables', { scrollX: true, paging: true, destroy: true, data: datas });
+                            new DataTable('#ap_tables', 
+                            { 
+                                columnDefs: [
+                                    {
+                                        className: 'dt-head-center',
+                                        targets: "_all",
+                                    },
+                                    {
+                                        className: 'dt-body-center',
+                                        targets: "_all",
+                                    },
+                                ],
+                                scrollX: true, paging: true, destroy: true, data: datas 
+
+                            });
                         }
                     })
                 }
             })
         }
-
-        $( function() { 
-            $("#stdate").daterangepicker({ 
-                autoUpdateInput: false,
-                locale: {
-                    cancelLabel: 'Clear'
-                }
-            }); 
-            
-            $("#stdate").on('apply.daterangepicker', function(ev, picker) {
-                $(this).val(picker.startDate.format('YYYY-MM-DD') + ' - ' + picker.endDate.format('YYYY-MM-DD'));
-            });
-
-            $("#stdate").on('cancel.daterangepicker', function(ev, picker) { $(this).val(''); });
-        });
-
         function search() {
             $("#card_search").css('display', '');
             var datas = [];
@@ -301,14 +317,44 @@
                             v.class,
                             v.number,
                             dayjs(v.date).format("YYYY-MM-DD"),
-                            i
+                            i,
+                            `<button type="button" class="btn btn-danger" onclick="sign('${v.id}', 1, 0)">회원 삭제</button>`
                         ])
                         if (data.length - 1 == i) {
                             console.log(datas)
-                            new DataTable('#tables', { scrollX: true, paging: true, destroy: true, data: datas });
+                            new DataTable('#tables', 
+                            { 
+                                columnDefs: [
+                                    {
+                                        className: 'dt-head-center',
+                                        targets: "_all",
+                                    },
+                                    {
+                                        className: 'dt-body-center',
+                                        targets: "_all",
+                                    },
+                                ],
+                                scrollX: true, paging: true, destroy: true, data: datas 
+                            });
                         }
                     })
                     
+                }
+            })
+        }
+
+        function sign(id, bool, table) {
+            let link = ['suc', 'del']
+            let tables = ['members', 'members_temp']
+            $.ajax({
+                url: `/${tables[table]}_${link[bool]}`,
+                method: 'post',
+                data: {
+                    id: id
+                },
+                success: function(msg) {
+                    alert(msg);
+                    location.reload();
                 }
             })
         }

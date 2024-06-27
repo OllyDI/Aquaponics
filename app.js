@@ -69,15 +69,27 @@ require('./lib/passport')(passport, options);
 // 아이디 중복 검사 및 회원가입
 app.post('/duplicate', function(req, res) {
   var uid = req.body.uid;
+  var level = req.body.level;
   var val = true;
-  db.query('select * from members where id=?', [uid],
-    function(err, data) {
-      if (err) throw(err);
-      if (data[0]) val = false;
-      else val = true;
-      res.send(val);
-    }
-  )
+
+  if (level == 1) {
+    db.query('select * from members_temp where id=?' , [uid],
+      function(err, data) {
+        if (err) throw(err);
+        if (data[0]) val = false;
+      }
+    )
+  }
+  if (val == false) res.send(val)
+  else {
+    db.query('select * from members where id=?', [uid],
+      function(err, data) {
+        if (err) throw(err);
+        if (data[0]) val = false;
+        res.send(val);
+      }
+    )
+  }
 })
 app.post('/register', function(req, res) {
   var base64crypto = (password) => { return crypto.createHash('sha512').update(password).digest('base64') }
@@ -85,7 +97,7 @@ app.post('/register', function(req, res) {
   var school = req.body.school;
   var name = req.body.name;
   var grade = req.body.grade;
-  var classNUm = req.body.class;
+  var classNum = req.body.class;
   var number = req.body.number
   var id = req.body.id
   var pw = base64crypto(req.body.pw)
@@ -94,7 +106,7 @@ app.post('/register', function(req, res) {
   var q = ['members', 'members_temp']
 
   db.query(`insert into ${q[level]} (level, school, name, grade, class, number, id, pw, date) values (?, ?, ?, ?, ?, ?, ?, ?, ?);`, 
-    [Number(level), school, name, Number(grade), Number(classNUm), Number(number), id, pw, date], 
+    [Number(level), school, name, Number(grade), Number(classNum), Number(number), id, pw, date], 
     function(err, data) {
       if (err) {
         console.log(err);
@@ -201,6 +213,48 @@ app.post('/members_temp', function(req, res) {
       })
     }
   })
+})
+
+app.post('/members_temp_suc', function(req, res) {
+  var id = req.body.id;
+  var today = new Date();
+  var date = today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate();
+
+  db.query('select * from members_temp where id=?;', [id],
+    function(err, data) {
+      if(err) throw(err);
+      db.query('insert into members(level, school, name, grade, class, number, id, pw, date) values(?, ?, ?, ?, ?, ?, ?, ?, ?);', 
+      [Number(data[0].level), data[0].school, data[0].name, Number(data[0].grade), Number(data[0].class), Number(data[0].number), data[0].id, data[0].pw, date],
+        function(err, data) {
+          if(err) throw(err);
+          db.query('delete from members_temp where id=?;', [id], 
+            function(err, data) { if(err) throw(err); }
+          )
+          res.send('회원가입 승인이 완료되었습니다.');
+        }
+      )
+    }
+  )
+})
+app.post('/members_temp_del', function(req, res) {
+  var id = req.body.id;
+
+  db.query(`delete from members_temp where id=?;`, [id], 
+    function(err, data) {
+      if(err) throw(err);
+      res.send('회원 삭제가 완료되었습니다.');
+    }
+  )
+})
+app.post('/members_del', function(req, res) {
+  var id = req.body.id;
+
+  db.query(`delete from members where id=?;`, [id], 
+    function(err, data) {
+      if(err) throw(err);
+      res.send('회원 삭제가 완료되었습니다.');
+    }
+  )
 })
 
 // catch 404 and forward to error handler
