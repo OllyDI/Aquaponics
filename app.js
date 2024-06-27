@@ -89,17 +89,19 @@ app.post('/register', function(req, res) {
   var number = req.body.number
   var id = req.body.id
   var pw = base64crypto(req.body.pw)
+  var today = new Date();
+  var date = today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate();
   var q = ['members', 'members_temp']
 
-  db.query(`insert into ${q[level]} (level, school, name, grade, class, number, id, pw) values (?, ?, ?, ?, ?, ?, ?, ?);`, 
-    [Number(level), school, name, Number(grade), Number(classNUm), Number(number), id, pw], 
+  db.query(`insert into ${q[level]} (level, school, name, grade, class, number, id, pw, date) values (?, ?, ?, ?, ?, ?, ?, ?, ?);`, 
+    [Number(level), school, name, Number(grade), Number(classNUm), Number(number), id, pw, date], 
     function(err, data) {
       if (err) {
         console.log(err);
         res.send("<script>alert('회원가입에 실패하였습니다. 다시 시도해 주세요.'); location.href='/register';</script>");
       } else {
         if (level == 0) res.send("<script>alert('회원가입이 완료되었습니다.');location.href='/login';</script>");
-        else res.send("<script>alert('회원가입 신청이 완료되었습니다.\n회원가입 승인 후 로그인이 가능합니다.');location.href='/login';</script>");
+        else res.send("<script>alert('회원가입 신청이 완료되었습니다.\\n\\n회원가입 승인 후 로그인이 가능합니다.');location.href='/login';</script>");
       }
     }
   )
@@ -154,12 +156,11 @@ app.post('/searchTable', function(req, res) {
   let start = req.body.start;
   let end = req.body.end;
   let sql = `select * from members where school like ? and level like ? and name like ?`
-  if (start != '' && start != undefined) sql += ` and date>=str_to_date('${start}', '%Y-%m-%d')`
-  if (end != '' && end != undefined) sql += ` and date<=str_to_date('${end}', '%Y-%m-%d')`
-
+  if (start != '' && start != undefined) sql += ` and date between str_to_date('${start}', '%Y-%m-%d') and str_to_date('${end}', '%Y-%m-%d')`
+  console.log(sql)
   db.query(sql, [ '%'+school+'%', '%'+level+'%', '%'+name+'%'],
     function(err, data) {
-      if (err) throw(err);
+      if(err) throw(err);
       else {
         let val = [];
         $.each(data, function(i, v) {
@@ -180,6 +181,27 @@ app.post('/searchTable', function(req, res) {
   )
 })
 
+app.post('/members_temp', function(req, res) {
+  db.query('select * from members_temp', function(err, data) {
+    if(err) throw(err);
+    else {
+      let datas = [];
+      $.each(data, function(i, v) {
+        datas.push({
+          id: v.id,
+          level: v.level,
+          school: v.school,
+          name: v.name,
+          grade: v.grade,
+          class: v.class,
+          number: v.number,
+          date: v.date
+        })
+        if (data.length - 1 == i) res.send(datas);
+      })
+    }
+  })
+})
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
