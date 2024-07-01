@@ -110,13 +110,13 @@
                                     </div>
                                     <div style="padding-bottom: 0.5rem;" class="col-sm-6 col-lg-3">
                                         <div class="input-group flex-nowrap">
+                                            <span class="input-group-text">이름</span>
+                                            <input type="text" id="name" name="name" class="form-control" maxlength="45">
                                             <select id="level" name="level" class="form-select form-select-sm" style="flex: 0.2 1 auto;">
                                                 <option value="">전체</option>
                                                 <option value="0">학생</option>
                                                 <option value="1">교사</option>
                                             </select>
-                                            <span class="input-group-text">이름</span>
-                                            <input type="text" id="name" name="name" class="form-control" maxlength="45">
                                         </div>
                                     </div>
                                     <div style="padding-bottom: 0.5rem;" class="col-sm-6 col-lg-4">
@@ -263,8 +263,8 @@
                             v.class,
                             v.number,
                             dayjs(v.date).format("YYYY-MM-DD"),
-                            `<button type="button" class="btn btn-success" onclick="sign('${v.id}', 0, 1)">승인</button>
-                            <button type="button" class="btn btn-danger" onclick="sign('${v.id}', 1, 1)">거절</button>`
+                            `<button type="button" class="btn btn-success" onclick="sign('${v.id}', 0, 1, 1)">승인</button>
+                            <button type="button" class="btn btn-danger" onclick="sign('${v.id}', 1, 1, 2)">거절</button>`
                         ])
                         if (data.length - 1 == i) {
                             console.log(datas)
@@ -318,7 +318,7 @@
                             v.number,
                             dayjs(v.date).format("YYYY-MM-DD"),
                             i,
-                            `<button type="button" class="btn btn-danger" onclick="sign('${v.id}', 1, 0)">회원 삭제</button>`
+                            `<button type="button" class="btn btn-danger" onclick="sign('${v.id}', 1, 0, 0)">삭제</button>`
                         ])
                         if (data.length - 1 == i) {
                             console.log(datas)
@@ -343,20 +343,23 @@
             })
         }
 
-        function sign(id, bool, table) {
-            let link = ['suc', 'del']
-            let tables = ['members', 'members_temp']
-            $.ajax({
-                url: `/${tables[table]}_${link[bool]}`,
-                method: 'post',
-                data: {
-                    id: id
-                },
-                success: function(msg) {
-                    alert(msg);
-                    location.reload();
-                }
-            })
+        function sign(id, bool, table, idx) {
+            let msg = ["회원을 삭제하시겠습니까?", "가입을 승인하시겠습니까?", "가입을 거절하시겠습니끼?"]
+            if (confirm(msg[idx])) {
+                let link = ['suc', 'del']
+                let tables = ['members', 'members_temp']
+                $.ajax({
+                    url: `/${tables[table]}_${link[bool]}`,
+                    method: 'post',
+                    data: {
+                        id: id
+                    },
+                    success: function(msg) {
+                        alert(msg);
+                        location.reload();
+                    }
+                })
+            }
         }
     </script>
 </body>

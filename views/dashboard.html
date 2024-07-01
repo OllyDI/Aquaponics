@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="style/sidebar.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
     <link rel="stylesheet" href="style/style.css">
+    <link rel="stylesheet" href="style/rotateCard.css">
 </head>
 
 
@@ -81,9 +82,22 @@
     <div class="height-100 bg-light" style="padding: 1rem;">
         <h4>기기 선택</h4>
         <div class="wrapper">
-            <div class="card">
-                <div class="card-header">기기 이름</div>
-                <div class="card-body">
+            <div class="card_content" id="content" style="position: relative;">
+                <div class="card card_front" style="position: absolute;">
+                    <a href="#" class="">
+                        <div class="card-header">front</div>
+                        <div class="card-body">
+                            <span id="">body</span>
+                        </div>
+                    </a>
+                </div>
+                <div class="card card_back" id="back" style="position: absolute;">
+                    <a href="#" class="">
+                        <div class="card-header">back</div>
+                        <div class="card-body">
+                            <span id="">body</span>
+                        </div>
+                    </a>
                 </div>
             </div>
         </div>
@@ -98,6 +112,19 @@
     <script src="js/sidebar.js"></script>
     <script src="js/memberAuth.js"></script>
     <script>
+        const div = document.getElementById('content');
+            var cnt = 1;
+
+            div.addEventListener('click', (event) => {
+            console.log(cnt);
+            if(cnt % 2 == 1) {document.getElementById("back").style.transform = "rotateY(180deg)";
+            document.getElementById("content").style.transform = "rotateY(180deg)";
+            }   else {
+            document.getElementById("back").style.transform = "rotateY(180deg)";
+            document.getElementById("content").style.transform = "rotateY(0deg)";
+            }
+            cnt += 1;
+        });
         function dashboardOpen() { 
             window.location = `/dashboard${decodeURI(location.search.substr(location.search))}`;
         }

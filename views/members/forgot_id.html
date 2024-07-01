@@ -8,19 +8,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
     <link rel="stylesheet" href="/style/member.css">
-    <style>
-        .mb-3 {
-            margin: 0 0 1.2rem !important;
-        }
-        label {
-            margin-top: 5px;
-            padding-left: 0.5rem;
-        }
-        .login-page {
-            min-height: 870px;
-            min-width: 372px;
-        }
-    </style>
 </head>
 
 <body class="login-page">
@@ -35,7 +22,7 @@
 
                 <div class="mb-3">
                     <div class="input-group">
-                        <select id="level" name="level" class="form-select">
+                        <select id="level" name="level" class="form-select" required oninvalid="this.setCustomValidity('값을 선택하세요.')">
                             <option value="" selected>선택하세요</option>
                             <option value="0">학생</option>
                             <option value="1">교사</option>

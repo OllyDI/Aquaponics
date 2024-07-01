@@ -8,19 +8,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
     <link rel="stylesheet" href="/style/member.css">
-    <style>
-        .mb-3 {
-            margin: 0 0 1.2rem !important;
-        }
-        label {
-            margin-top: 5px;
-            padding-left: 0.5rem;
-        }
-        .login-page {
-            min-height: 870px;
-            min-width: 372px;
-        }
-    </style>
 </head>
 
 <body class="login-page">
@@ -32,65 +19,26 @@
     <div class="card" style="box-shadow: none">
         <div class="card-body login-card-body">
             <form action="/register" name="userRegister" method="post">
-
                 <div class="mb-3">
                     <div class="input-group">
-                        <select id="level" name="level" class="form-select">
-                            <option value="" selected>선택하세요</option>
-                            <option value="0">학생</option>
-                            <option value="1">교사</option>
-                        </select>
+                        <input type="text" name="name" id="uname" class="form-control" placeholder="이름" title="한글 또는 영문으로&#13;2에서 10자리까지만 입력가능합니다." 
+                        pattern="^[가-힣]{2,5}|[a-zA-Z]{2,10}" required oninvalid="this.setCustomValidity('이름을 입력하세요.')" oninput="this.setCustomValidity('')">
                     </div>
-                    <label id="lLevel" style="color: red;" hidden>선택하세요.</label>
                 </div>
                 <div class="mb-3">
                     <div class="input-group">
-                        <input type="text" name="school" id="school" class="form-control" placeholder="학교명">
-                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#schoolSerch">검색</button>
-                    </div>
-                    <label id="lSchool" style="color: red;" hidden>학교명을 입력하세요.</label>
-                </div>
-                <div class="mb-3">
-                    <div class="input-group">
-                        <input type="text" name="name" id="uname" class="form-control" placeholder="이름">
-                        <div class="input-group-append">
-                        </div>
-                    </div>
-                    <label id="lUname" style="color: red;" hidden>이름을 입력하세요.</label>
-                </div>
-                <div class="mb-3">
-                    <div class="input-group">
-                        <input type="text" name="grade" id="grade" class="form-control" placeholder="학년" pattern="[0-9]{1}" title="1에서 9까지 숫자만 입력가능합니다.">
-                        <div class="input-group-append">
-                        </div>
-                    </div>
-                    <label id="lUgrade" style="color: red;" hidden>학년을 입력하세요.</label>
-                </div>
-                <div class="mb-3">
-                    <div class="input-group">
-                        <input type="text" name="class" id="class" class="form-control" placeholder="반" pattern="[0-9]{1,2}" title="1에서 99까지 숫자만 입력가능합니다.">
-                        <div class="input-group-append">
-                        </div>
-                    </div>
-                    <label id="lUclass" style="color: red;" hidden>반을 입력하세요.</label>
-                </div>
-                <div class="mb-3">
-                    <div class="input-group">
-                        <input type="text" name="number" id="number" class="form-control" placeholder="번호" pattern="[0-9]{1,2}" title="1에서 99까지 숫자만 입력가능합니다.">
-                        <div class="input-group-append">
-                        </div>
-                    </div>
-                    <label id="lUnumber" style="color: red;" hidden>번호을 입력하세요.</label>
-                </div>
-                <div class="mb-3">
-                    <div class="input-group">
-                        <input type="text" name="id" id="uid" class="form-control" placeholder="아이디" pattern=".{6,12}" title="6에서 12자리까지만 입력가능합니다.">
-                        <div class="input-group-append">
-                        </div>
+                        <input type="text" name="id" id="uid" class="form-control" placeholder="아이디" pattern=".{6,12}" title="6에서 12자리까지만 입력가능합니다."
+                        required oninvalid="this.setCustomValidity('아이디를 입력하세요.')" oninput="this.setCustomValidity('')">
+                        <button type="button" class="btn btn-success">인증</button>
                     </div>
                     <label id="lUid" style="color: red;" hidden>아이디를 입력하세요.</label>
                 </div>
-
+                <div class="mb-3">
+                    <div class="input-group">
+                        <input type="text" name="valid" id="valid" class="form-control" placeholder="인증번호"
+                        required oninvalid="this.setCustomValidity('인증번호를 입력하세요.')" oninput="this.setCustomValidity('')">
+                    </div>
+                </div>
                 <!-- /.col -->
                 <div class="mb-3" style="margin-top: 25px;">
                     <button type="submit" class="btn btn-success btn-block" id="reg" onclick="">비밀번호 찾기</button>
@@ -102,9 +50,9 @@
                     <li style="float: left;">
                         <a href="/login" class="text-center">로그인</a>
                     </li>
-                    <!-- <li style="float: left;">
+                    <li style="float: left;">
                         <a href="/forgot_id" class="text-center">아이디 분실</a>
-                    </li> -->
+                    </li>
                 </ul>
             </div>
         </div>

@@ -66,3 +66,14 @@ li:nth-child(3)::before {
     margin: 4px 10px;
     background-color: rgba(0, 0, 0, .08);
 }
+.mb-3 {
+    margin: 0 0 1.2rem !important;
+}
+label {
+    margin-top: 5px;
+    padding-left: 0.5rem;
+}
+.login-page {
+    min-height: 870px;
+    min-width: 372px;
+}
