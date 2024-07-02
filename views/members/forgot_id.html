@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -12,12 +12,15 @@
 
 <body class="login-page">
 <div class="login-logo">
-    <b>아이디 찾기</b>
+    <a href="/"><img src="imgs/aqufarm.png" style="height: 60px; padding: 0.5rem;"></a>
 </div>
 <div class="login-box">
     <!-- /.login-logo -->
     <div class="card" style="box-shadow: none">
         <div class="card-body login-card-body">
+            <div class="mb-3" style="text-align: center;">
+                <h4>아이디 찾기</h4>
+            </div>
             <form action="/register" name="userRegister" method="post">
 
                 <div class="mb-3">

@@ -30,9 +30,9 @@
                     <span id="level"></span>
                 </li>
                 <li class="navbar-text usericon" style="color: black; padding: 0.5rem;">
-                    <a id="username" data-bs-toggle="dropdown" role="button" href="#" style="height: 28px; width: calc(var(--nav-width) + 156px);"></a>
+                    <a id="username" data-bs-toggle="dropdown" role="button" style="height: 28px;"></a>
                     <ul class="dropdown-menu" aria-labelledby="username" style="width: 2rem; min-width: 100px;">
-                        <li><a class="dropdown-item" href="#">정보수정</a></li>
+                        <li><a class="dropdown-item" href="/modify_profile">정보수정</a></li>
                         <li><a class="dropdown-item" href="#">기기정보</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" href="#" onclick="javascript:logout()">로그아웃</a></li>
@@ -57,7 +57,7 @@
                         <i class='bx bx-bar-chart-alt-2 nav_icon'></i>
                         <span class="nav_name">차트</span>
                     </a>
-                    <a href="#" class="nav_link" id="stumanag">
+                    <a href="/student_manage" class="nav_link" id="stumanag">
                         <i class='bx bx-user nav_icon'></i> <span class="nav_name">학생관리</span>
                     </a>
                     <a href="/admin" class="nav_link" id="settings">
@@ -85,7 +85,7 @@
         </nav>
     </div>
 
-    <div class="height-100 bg-light" style="padding: 1rem;">
+    <div class="height-90 bg-light" style="padding: 1rem;">
         <h4>기기 선택</h4>
         <div class="wrapper" id="device_card">
         </div>
@@ -94,9 +94,6 @@
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-        <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
-        <script src="https://kit.fontawesome.com/57c8b4e229.js"></script> -->
     <script src="js/sidebar.js"></script>
     <script src="js/memberAuth.js"></script>
     <script>

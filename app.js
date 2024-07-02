@@ -128,11 +128,13 @@ app.get('/session', function(req, res) {
   if (req.isAuthenticated()) {
     data.push({
       auth: req.isAuthenticated(),
-      name: req.user.name,
       id: req.user.id,
       level: req.user.level,
+      school: req.user.school,
+      name: req.user.name,
+      grade: req.user.grade,
+      class: req.user.class,
       number: req.user.number,
-      school: req.user.school
     });
   }
   else data.push({auth: req.isAuthenticated()});
@@ -255,6 +257,25 @@ app.post('/members_del', function(req, res) {
       res.send('회원 삭제가 완료되었습니다.');
     }
   )
+})
+
+app.post('/modify_profile', function(req, res) {
+  var base64crypto = (password) => { return crypto.createHash('sha512').update(password).digest('base64') }
+  let pw = base64crypto(req.body.pw);
+  let id = req.user.id;
+  let school = req.body.school;
+  let name = req.body.name;
+  let grade = req.body.grade;
+  let classNum = req.body.class;
+  let number = req.body.number;
+
+  db.query('update members set school=?, name=?, grade=?, class=?, number=?, pw=? where id=?', 
+    [school, name, grade, classNum, number, pw, id], function(err, data) {
+      if(err) {
+        res.send("회원정보수정에 실패했습니다.");
+        throw(err);
+      } else res.send("<script>alert('회원정보수정이 완료되었습니다.');location.href='/modify_profile';</script>");
+    })
 })
 
 // catch 404 and forward to error handler

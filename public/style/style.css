@@ -1,15 +1,3 @@
-.usericon {
-  border-radius: 50%; 
-  background-color: ivory; 
-  width: 40px;
-  height: 40px; 
-  display: flex;
-  justify-content: 
-  center;align-items: 
-  center;font-weight: bold;
-  font-size: 21px;
-}
-
 th.dt-head-center, td.dt-head-center,
 th.dt-body-center, td.dt-body-center { 
   vertical-align: middle; 

@@ -26,7 +26,7 @@
 
 
         <nav class="navbar navbar-expand navbar-light bg-light">
-            <ui class="d-flex navbar-nav" style="margin-left: auto !important;">
+            <ul class="d-flex navbar-nav" style="margin-left: auto !important;">
                 <li class="navbar-text" style="padding: 0.5rem;">
                     <span id="level"></span>
                 </li>
@@ -34,15 +34,15 @@
                     <span id="username" style="height: 28px;">홍길동</span>
                 </li> -->
                 <li class="navbar-text usericon" style="color: black; padding: 0.5rem;">
-                    <a id="username" data-bs-toggle="dropdown" role="button" href="#" style="height: 28px; width: calc(var(--nav-width) + 156px);"></a>
+                    <a id="username" data-bs-toggle="dropdown" role="button" style="height: 28px;"></a>
                     <ul class="dropdown-menu" aria-labelledby="username" style="width: 2rem; min-width: 100px;">
-                        <li><a class="dropdown-item" href="#">정보수정</a></li>
+                        <li><a class="dropdown-item" href="/modify_profile">정보수정</a></li>
                         <li><a class="dropdown-item" href="#">기기정보</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" href="#" onclick="javascript:logout()">로그아웃</a></li>
                     </ul>
                 </li>
-            </ui>
+            </ul>
         </nav>
     </header>
     <div class="l-navbar" id="nav-bar">
@@ -62,7 +62,7 @@
                         <span class="nav_name">차트</span>
                     </a>
                     <!--@if($level->학생용) -->
-                    <a href="#" class="nav_link" id="stumanag">
+                    <a href="/student_manage" class="nav_link" id="stumanag">
                         <i class='bx bx-user nav_icon'></i> <span class="nav_name">학생관리</span>
                     </a>
                     <a href="/admin" class="nav_link" id="settings">

@@ -34,16 +34,7 @@ a {
     border-radius: 15px;
     box-sizing: border-box;
 }
-@media (max-width: 576px) {
-    .login-box, .register-box {
-        margin-top: .5rem;
-        width: 90%;
-        padding: 0 45px;
-    }
-    .login-card-body, .register-card-body {
-        padding: 40px 0 30px;
-    }
-}
+
 .login-box .card, .register-box .card {
     margin-bottom: 0
 }
@@ -53,22 +44,18 @@ a {
     padding: 55px 0 45px;
     box-sizing: border-box;
 }
-li:nth-child(2)::before {
-    content: "";
-    float: left;
-    width: 1px;
-    height: 10px;
-    margin: 4px 10px;
-    background-color: rgba(0, 0, 0, .08);
+
+@media (max-width: 576px) {
+    .login-box, .register-box {
+        margin-top: .5rem;
+        width: 90%;
+        padding: 0 35px;
+    }
+    .login-card-body, .register-card-body {
+        padding: 40px 0 30px;
+    }
 }
-li:nth-child(3)::before {
-    content: "";
-    float: left;
-    width: 1px;
-    height: 10px;
-    margin: 4px 10px;
-    background-color: rgba(0, 0, 0, .08);
-}
+
 .mb-3 {
     margin: 0 0 1.2rem !important;
 }

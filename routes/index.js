@@ -23,12 +23,21 @@ router.get('/forgot_id', function(req, res, next) {
 router.get('/forgot_pw', function(req, res, next) {
   res.sendFile(path.join(__dirname, "../views/members/forgot_pw.html"))
 });
+
 router.get('/change_pw', function(req, res, next) {
   res.sendFile(path.join(__dirname, "../views/members/change_pw.html"))
 });
 
+router.get('/modify_profile', auth, function(req, res, next) {
+  res.sendFile(path.join(__dirname, "../views/members/modify_profile.html"))
+});
+
 router.get('/dashboard', auth, function(req, res, next) {
   res.sendFile(path.join(__dirname, "../views/dashboard.html"))
+});
+
+router.get('/student_manage', auth, function(req, res, next) {
+  if (req.user.level > 1) res.sendFile(path.join(__dirname, "../views/student_manage.html"))
 });
 
 router.get('/admin', auth, function(req, res, next) {
