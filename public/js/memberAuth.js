@@ -1,5 +1,6 @@
 const level = ['학생용', '교사용', '관리자']
 var id = null;
+var member = null;
 
 function logout() {
     var f = document.createElement('form');
@@ -20,6 +21,7 @@ $(document).ready(function() {
             location.replace('/login');
         }
         else {
+            member = data;
             $("#level").text(level[data[0].level]);
             $("#username").text(data[0].name.slice(0, 1));
             if (level[data[0].level] == '학생용') $('#stumanag').hide();

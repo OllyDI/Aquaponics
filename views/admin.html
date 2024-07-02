@@ -297,7 +297,10 @@
                 method: "post",
                 data: {
                     school: $("#school").val(),
+                    grade: '',
+                    class: '',
                     level: $("#level").val(),
+                    userLevel: member[0].level,
                     name: $("#name").val(),
                     start: $("#stdate").val().split(" - ")[0],
                     end: $("#stdate").val().split(" - ")[1],

@@ -164,15 +164,28 @@ app.post('/get_device', function(req, res) {
 });
 
 app.post('/searchTable', function(req, res) {
-  let school = req.body.school;
+  let userLevel = req.body.userLevel;
   let level = req.body.level;
+  let school = req.body.school;
+  let grade = req.body.grade;
+  let classNum = req.body.class;
   let name = req.body.name;
   let start = req.body.start;
   let end = req.body.end;
-  let sql = `select * from members where school like ? and level like ? and name like ?`
+  let sql = '';
+  let data = null;
+  if (userLevel == 1) {
+    sql = `select * from members where school like ? and level like ? and name like ? and grade=? and class=?`
+    data = [ '%'+school+'%', '%'+level+'%', '%'+name+'%', grade, classNum]
+  }
+  else {
+    sql = `select * from members where school like ? and level like ? and name like ?`
+    data = [ '%'+school+'%', '%'+level+'%', '%'+name+'%']
+  }
+  console.log(sql)
   if (start != '' && start != undefined) sql += ` and date between str_to_date('${start}', '%Y-%m-%d') and str_to_date('${end}', '%Y-%m-%d')`
   console.log(sql)
-  db.query(sql, [ '%'+school+'%', '%'+level+'%', '%'+name+'%'],
+  db.query(sql, data,
     function(err, data) {
       if(err) throw(err);
       else {
