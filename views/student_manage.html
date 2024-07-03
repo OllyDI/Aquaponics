@@ -8,19 +8,14 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.3/themes/base/jquery-ui.min.css"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
-    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/css/bootstrap-datepicker.min.css"/> -->
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
     <link rel="stylesheet" href="https://cdn.datatables.net/2.0.8/css/dataTables.bootstrap5.min.css"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="style/sidebar.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
     <link rel="stylesheet" href="style/style.css">
-    <link rel="stylesheet" href="https://unpkg.com/multiple-select@1.7.0/dist/multiple-select.min.css">
-    <style>
-        span {
-            background: none !important;
-        }
-    </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/dual-listbox/dist/dual-listbox.css"/>
+    <link rel="stylesheet" href="style/duallist.css">
 </head>
 
 
@@ -88,121 +83,76 @@
 
     <div class="height-100 bg-light" style="padding: 1rem;">
         <div class="wrapper" id="device_card">
-            <!-- <div class="container-fluid"> -->
-                <!-- <h4>학생 관리</h4> -->
-            <!-- <div class="card"> -->
-                <ul class="nav nav-tabs" style="padding: 0 0.2rem 0 0.1rem; border-color: transparent;">
-                    <li class="nav-item" role="presentation">
-                        <a class="nav-link active" data-bs-toggle="tab" href="#" data-bs-target="#manager">사용자 관리</a>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <a class="nav-link" data-bs-toggle="tab" href="#" data-bs-target="#submit" onclick="ap_table()">가입 승인</a>
-                    </li>
-                </ul>
-                <div class="tab-content">
-                    <div class="tab-pane fade show active" id="manager" role="tabpanel" aria-labelledby="manager-tab">
-                        <div class="card">
-                            <div class="card-header"> 
-                                <span class="card-title">사용자 검색</span>
-                            </div>
-                            <div class="card-body">
-                                <div class="row">
-                                    <div style="padding-bottom: 0.5rem;" hidden>
-                                        <div class="input-group flex-nowrap">
-                                            <span class="input-group-text">학교</span>
-                                            <input type="text" id="school" name="school" class="form-control" maxlength="45">
-                                            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#schoolSerch" aria-controls="home" aria-selected="true">검색</button>
-                                        </div>
-                                    </div>
-                                    <div style="padding-bottom: 0.5rem;" class="col-sm-12 col-md-5 col-lg-6">
-                                        <div class="input-group flex-nowrap">
-                                            <span class="input-group-text">이름</span>
-                                            <input type="text" id="name" name="name" class="form-control" maxlength="45">
-                                            <select id="ulevel" name="level" class="form-select form-select-sm" style="flex: 0.2 1 auto;">
-                                                <option value="">전체</option>
-                                                <option value="0">학생</option>
-                                                <option value="1">교사</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div style="padding-bottom: 0.5rem;" class="col-sm-12 col-md-5  col-lg-5">
-                                        <div class="input-group flex-nowrap">
-                                            <span class="input-group-text">가입일</span>
-                                                <input type="text" name="stdate" id="stdate" class ="form-control" autocomplete="off">
-                                        </div>
-                                    </div>
-                                    <div class="d-grid col-sm-12 col-md-2 col-lg-1" style="padding-bottom: 0.5rem;">
-                                        <button id="upload_button" onclick="search()" class="btn btn-primary waves-effect waves-light" style="float:right; min-width: 58.75px;">검색</button>
-                                    </div>
-                                </div>
+            <div class="card">
+                <div class="card-header"> 
+                    <span class="card-title">사용자 검색</span>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div style="padding-bottom: 0.5rem;" hidden>
+                            <div class="input-group flex-nowrap">
+                                <span class="input-group-text">학교</span>
+                                <input type="text" id="school" name="school" class="form-control" maxlength="45">
+                                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#schoolSerch" aria-controls="home" aria-selected="true">검색</button>
                             </div>
                         </div>
-                        <div class="row" style="padding-top: 2rem;">
-                            <div class="col-12">
-                                <div class="card" id="card_search" style="display: none;">
-                                    <div class="card-header">
-                                        <span class="card-title">사용자 검색 결과</span>
-                                    </div>
-                                    <!-- card-header end -->
-                                    <div class="card-body">
-                                        <div class="table-responsive" >
-                                            <table class="table table-hover" id="tables" style="white-space: nowrap; width: 100%;">
-                                                <thead>
-                                                    <tr>
-                                                        <th>아이디</th>
-                                                        <th>학교</th>
-                                                        <th>직급</th>
-                                                        <th>이름</th>
-                                                        <th>학년</th>
-                                                        <th>반</th>
-                                                        <th>번호</th>
-                                                        <th>가입날짜</th>
-                                                        <th>기기권한</th>
-                                                        <th>제어권한</th>
-                                                        <th>관리</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody id="table_body">
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                    <!-- card-body end -->
-                                </div>
+                        <div style="padding-bottom: 0.5rem;" class="col-sm-12 col-md-5 col-lg-6">
+                            <div class="input-group flex-nowrap">
+                                <span class="input-group-text">이름</span>
+                                <input type="text" id="name" name="name" class="form-control" maxlength="45">
+                                <select id="ulevel" name="level" class="form-select form-select-sm" style="flex: 0.2 1 auto;">
+                                    <option value="">전체</option>
+                                    <option value="0">학생</option>
+                                    <option value="1">교사</option>
+                                </select>
                             </div>
                         </div>
-                    </div>
-                    <div class="tab-pane fade" id="submit" role="tabpanel" aria-labelledby="submit-tab">
-                        <div class="card">
-                            <div class="card-header">
-                                <span class="card-title">가입 요청 사용자</span>
+                        <div style="padding-bottom: 0.5rem;" class="col-sm-12 col-md-5  col-lg-5">
+                            <div class="input-group flex-nowrap">
+                                <span class="input-group-text">가입일</span>
+                                    <input type="text" name="stdate" id="stdate" class ="form-control" autocomplete="off">
                             </div>
-                            <!-- card-header end -->
-                            <div class="card-body">
-                                <div class="table-responsive" >
-                                    <table class="table table-hover" id="ap_tables" style="white-space: nowrap; width: 100%;">
-                                        <thead>
-                                            <tr>
-                                                <th>아이디</th>
-                                                <th>학교</th>
-                                                <th>직급</th>
-                                                <th>이름</th>
-                                                <th>학년</th>
-                                                <th>반</th>
-                                                <th>번호</th>
-                                                <th>가입날짜</th>
-                                                <th>#</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="tbody">
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                            <!-- card-body end -->
+                        </div>
+                        <div class="d-grid col-sm-12 col-md-2 col-lg-1" style="padding-bottom: 0.5rem;">
+                            <button id="upload_button" onclick="search()" class="btn btn-primary waves-effect waves-light" style="float:right; min-width: 58.75px;">검색</button>
                         </div>
                     </div>
                 </div>
+            </div>
+            <div class="row" style="padding-top: 2rem;">
+                <div class="col-12">
+                    <div class="card" id="card_search" style="display: none;">
+                        <div class="card-header">
+                            <span class="card-title">사용자 검색 결과</span>
+                        </div>
+                        <!-- card-header end -->
+                        <div class="card-body">
+                            <div class="table-responsive" >
+                                <table class="table table-hover" id="tables" style="white-space: nowrap; width: 100%;">
+                                    <thead>
+                                        <tr>
+                                            <th>아이디</th>
+                                            <th>학교</th>
+                                            <th>직급</th>
+                                            <th>이름</th>
+                                            <th>학년</th>
+                                            <th>반</th>
+                                            <th>번호</th>
+                                            <th>가입날짜</th>
+                                            <th>기기권한</th>
+                                            <th>제어권한</th>
+                                            <th>관리</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="table_body">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <!-- card-body end -->
+                    </div>
+                </div>
+            </div>
             <!-- </div> -->
         </div>
     </div>
@@ -223,6 +173,36 @@
             </div>
         </div>
     </div>
+    <div class="modal" id="device_modal">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">학교 검색</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <select multiple="multiple" class="multiple-select">
+                        <option value="1">January</option>
+                        <option value="2">February</option>
+                        <option value="3">March</option>
+                        <option value="4">April</option>
+                        <option value="5">May</option>
+                        <option value="6">June</option>
+                        <option value="7">July</option>
+                        <option value="8">August</option>
+                        <option value="9">September</option>
+                        <option value="10">October</option>
+                        <option value="11">November</option>
+                        <option value="12">December</option>
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                    <button type="button" class="btn btn-primary">완료</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -233,8 +213,7 @@
     <script src="https://unpkg.com/dayjs@1.8.21/dayjs.min.js"></script>
     <script src="js/sidebar.js"></script>
     <script src="js/memberAuth.js"></script>
-    <script src="https://unpkg.com/multiple-select@1.7.0/dist/multiple-select.min.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/dual-listbox/dist/dual-listbox.min.js"></script>
     <script>
         var tables = null;
         $( function() { 
@@ -321,11 +300,11 @@
                             { 
                                 columnDefs: [
                                     {
-                                        className: 'dt-head-left',
+                                        className: 'dt-head-center',
                                         targets: "_all",
                                     },
                                     {
-                                        className: 'dt-body-left',
+                                        className: 'dt-body-center',
                                         targets: "_all",
                                     },
                                 ],
@@ -346,34 +325,8 @@
                             v.class,
                             v.number,
                             dayjs(v.date).format("YYYY-MM-DD"),
-                            `<select multiple="multiple" class="multiple-select">
-                                <option value="1">January</option>
-                                <option value="2">February</option>
-                                <option value="3">March</option>
-                                <option value="4">April</option>
-                                <option value="5">May</option>
-                                <option value="6">June</option>
-                                <option value="7">July</option>
-                                <option value="8">August</option>
-                                <option value="9">September</option>
-                                <option value="10">October</option>
-                                <option value="11">November</option>
-                                <option value="12">December</option>
-                            </select>`,
-                            `<select multiple="multiple" class="multiple-select">
-                                <option value="1">January</option>
-                                <option value="2">February</option>
-                                <option value="3">March</option>
-                                <option value="4">April</option>
-                                <option value="5">May</option>
-                                <option value="6">June</option>
-                                <option value="7">July</option>
-                                <option value="8">August</option>
-                                <option value="9">September</option>
-                                <option value="10">October</option>
-                                <option value="11">November</option>
-                                <option value="12">December</option>
-                            </select>`,
+                            `<button type="button" class="btn btn-success" onclick="" data-bs-toggle="modal" data-bs-target="#device_modal">권한관리</button>`,
+                            `<button type="button" class="btn btn-success" onclick="" data-bs-toggle="modal" data-bs-target="#device_modal">권한관리</button>`,
                             `<button type="button" class="btn btn-danger" onclick="sign('${v.id}', 1, 0, 0)">삭제</button>`
                         ])
                         if (data.length - 1 == i) {
@@ -381,27 +334,17 @@
                             { 
                                 columnDefs: [
                                     {
-                                        className: 'dt-head-left',
+                                        className: 'dt-head-center',
                                         targets: "_all",
                                     },
                                     {
-                                        className: 'dt-body-left',
+                                        className: 'dt-body-center',
                                         targets: "_all",
                                     },
                                 ],
                                 scrollX: true, paging: true, destroy: true, data: datas 
                             });
-                            table.on('draw', function () {
-                                console.log(table.page.info());
-                                $(".multiple-select").multipleSelect('destroy');
-                                $(".multiple-select").multipleSelect({ filter: true, placeholder: '권한부여', maxHeight: 5, maxHeightUnit: 'row' });
-                            });
-                            $(".multiple-select").multipleSelect('destroy');
-                            $(".multiple-select").multipleSelect({ filter: true, placeholder: '권한부여', maxHeight: 5, maxHeightUnit: 'row',
-                                onClick: function (view) {
-                                    console.log('onClick event fire! view: ' + JSON.stringify('getOptions') + '\n')
-                                }
-                             });
+                            new DualListbox(".multiple-select");
                         }
                     })
                     

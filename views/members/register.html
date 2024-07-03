@@ -30,7 +30,8 @@
                 </div>
                 <div class="mb-3">
                     <div class="input-group">
-                        <input type="text" name="school" id="school" class="form-control" placeholder="학교명" required oninvalid="this.setCustomValidity('학교명을 입력하세요.')" oninput="this.setCustomValidity('')">
+                        <input type="text" name="school" id="school" class="form-control" placeholder="학교명" data-bs-toggle="modal"
+                        data-bs-target="#schoolSerch" required oninvalid="this.setCustomValidity('학교명을 입력하세요.')" oninput="this.setCustomValidity('')">
                         <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#schoolSerch">검색</button>
                     </div>
                 </div>

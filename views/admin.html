@@ -14,12 +14,8 @@
     <link rel="stylesheet" href="style/sidebar.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
     <link rel="stylesheet" href="style/style.css">
-    <link rel="stylesheet" href="https://unpkg.com/multiple-select@1.7.0/dist/multiple-select.min.css">
-    <style>
-        span {
-            background: none !important;
-        }
-    </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/dual-listbox/dist/dual-listbox.css"/>
+    <link rel="stylesheet" href="style/duallist.css">
 </head>
 
 
@@ -160,7 +156,7 @@
                                                         <th>관리</th>
                                                     </tr>
                                                 </thead>
-                                                <tbody id="table_body">
+                                                <tbody id="table_body" style="min-height: 200px;">
                                                 </tbody>
                                             </table>
                                         </div>
@@ -221,6 +217,36 @@
             </div>
         </div>
     </div>
+    <div class="modal" id="device_modal">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">학교 검색</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="modal-body">
+                    <select multiple="multiple" class="multiple-select">
+                        <option value="1">January</option>
+                        <option value="2">February</option>
+                        <option value="3">March</option>
+                        <option value="4">April</option>
+                        <option value="5">May</option>
+                        <option value="6">June</option>
+                        <option value="7">July</option>
+                        <option value="8">August</option>
+                        <option value="9">September</option>
+                        <option value="10">October</option>
+                        <option value="11">November</option>
+                        <option value="12">December</option>
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                    <button type="button" class="btn btn-primary" id="modal_success_btn" onclick="updateDevice(this)">완료</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -231,9 +257,25 @@
     <script src="https://unpkg.com/dayjs@1.8.21/dayjs.min.js"></script>
     <script src="js/sidebar.js"></script>
     <script src="js/memberAuth.js"></script>
-    <script src="https://unpkg.com/multiple-select@1.7.0/dist/multiple-select.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dual-listbox/dist/dual-listbox.min.js"></script>
     <script>
         var table = null;
+        var multiplelist = null;
+        function modal_func(id) {
+            $("#modal_success_btn").addClass(`userid_${id}`);
+            $("#device_modal").modal('show');
+            $(document).ready(function() {
+                $('#device_modal').on('hidden.bs.modal', function (e) {
+                    $("#modal_success_btn").removeClass(`userid_${id}`);
+                })
+            })
+        }
+
+        function updateDevice(btn) {
+            console.log($(btn).attr('class').split("userid_")[1]);
+            $("#device_modal").modal('hide');
+        }
+
         $( function() { 
             $("#stdate").daterangepicker({ 
                 autoUpdateInput: false,
@@ -343,20 +385,7 @@
                             v.class,
                             v.number,
                             dayjs(v.date).format("YYYY-MM-DD"),
-                            `<select multiple="multiple" class="multiple-select" id="multiple_${v.id}">
-                                <option value="1">January</option>
-                                <option value="2">February</option>
-                                <option value="3">March</option>
-                                <option value="4">April</option>
-                                <option value="5">May</option>
-                                <option value="6">June</option>
-                                <option value="7">July</option>
-                                <option value="8">August</option>
-                                <option value="9">September</option>
-                                <option value="10">October</option>
-                                <option value="11">November</option>
-                                <option value="12">December</option>
-                            </select>`,
+                            `<button type="button" class="btn btn-success" onclick="modal_func(${v.id})"  id="modal_${v.id}">버튼</button>`,
                             `<button type="button" class="btn btn-danger" onclick="sign('${v.id}', 1, 0, 0)">삭제</button>`
                         ])
                         if (data.length - 1 == i) {
@@ -364,31 +393,25 @@
                             { 
                                 columnDefs: [
                                     {
-                                        className: 'dt-head-left',
+                                        className: 'dt-head-center',
                                         targets: "_all",
                                     },
                                     {
-                                        className: 'dt-body-left',
+                                        className: 'dt-body-center',
                                         targets: "_all",
                                     },
                                 ],
                                 scrollX: true, 
+                                scrollY: true, 
                                 paging: true, 
                                 destroy: true, 
                                 data: datas 
                             });
-                            table.on('draw', function () {
-                                console.log(table.page.info());
-                                $(".multiple-select").multipleSelect('destroy');
-                                $(".multiple-select").multipleSelect({ filter: true, placeholder: '권한부여', maxHeight: 5, maxHeightUnit: 'row' });
+                            multiplelist = new DualListbox(".multiple-select");
+                            multiplelist.addEventListener("added", function (event) {
+                                console.log(event);
+                                console.log(event.addedElement);
                             });
-                            $(".multiple-select").multipleSelect('destroy');
-                            $(".multiple-select").multipleSelect({ filter: true, placeholder: '권한부여', maxHeight: 5, maxHeightUnit: 'row',
-                                onClick: function (view) {
-                                    console.log('onClick event fire! view: ' + JSON.stringify('getOptions') + '\n')
-                                }
-                             });
-                            
                         }
                     })
                     
