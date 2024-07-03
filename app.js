@@ -187,7 +187,7 @@ app.post('/searchTable', function(req, res) {
   let end = req.body.end;
   let sql = '';
   let data = null;
-  console.log("level: ", level);
+  
   if (userLevel == 1) {
     sql = `select * from members where id not in (?) and school like ? and level like ? and name like ? and grade=? and class=?`
     data = [ req.user.id, '%'+school+'%', '%'+level+'%', '%'+name+'%', grade, classNum]
