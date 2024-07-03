@@ -12,6 +12,7 @@ var passport = require('passport');
 var app = express();
 var indexRouter = require('./routes/index');
 var crypto = require('crypto');
+var flash = require('connect-flash');
 
 const { JSDOM } = require("jsdom");
 const { window } = new JSDOM("");
@@ -61,6 +62,7 @@ app.use(
     credentials: true,
   })
 );
+app.use(flash());
 
 
 app.use('/', indexRouter);
@@ -120,9 +122,20 @@ app.post('/register', function(req, res) {
 })
 
 
-app.post('/session_login', 
-  passport.authenticate('local', {successRedirect: '/', failureRedirect: '/login' }
-));
+// app.post('/session_login', 
+//   passport.authenticate('local', {successRedirect: '/', failureRedirect: '/login', failureFlash: true, }
+// ));
+app.post("/session_login", (req, res) => {
+  passport.authenticate("local",
+      (err, user, options) => {
+        if (user) {
+          req.login(user, (error)=>{
+            if (error) res.send(error);
+            else res.redirect("/");
+          });
+        } else res.send("<script>alert('로그인에 실패하였습니다. 다시 시도해 주세요.'); location.href='/login';</script>");
+  })(req, res)
+});
 app.get('/session', function(req, res) {
   var data = [];
   if (req.isAuthenticated()) {
@@ -174,35 +187,39 @@ app.post('/searchTable', function(req, res) {
   let end = req.body.end;
   let sql = '';
   let data = null;
+  console.log("level: ", level);
   if (userLevel == 1) {
-    sql = `select * from members where school like ? and level like ? and name like ? and grade=? and class=?`
-    data = [ '%'+school+'%', '%'+level+'%', '%'+name+'%', grade, classNum]
+    sql = `select * from members where id not in (?) and school like ? and level like ? and name like ? and grade=? and class=?`
+    data = [ req.user.id, '%'+school+'%', '%'+level+'%', '%'+name+'%', grade, classNum]
   }
   else {
-    sql = `select * from members where school like ? and level like ? and name like ?`
-    data = [ '%'+school+'%', '%'+level+'%', '%'+name+'%']
+    sql = `select * from members where id not in (?) and school like ? and level like ? and name like ?`
+    data = [ req.user.id, '%'+school+'%', '%'+level+'%', '%'+name+'%']
   }
-  console.log(sql)
-  if (start != '' && start != undefined) sql += ` and date between str_to_date('${start}', '%Y-%m-%d') and str_to_date('${end}', '%Y-%m-%d')`
-  console.log(sql)
+  if (start == end) sql += ` and date='${end}'`
+  else if (start != '' && start != undefined) sql += ` and date between str_to_date('${start}', '%Y-%m-%d') and str_to_date('${end}', '%Y-%m-%d')`
+  console.log(sql);
   db.query(sql, data,
     function(err, data) {
       if(err) throw(err);
       else {
         let val = [];
-        $.each(data, function(i, v) {
-          val.push({
-            id: v.id,
-            level: v.level,
-            school: v.school,
-            name: v.name,
-            grade: v.grade,
-            class: v.class,
-            number: v.number,
-            date: v.date
+        if (data.length == 0) res.send(null);
+        else {
+            $.each(data, function(i, v) {
+            val.push({
+              id: v.id,
+              level: v.level,
+              school: v.school,
+              name: v.name,
+              grade: v.grade,
+              class: v.class,
+              number: v.number,
+              date: v.date
+            })
+            if (data.length - 1 == i) res.send(val);
           })
-          if (data.length - 1 == i) res.send(val);
-        })
+        }
       };
     }
   )
