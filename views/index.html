@@ -107,10 +107,10 @@
 
                     $.each(data, (i, val) => {
                         html += `<div class="card" style="margin-bottom: 1rem;">
-                                    <a href="#" onclick="window.open('/dashboard?${name=val.name},${device=val.device_id}')">
-                                        <div class="card-header">${val.name}</div>
+                                    <a href="#" onclick="window.open('/dashboard?${name=val.name},${device=val.device_id}')" style="color: black;">
+                                        <div class="card-header">기기명: ${val.name}</div>
                                         <div class="card-body">
-                                            <span id="device_date_${i}">${val.time}</span>
+                                            <span id="device_date_${i}">가입일: ${val.time}</span>
                                         </div>
                                     </a>
                                 </div>`

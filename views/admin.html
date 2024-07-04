@@ -174,7 +174,7 @@
                             <!-- card-header end -->
                             <div class="card-body">
                                 <div class="table-responsive" >
-                                    <table class="table table-hover" id="ap_tables" style="white-space: nowrap; width: 100%; min-height: 100px;">
+                                    <table class="table table-hover" id="ap_tables" style="white-space: nowrap; width: 100%;">
                                         <thead>
                                             <tr>
                                                 <th>아이디</th>
@@ -221,11 +221,11 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">학교 검색</h5>
+                    <h5 class="modal-title" id="modal_title">title</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body" id="modal-body">
-                    <select multiple="multiple" class="multiple-select">
+                    <select multiple="multiple" class="multiple-select" id="modal-select">
                         <option value="1">January</option>
                         <option value="2">February</option>
                         <option value="3">March</option>
@@ -261,37 +261,62 @@
     <script>
         var table = null;
         var multiplelist = null;
+        var devices = [];
+        var addDevice = [];
+        var delDevice = [];
+        var eee = null;
+
+        // modal
         function modal_func(id) {
+            $.ajax({
+                url: '/get_link',
+                method: 'post',
+                data: { id: id },
+                success: function(data) {
+                    let options = [];
+                    $.each(data, (i, v) => {
+                        if (v.id)
+                        devices.push({
+                            text: v.name, value: (v.id).toString()
+                        })
+                        if (data.length - 1 == i) {
+                            multiplelist.options = options;
+                            multiplelist.redraw();
+                        }
+                    })
+                }
+            })
+
+            $("#modal_title").html("ID: " + id + " 권한설정");
             $("#modal_success_btn").addClass(`userid_${id}`);
             $("#device_modal").modal('show');
-            $(document).ready(function() {
-                $('#device_modal').on('hidden.bs.modal', function (e) {
-                    $("#modal_success_btn").removeClass(`userid_${id}`);
-                })
-            })
+            $('#device_modal').on('hidden.bs.modal', function (e) { $("#modal_success_btn").removeClass(`userid_${id}`); })
         }
-
         function updateDevice(btn) {
             console.log($(btn).attr('class').split("userid_")[1]);
+
+            // $.each(multiplelist.options, (i, v) => {
+                
+            // })
             $("#device_modal").modal('hide');
         }
 
+
+        // date range picker
         $( function() { 
             $("#stdate").daterangepicker({ 
                 autoUpdateInput: false,
-                locale: {
-                    cancelLabel: 'Clear'
-                }
+                locale: { cancelLabel: 'Clear' }
             }); 
             
             $("#stdate").on('apply.daterangepicker', function(ev, picker) {
                 $(this).val(picker.startDate.format('YYYY-MM-DD') + ' ~ ' + picker.endDate.format('YYYY-MM-DD'));
             });
-
             $("#stdate").on('cancel.daterangepicker', function(ev, picker) { $(this).val(''); });
         });
 
 
+        // datatables
         function ap_table() {
             var datas = [];
             $.ajax({
@@ -385,7 +410,7 @@
                             v.class,
                             v.number,
                             dayjs(v.date).format("YYYY-MM-DD"),
-                            `<button type="button" class="btn btn-success" onclick="modal_func(${v.id})"  id="modal_${v.id}">버튼</button>`,
+                            `<button type="button" class="btn btn-success" onclick="modal_func('${v.id}')"  id="modal_${v.id}">권한관리</button>`,
                             `<button type="button" class="btn btn-danger" onclick="sign('${v.id}', 1, 0, 0)">삭제</button>`
                         ])
                         if (data.length - 1 == i) {
@@ -407,18 +432,12 @@
                                 destroy: true, 
                                 data: datas 
                             });
-                            multiplelist = new DualListbox(".multiple-select");
-                            multiplelist.addEventListener("added", function (event) {
-                                console.log(event);
-                                console.log(event.addedElement);
-                            });
                         }
                     })
                     
                 }
             })
         }
-
         function sign(id, bool, table, idx) {
             let msg = ["회원을 삭제하시겠습니까?", "가입을 승인하시겠습니까?", "가입을 거절하시겠습니끼?"]
             if (confirm(msg[idx])) {
@@ -437,6 +456,81 @@
                 })
             }
         }
+
+
+        // document ready
+        $(document).ready(function() {
+            $.ajax({
+                url: "/device_all",
+                method: "post",
+                success: function(data) {
+                    $.each(data, (i, v) => {
+                        devices.push({
+                            text: v.name, value: (v.id).toString()
+                        })
+                        if (data.length - 1 == i) {
+                            multiplelist = new DualListbox("#modal-select" , {
+                                sortable: true,
+                                options: devices,
+                            });
+                            multiplelist.addEventListener("added", function (event) {
+                                console.log('add')
+                                addDevice.push({
+                                    id: event.addedElement.dataset.id,
+                                    name: event.addedElement.textContent
+                                })
+                                $.each(delDevice, (i, v) => {
+                                    if (v.id == event.addedElement.dataset.id) {
+                                        delDevice.splice(i, i + 1);
+                                        return false;
+                                    }
+                                })
+                            });
+                            multiplelist.addEventListener("removed", function (event) {
+                                console.log('del')
+                                delDevice.push({
+                                    id: event.removedElement.dataset.id,
+                                    name: event.removedElement.textContent
+                                })
+                                $.each(addDevice, (i, v) => {
+                                    if (v.id == event.removedElement.dataset.id) {
+                                        addDevice.splice(i, i + 1);
+                                        return false;
+                                    }
+                                })
+                            });
+                            multiplelist.add_all_button.addEventListener("click", function (event) {
+                                console.log(event)
+                                eee = event
+                                // delDevice.push({
+                                //     id: event.removedElement.dataset.id,
+                                //     name: event.removedElement.textContent
+                                // })
+                                // $.each(addDevice, (i, v) => {
+                                //     if (v.id == event.removedElement.dataset.id) {
+                                //         addDevice.splice(i, i + 1);
+                                //         return false;
+                                //     }
+                                // })
+                            });
+                            multiplelist.remove_all_button.addEventListener("click", function (event) {
+                                console.log(event.delegateTarget)
+                                // delDevice.push({
+                                //     id: event.removedElement.dataset.id,
+                                //     name: event.removedElement.textContent
+                                // })
+                                // $.each(addDevice, (i, v) => {
+                                //     if (v.id == event.removedElement.dataset.id) {
+                                //         addDevice.splice(i, i + 1);
+                                //         return false;
+                                //     }
+                                // })
+                            });
+                        }
+                    })
+                }
+            })
+        })
     </script>
 </body>
 </html>

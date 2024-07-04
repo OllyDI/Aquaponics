@@ -308,6 +308,45 @@ app.post('/modify_profile', function(req, res) {
     })
 })
 
+
+app.post('/device_all', function(req, res) {
+  db.query('select * from devices', function(err, data) {
+    if (err) throw(err);
+    else {
+      let datas = [];
+
+      $.each(data, function(i, v) {
+        datas.push({
+          id: v.device_id,
+          name: v.name
+        })
+        if(data.length - 1 == i) res.send(datas);
+      })
+    }
+  })
+})
+app.post('/get_link', function(req, res) {
+  let id = req.body.id;
+
+  db.query('select * from link where user_id=?', [id], 
+    function(err, data) {
+      if (err) throw(err);
+      else {
+        let datas = [];
+
+        $.each(data, function(i, v) {
+          datas.push({
+            device_id: v.device_id,
+            name: v.name,
+            user_id: v.user_id
+          })
+          if(data.length - 1 == i) res.send(datas);
+        })
+      }
+    })
+})
+
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
