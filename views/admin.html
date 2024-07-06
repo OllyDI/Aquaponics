@@ -262,9 +262,7 @@
         var table = null;
         var multiplelist = null;
         var devices = [];
-        var addDevice = [];
-        var delDevice = [];
-        var eee = null;
+        var test = null;
 
         // modal
         function modal_func(id) {
@@ -272,32 +270,67 @@
                 url: '/get_link',
                 method: 'post',
                 data: { id: id },
+                async: false,
                 success: function(data) {
-                    let options = [];
-                    $.each(data, (i, v) => {
-                        if (v.id)
-                        devices.push({
-                            text: v.name, value: (v.id).toString()
-                        })
-                        if (data.length - 1 == i) {
-                            multiplelist.options = options;
+                    test = data;
+                    $.each(devices, (i, v) => {
+                        if (data.includes(Number(v.value))) devices[i].selected = true
+                        else devices[i].selected = false
+                        if (devices.length - 1 == i) {
+                            multiplelist.options = devices;
                             multiplelist.redraw();
+                            $("#modal_title").html("ID: " + id + " 권한설정");
+                            $("#modal_success_btn").addClass(`userid_${id}`);
+                            $('#device_modal').on('hidden.bs.modal', function (e) { $("#modal_success_btn").removeClass(`userid_${id}`); })
+                            $("#device_modal").modal('show');
                         }
                     })
                 }
             })
-
-            $("#modal_title").html("ID: " + id + " 권한설정");
-            $("#modal_success_btn").addClass(`userid_${id}`);
-            $("#device_modal").modal('show');
-            $('#device_modal').on('hidden.bs.modal', function (e) { $("#modal_success_btn").removeClass(`userid_${id}`); })
+            
         }
         function updateDevice(btn) {
-            console.log($(btn).attr('class').split("userid_")[1]);
-
-            // $.each(multiplelist.options, (i, v) => {
-                
-            // })
+            let uid = $(btn).attr('class').split("userid_")[1];
+            let selected_item = [];
+            let unselected_item = [];
+            
+            $.each(multiplelist.options, (i, v) => {
+                if (v.selected == true) {
+                    selected_item.push({
+                        name: v.text,
+                        user_id: uid,
+                        device_id: v.value,
+                    })
+                } else {
+                    unselected_item.push({
+                        device_id: v.value,
+                    })
+                }
+                if (multiplelist.options.length - 1 == i) {
+                    $.ajax({
+                        url: '/delete_link',
+                        method: 'post',
+                        data: {
+                            items: JSON.stringify(unselected_item),
+                            uid: uid,
+                        },
+                        success: function(data) {
+                            console.log('del')
+                        }
+                    })
+                    $.ajax({
+                        url: '/insert_link',
+                        method: 'post',
+                        data: { 
+                            items: JSON.stringify(selected_item), 
+                            uid: uid,
+                        }, 
+                        success: function(data) {
+                            console.log('ins')
+                        }
+                    })
+                }
+            })
             $("#device_modal").modal('hide');
         }
 
@@ -341,7 +374,6 @@
                             <button type="button" class="btn btn-danger" onclick="sign('${v.id}', 1, 1, 2)">거절</button>`
                         ])
                         if (data.length - 1 == i) {
-                            console.log(datas)
                             new DataTable('#ap_tables', 
                             { 
                                 columnDefs: [
@@ -464,69 +496,72 @@
             $.ajax({
                 url: "/device_all",
                 method: "post",
+                async: false, 
                 success: function(data) {
                     $.each(data, (i, v) => {
                         devices.push({
-                            text: v.name, value: (v.id).toString()
+                            text: v.name, 
+                            value: (v.id).toString(),
+                            selected: false
                         })
                         if (data.length - 1 == i) {
                             multiplelist = new DualListbox("#modal-select" , {
                                 sortable: true,
                                 options: devices,
                             });
-                            multiplelist.addEventListener("added", function (event) {
-                                console.log('add')
-                                addDevice.push({
-                                    id: event.addedElement.dataset.id,
-                                    name: event.addedElement.textContent
-                                })
-                                $.each(delDevice, (i, v) => {
-                                    if (v.id == event.addedElement.dataset.id) {
-                                        delDevice.splice(i, i + 1);
-                                        return false;
-                                    }
-                                })
-                            });
-                            multiplelist.addEventListener("removed", function (event) {
-                                console.log('del')
-                                delDevice.push({
-                                    id: event.removedElement.dataset.id,
-                                    name: event.removedElement.textContent
-                                })
-                                $.each(addDevice, (i, v) => {
-                                    if (v.id == event.removedElement.dataset.id) {
-                                        addDevice.splice(i, i + 1);
-                                        return false;
-                                    }
-                                })
-                            });
-                            multiplelist.add_all_button.addEventListener("click", function (event) {
-                                console.log(event)
-                                eee = event
-                                // delDevice.push({
-                                //     id: event.removedElement.dataset.id,
-                                //     name: event.removedElement.textContent
-                                // })
-                                // $.each(addDevice, (i, v) => {
-                                //     if (v.id == event.removedElement.dataset.id) {
-                                //         addDevice.splice(i, i + 1);
-                                //         return false;
-                                //     }
-                                // })
-                            });
-                            multiplelist.remove_all_button.addEventListener("click", function (event) {
-                                console.log(event.delegateTarget)
-                                // delDevice.push({
-                                //     id: event.removedElement.dataset.id,
-                                //     name: event.removedElement.textContent
-                                // })
-                                // $.each(addDevice, (i, v) => {
-                                //     if (v.id == event.removedElement.dataset.id) {
-                                //         addDevice.splice(i, i + 1);
-                                //         return false;
-                                //     }
-                                // })
-                            });
+                            // multiplelist.addEventListener("added", function (event) {
+                            //     console.log('add')
+                            //     addDevice.push({
+                            //         id: event.addedElement.dataset.id,
+                            //         name: event.addedElement.textContent
+                            //     })
+                            //     $.each(delDevice, (i, v) => {
+                            //         if (v.id == event.addedElement.dataset.id) {
+                            //             delDevice.splice(i, i + 1);
+                            //             return false;
+                            //         }
+                            //     })
+                            // });
+                            // multiplelist.addEventListener("removed", function (event) {
+                            //     console.log('del')
+                            //     delDevice.push({
+                            //         id: event.removedElement.dataset.id,
+                            //         name: event.removedElement.textContent
+                            //     })
+                            //     $.each(addDevice, (i, v) => {
+                            //         if (v.id == event.removedElement.dataset.id) {
+                            //             addDevice.splice(i, i + 1);
+                            //             return false;
+                            //         }
+                            //     })
+                            // });
+                            // multiplelist.add_all_button.addEventListener("click", function (event) {
+                            //     console.log(multiplelist.options)
+                            //     eee = event
+                            //     // delDevice.push({
+                            //     //     id: event.removedElement.dataset.id,
+                            //     //     name: event.removedElement.textContent
+                            //     // })
+                            //     // $.each(addDevice, (i, v) => {
+                            //     //     if (v.id == event.removedElement.dataset.id) {
+                            //     //         addDevice.splice(i, i + 1);
+                            //     //         return false;
+                            //     //     }
+                            //     // })
+                            // });
+                            // multiplelist.remove_all_button.addEventListener("click", function (event) {
+                            //     console.log(multiplelist.options)
+                            //     // delDevice.push({
+                            //     //     id: event.removedElement.dataset.id,
+                            //     //     name: event.removedElement.textContent
+                            //     // })
+                            //     // $.each(addDevice, (i, v) => {
+                            //     //     if (v.id == event.removedElement.dataset.id) {
+                            //     //         addDevice.splice(i, i + 1);
+                            //     //         return false;
+                            //     //     }
+                            //     // })
+                            // });
                         }
                     })
                 }

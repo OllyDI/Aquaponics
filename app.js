@@ -225,6 +225,8 @@ app.post('/searchTable', function(req, res) {
   )
 })
 
+
+// 교사 회원
 app.post('/members_temp', function(req, res) {
   db.query('select * from members_temp', function(err, data) {
     if(err) throw(err);
@@ -246,7 +248,6 @@ app.post('/members_temp', function(req, res) {
     }
   })
 })
-
 app.post('/members_temp_suc', function(req, res) {
   var id = req.body.id;
   var today = new Date();
@@ -289,6 +290,8 @@ app.post('/members_del', function(req, res) {
   )
 })
 
+
+// 회원정보 수정
 app.post('/modify_profile', function(req, res) {
   var base64crypto = (password) => { return crypto.createHash('sha512').update(password).digest('base64') }
   let pw = base64crypto(req.body.pw);
@@ -309,6 +312,7 @@ app.post('/modify_profile', function(req, res) {
 })
 
 
+// 기기 검색
 app.post('/device_all', function(req, res) {
   db.query('select * from devices', function(err, data) {
     if (err) throw(err);
@@ -325,6 +329,9 @@ app.post('/device_all', function(req, res) {
     }
   })
 })
+
+
+// 기기 연결정보
 app.post('/get_link', function(req, res) {
   let id = req.body.id;
 
@@ -333,19 +340,56 @@ app.post('/get_link', function(req, res) {
       if (err) throw(err);
       else {
         let datas = [];
-
+        if (data.length == 0) res.send(datas);
         $.each(data, function(i, v) {
-          datas.push({
-            device_id: v.device_id,
-            name: v.name,
-            user_id: v.user_id
-          })
+          datas.push(v.device_id)
           if(data.length - 1 == i) res.send(datas);
         })
       }
     })
 })
+app.post('/delete_link', function(req, res) {
+  let items = JSON.parse(req.body.items);
+  let uid = req.body.uid;
+  
+  $.each(items, function(i, v) {
+    let sql = `delete from link where user_id=? and device_id=?`
+    db.query(sql, [uid, v.device_id], 
+      function(err, data) {
+        if (err) throw(err);
+        else {
+          console.log('success');
+        }
+      }
+    )
+    if (items.length - 1 == i) {
+      res.send();
+    }
+  })
+})
+app.post('/insert_link', function(req, res) {
+  let items = JSON.parse(req.body.items);
+  let uid = req.body.uid;
+  let today = new Date();
+  let date = today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate() + " " + today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
 
+  $.each(items, function(i, v) {
+    let params = [v.name, v.user_id, Number(v.device_id), date];
+    let sql = `insert into link (name, user_id, device_id, time) select ? where not exists(select * from link where user_id='${uid}' and device_id=?)`;
+    db.query(sql, [params, Number(v.device_id)],
+      function(err, data) {
+        if (err) throw(err);
+        else {
+          console.log('success');
+        }
+      }
+    )
+    if (items.length - 1 == i) {
+      res.send();
+    }
+  })
+  
+})
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
