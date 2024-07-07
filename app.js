@@ -351,7 +351,7 @@ app.post('/get_link', function(req, res) {
 app.post('/delete_link', function(req, res) {
   let items = JSON.parse(req.body.items);
   let uid = req.body.uid;
-  
+
   $.each(items, function(i, v) {
     let sql = `delete from link where user_id=? and device_id=?`
     db.query(sql, [uid, v.device_id], 
@@ -372,10 +372,13 @@ app.post('/insert_link', function(req, res) {
   let uid = req.body.uid;
   let today = new Date();
   let date = today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate() + " " + today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-
+  let tmp = req.body.ulevel;
+  let ulevel = 0;
+  if (tmp > 0) ulevel = Number(tmp) + 1
+  console.log(uid, tmp > 0, tmp);
   $.each(items, function(i, v) {
-    let params = [v.name, v.user_id, Number(v.device_id), date];
-    let sql = `insert into link (name, user_id, device_id, time) select ? where not exists(select * from link where user_id='${uid}' and device_id=?)`;
+    let params = [v.name, v.user_id, Number(v.device_id), date, ulevel];
+    let sql = `insert into link (name, user_id, device_id, time, link_level) select ? where not exists(select * from link where user_id='${uid}' and device_id=?)`;
     db.query(sql, [params, Number(v.device_id)],
       function(err, data) {
         if (err) throw(err);
