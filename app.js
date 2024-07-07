@@ -232,6 +232,8 @@ app.post('/members_temp', function(req, res) {
     if(err) throw(err);
     else {
       let datas = [];
+
+      if (data.length == 0) res.send();
       $.each(data, function(i, v) {
         datas.push({
           id: v.id,
@@ -319,6 +321,7 @@ app.post('/device_all', function(req, res) {
     else {
       let datas = [];
 
+      if (data.length == 0) res.send();
       $.each(data, function(i, v) {
         datas.push({
           id: v.device_id,
@@ -342,7 +345,11 @@ app.post('/get_link', function(req, res) {
         let datas = [];
         if (data.length == 0) res.send(datas);
         $.each(data, function(i, v) {
-          datas.push(v.device_id)
+          datas.push({
+            device_id: v.device_id, 
+            name: v.name,
+            link_level: v.link_level,
+          })
           if(data.length - 1 == i) res.send(datas);
         })
       }
@@ -352,19 +359,17 @@ app.post('/delete_link', function(req, res) {
   let items = JSON.parse(req.body.items);
   let uid = req.body.uid;
 
+  if (items.length == 0) res.send();
   $.each(items, function(i, v) {
     let sql = `delete from link where user_id=? and device_id=?`
+
     db.query(sql, [uid, v.device_id], 
       function(err, data) {
         if (err) throw(err);
-        else {
-          console.log('success');
-        }
+        else  console.log('del_success');
       }
     )
-    if (items.length - 1 == i) {
-      res.send();
-    }
+    if (items.length - 1 == i) res.send();
   })
 })
 app.post('/insert_link', function(req, res) {
@@ -375,24 +380,46 @@ app.post('/insert_link', function(req, res) {
   let tmp = req.body.ulevel;
   let ulevel = 0;
   if (tmp > 0) ulevel = Number(tmp) + 1
-  console.log(uid, tmp > 0, tmp);
+
+  if (items.length == 0) res.send();
   $.each(items, function(i, v) {
     let params = [v.name, v.user_id, Number(v.device_id), date, ulevel];
     let sql = `insert into link (name, user_id, device_id, time, link_level) select ? where not exists(select * from link where user_id='${uid}' and device_id=?)`;
+
     db.query(sql, [params, Number(v.device_id)],
       function(err, data) {
         if (err) throw(err);
-        else {
-          console.log('success');
-        }
+        else console.log('ins_success');
       }
     )
-    if (items.length - 1 == i) {
-      res.send();
-    }
+    if (items.length - 1 == i) res.send();
   })
-  
 })
+
+
+app.post('/update_link', function(req, res) {
+  let items = JSON.parse(req.body.items);
+  let uid = req.body.uid;
+  let tmp = req.body.level;
+  
+  if (items.length == 0) res.send();
+  $.each(items, function(i, v) {
+    let level = 0;
+    if (v.selected == true) tmp == 0 ? level = 1 : level = 2
+
+    let params = [level, uid, v.device_id];
+    let sql = `update link set link_level=? where user_id=? and device_id=?`
+
+    db.query(sql, params, 
+      function(err, data) {
+        if (err) throw(err);
+        else console.log('upd_success')
+      }
+    )
+    if (items.length - 1 == i) res.send();
+  })
+})
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

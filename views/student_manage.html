@@ -53,7 +53,7 @@
         <nav class="navsidebar">
             <div>
                 <a href="/" class="nav_logo" style="padding-left: 22px;">
-                    <i ><img src="imgs/am_h20.png" width="24px;"></i>
+                    <i ><img src="imgs/am_h20.png" width="30px;"></i>
                     <span class="fas-3 bi_house" style="color: aliceblue;">아쿠팜</span>
                 </a>
                 <div class="nav_list">
@@ -186,7 +186,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-                    <button type="button" class="btn btn-primary" id="modal_success_btn" onclick="updateDevice(this)">완료</button>
+                    <button type="button" class="btn btn-primary" id="modal_success_btn" onclick="">완료</button>
                 </div>
             </div>
         </div>
@@ -204,6 +204,7 @@
     <script src="js/memberAuth.js"></script>
     <script src="js/range_picker.js"></script>
     <script src="js/permission_manage.js"></script>
+    <script src="js/member_control.js"></script>
     <script>
         var multiplelist = null;
         var devices = [];
@@ -256,8 +257,8 @@
                             v.class,
                             v.number,
                             dayjs(v.date).format("YYYY-MM-DD"),
-                            `<button type="button" class="btn btn-success" onclick="modal_func('${v.id}', ${v.level})"  id="modal_${v.id}">권한관리</button>`,
-                            `<button type="button" class="btn btn-success" onclick="">권한관리</button>`,
+                            `<button type="button" class="btn btn-success" onclick="modal_func('${v.id}', ${v.level}, 0)"  id="modal_${v.id}">권한관리</button>`,
+                            `<button type="button" class="btn btn-success" onclick="modal_func('${v.id}', '${v.level}', 1)" id="modal_link_${v.id}">권한관리</button>`,
                             `<button type="button" class="btn btn-danger" onclick="sign('${v.id}', 1, 0, 0)">삭제</button>`
                         ])
                         if (data.length - 1 == i) {
