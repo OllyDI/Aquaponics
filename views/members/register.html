@@ -8,24 +8,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
     <link rel="stylesheet" href="/style/member.css">
-    <style>
-        .sel_register_card {
-            --bs-card-border-color: rgba(0, 0, 0, 0.175);
-            border-radius: 20%;
-            margin-bottom: 1rem;
-        }
-        .sel_register_btn {
-            width: 268px; 
-            height: 268px; 
-            font-weight: 400; 
-            font-size: 30px;
-        }
-        @media screen and (max-width: 767px) {
-            .row {
-                display: block;
-            }
-        }
-    </style>
 </head>
 
 <body class="login-page">
@@ -35,14 +17,14 @@
 <div class="row" id="register_box" style="margin: 40px auto 42px;">
     <div class="col-lg-6 col-md-6 col-sm-12" >
         <div class="card sel_register_card">
-            <div class="card-body"style="width: 300px; height: 300px;">
+            <div class="card-body select-card">
                 <button class="btn sel_register_btn" type="button" id="general_btn" onclick="sel_register(this.id)">일반용</button>
             </div>
         </div>
     </div>
     <div class="col-lg-6 col-md-6 col-sm-12" >
         <div class="card sel_register_card">
-            <div class="card-body"style="width: 300px; height: 300px;">
+            <div class="card-body select-card">
                 <button class="btn sel_register_btn" type="button" id="school_btn" onclick="sel_register(this.id)">학교용</button>
             </div>
         </div>
@@ -52,22 +34,44 @@
     <!-- /.login-logo -->
     <div class="card" style="box-shadow: none">
         <div class="card-body login-card-body">
-            <form class="form" action="/register" name="userRegister" method="post">
+            <form class="form" action="/register" onsubmit="actions()" name="userRegister" method="post">
                 <div class="mb-3">
                     <div class="input-group">
                         <select id="level" name="level" class="form-select" required oninvalid="this.setCustomValidity('목록중 하나를 선택하세요.')" oninput="this.setCustomValidity('')"> 
                             <option selected disabled value="" selected>선택하세요</option>
                             <option value="0">학생</option>
                             <option value="1">교사</option>
-                            <option value="3">일반</option>
+                            <option value="2">일반</option>
                         </select>
                     </div>
                 </div>
                 <div class="mb-3">
-                    <div class="input-group">
+                    <div class="input-group" id="gen_region" style="display: none;">
+                        <select id="region" name="school" class="form-select" required disabled
+                        oninvalid="this.setCustomValidity('목록중 하나를 선택하세요.')" oninput="this.setCustomValidity('')"> 
+                            <option selected disabled value="" selected>선택하세요</option>
+                            <option value="서울특별시">서울특별시</option>
+                            <option value="광주광역시">광주광역시</option>
+                            <option value="대구광역시">대구광역시</option>
+                            <option value="부산광역시">부산광역시</option>
+                            <option value="울산광역시">울산광역시</option>
+                            <option value="인천광역시">인천광역시</option>
+                            <option value="강원도">강원도</option>
+                            <option value="경기도">경기도</option>
+                            <option value="경상남도">경상남도</option>
+                            <option value="경상북도">경상북도</option>
+                            <option value="전라남도">전라남도</option>
+                            <option value="전라북도">전라북도</option>
+                            <option value="충청남도">충청남도</option>
+                            <option value="충청북도">충청북도</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="input-group" id="gen_school">
                         <input type="text" name="school" id="school" class="form-control" placeholder="학교명" data-bs-toggle="modal"
                         data-bs-target="#schoolSerch" required oninvalid="this.setCustomValidity('학교명을 입력하세요.')" oninput="this.setCustomValidity('')">
-                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#schoolSerch">검색</button>
+                        <button type="button" class="btn btn-success" id="school_btn" data-bs-toggle="modal" data-bs-target="#schoolSerch">검색</button>
                     </div>
                 </div>
                 <div class="mb-3">
@@ -78,7 +82,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="mb-3">
+                <div class="mb-3" id="gen_grade">
                     <div class="input-group">
                         <input type="text" name="grade" id="grade" class="form-control" placeholder="학년" 
                         pattern="^[0-9]+$" title="숫자만 입력가능합니다." required oninvalid="this.setCustomValidity('학년을 입력하세요.')" oninput="this.setCustomValidity('')">
@@ -87,7 +91,7 @@
                     </div>
                     <label id="lUgrade" style="color: red;" hidden>학년을 입력하세요.</label>
                 </div>
-                <div class="mb-3">
+                <div class="mb-3" id="gen_class">
                     <div class="input-group">
                         <input type="text" name="class" id="class" class="form-control" placeholder="반" 
                         pattern="^[0-9]+$" title="숫자만 입력가능합니다." required oninvalid="this.setCustomValidity('반을 입력하세요.')" oninput="this.setCustomValidity('')">
@@ -96,7 +100,7 @@
                     </div>
                     <label id="lUclass" style="color: red;" hidden>반을 입력하세요.</label>
                 </div>
-                <div class="mb-3">
+                <div class="mb-3" id="gen_number">
                     <div class="input-group">
                         <input type="text" name="number" id="number" class="form-control" placeholder="번호" 
                         pattern="^[0-9]+$" title="숫자만 입력가능합니다." required oninvalid="this.setCustomValidity('번호를 입력하세요.')" oninput="this.setCustomValidity('')">
@@ -169,16 +173,26 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="/js/duplicate.js"></script>
 <script>
+    var gen = ['gen_school', 'gen_grade', 'gen_class', 'gen_number']
+
     function sel_register(id) {
         if (id =='general_btn') {
-            $("#level option[value='3'").attr('selected', true);
+            $("#level option[value='2']").attr('selected', true);
             $("#level").attr('disabled', true);
+            $("#region").attr('disabled', false);
+            $("#gen_region").show()
+
+            $.each(gen, (i, v) => {
+                $(`#${v}`).hide()
+                $(`#${v.split("gen_")[1]}`).attr('disabled', true)
+            })
         } else {
-            $("#level option[value='3'").attr('hidden', true);
+            $("#level option[value='2']").attr('hidden', true);
         }
         $("#register_box").hide();
         $("#login_box").show();
     }
+    function actions() { $("#level").attr('disabled', false); }
 </script>
 </body>
 </html>

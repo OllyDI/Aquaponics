@@ -37,11 +37,11 @@ router.get('/dashboard', auth, function(req, res, next) {
 });
 
 router.get('/student_manage', auth, function(req, res, next) {
-  if (req.user.level > 0) res.sendFile(path.join(__dirname, "../views/student_manage.html"))
+  if (req.user.level == 1 || req.user.level == 3) res.sendFile(path.join(__dirname, "../views/student_manage.html"))
 });
 
 router.get('/admin', auth, function(req, res, next) {
-  if (req.user.level == 2) res.sendFile(path.join(__dirname, "../views/admin.html"))
+  if (req.user.level == 3 || req.user.level == 4) res.sendFile(path.join(__dirname, "../views/admin.html"))
 });
 
 module.exports = router;

@@ -80,3 +80,38 @@ label {
     min-height: 840px;
     min-width: 372px;
 }
+
+
+/* 회원가입 선택 */
+.sel_register_card {
+    --bs-card-border-color: rgba(0, 0, 0, 0.175);
+    border-radius: 3rem;
+    border-width: 0.7rem;
+    margin-bottom: 1rem;
+}
+.sel_register_btn {
+    width: 268px; 
+    height: 268px; 
+    font-weight: 400; 
+    font-size: 30px;
+}
+.select-card {
+    width: 300px; 
+    height: 300px; 
+    }
+@media screen and (max-width: 767px) {
+    .row {
+        display: block;
+    }
+    .select-card {
+        height: 150px;
+    }
+    .sel_register_btn {
+        height: 118px;
+    }
+    .sel_register_card {
+        --bs-card-border-color: rgba(0, 0, 0, 0.175);
+        border-radius: 1rem;
+        border-width: 0.5rem;
+    }
+}

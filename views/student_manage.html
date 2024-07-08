@@ -119,7 +119,7 @@
                     </div>
                 </div>
             </div>
-            <div class="row" style="padding-top: 2rem;">
+            <div class="row" style="padding: 2rem 0 2rem 0;">
                 <div class="col-12">
                     <div class="card" id="card_search" style="display: none;">
                         <div class="card-header">
@@ -247,7 +247,8 @@
                         let level = '';
                         if (v.level == 0) level = '학생'
                         else if (v.level == 1) level = '교사'
-                        else if (v.level == 2) level = '관리자'
+                        else if (v.level == 2) level = '일반'
+                        else if (v.level == 3) level = '관리자'
                         datas.push([
                             v.id,
                             v.school,

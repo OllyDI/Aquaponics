@@ -86,7 +86,7 @@
             <!-- <div class="container-fluid"> -->
                 <!-- <h4>학생 관리</h4> -->
             <!-- <div class="card"> -->
-                <ul class="nav nav-tabs" style="padding: 0 0.2rem 0 0.1rem; border-color: transparent;">
+                <ul class="nav nav-tabs" id="nav-tabs" style="padding: 0 0.2rem 0 0.1rem; border-color: transparent;">
                     <li class="nav-item" role="presentation">
                         <a class="nav-link active" data-bs-toggle="tab" href="#" data-bs-target="#manager">사용자 관리</a>
                     </li>
@@ -102,14 +102,35 @@
                             </div>
                             <div class="card-body">
                                 <div class="row">
-                                    <div style="padding-bottom: 0.5rem;" class="col-sm-6 col-lg-4">
+                                    <div style="padding-bottom: 0.5rem;" class="col-sm-6 col-lg-3" id="school_div">
                                         <div class="input-group flex-nowrap">
                                             <span class="input-group-text">학교</span>
                                             <input type="text" id="school" name="school" class="form-control" maxlength="45">
                                             <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#schoolSerch" aria-controls="home" aria-selected="true">검색</button>
                                         </div>
                                     </div>
-                                    <div style="padding-bottom: 0.5rem;" class="col-sm-6 col-lg-3">
+                                    <div style="padding-bottom: 0.5rem; display: none;" class="col-sm-6 col-lg-3" id="gen_region">
+                                        <div class="input-group flex-nowrap">
+                                            <select id="region" name="school" class="form-select" disabled> 
+                                                <option selected value="" selected>전체</option>
+                                                <option value="서울특별시">서울특별시</option>
+                                                <option value="광주광역시">광주광역시</option>
+                                                <option value="대구광역시">대구광역시</option>
+                                                <option value="부산광역시">부산광역시</option>
+                                                <option value="울산광역시">울산광역시</option>
+                                                <option value="인천광역시">인천광역시</option>
+                                                <option value="강원도">강원도</option>
+                                                <option value="경기도">경기도</option>
+                                                <option value="경상남도">경상남도</option>
+                                                <option value="경상북도">경상북도</option>
+                                                <option value="전라남도">전라남도</option>
+                                                <option value="전라북도">전라북도</option>
+                                                <option value="충청남도">충청남도</option>
+                                                <option value="충청북도">충청북도</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div style="padding-bottom: 0.5rem;" class="col-sm-6 col-lg-4">
                                         <div class="input-group flex-nowrap">
                                             <span class="input-group-text">이름</span>
                                             <input type="text" id="name" name="name" class="form-control" maxlength="45">
@@ -117,6 +138,7 @@
                                                 <option value="">전체</option>
                                                 <option value="0">학생</option>
                                                 <option value="1">교사</option>
+                                                <option value="2">일반</option>
                                             </select>
                                         </div>
                                     </div>
@@ -132,7 +154,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row" style="padding-top: 2rem;">
+                        <div class="row" style="padding: 2rem 0 2rem 0;">
                             <div class="col-12">
                                 <div class="card" id="card_search" style="display: none;">
                                     <div class="card-header">
@@ -159,6 +181,22 @@
                                                 <tbody id="table_body" style="min-height: 200px;">
                                                 </tbody>
                                             </table>
+
+                                            <table class="table table-hover" id="gen_tables" style="white-space: nowrap; width: 100%; display: none;">
+                                                <thead>
+                                                    <tr>
+                                                        <th>아이디</th>
+                                                        <th>지역</th>
+                                                        <th>직급</th>
+                                                        <th>이름</th>
+                                                        <th>가입날짜</th>
+                                                        <th>기기권한</th>
+                                                        <th>관리</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="gen_table_body" style="min-height: 200px;">
+                                                </tbody>
+                                            </table>
                                         </div>
                                     </div>
                                     <!-- card-body end -->
@@ -173,7 +211,7 @@
                             </div>
                             <!-- card-header end -->
                             <div class="card-body">
-                                <div class="table-responsive" >
+                                <div class="table-responsive">
                                     <table class="table table-hover" id="ap_tables" style="white-space: nowrap; width: 100%;">
                                         <thead>
                                             <tr>
@@ -264,7 +302,8 @@
                         let level = '';
                         if (v.level == 0) level = '학생'
                         else if (v.level == 1) level = '교사'
-                        else if (v.level == 2) level = '관리자'
+                        else if (v.level == 2) level = '일반'
+                        else if (v.level == 3) level = '관리자'
                         datas.push([
                             v.id,
                             v.school,
@@ -281,16 +320,9 @@
                             new DataTable('#ap_tables', 
                             { 
                                 columnDefs: [
-                                    {
-                                        className: 'dt-head-center',
-                                        targets: "_all",
-                                    },
-                                    {
-                                        className: 'dt-body-center',
-                                        targets: "_all",
-                                    },
-                                ],
-                                scrollX: true, paging: true, destroy: true, data: datas 
+                                    { className: 'dt-head-center', targets: "_all", },
+                                    { className: 'dt-body-center', targets: "_all", },
+                                ], scrollX: true, paging: true, destroy: true, data: datas 
 
                             });
                         }
@@ -299,15 +331,67 @@
             })
         }
 
-        function search() {
-            $("#card_search").css('display', '');
+        function creatTables(data, table) {
             var datas = [];
 
+            if (data == '') {
+                        new DataTable(`#${table}`, 
+                            { 
+                                columnDefs: [
+                                    { className: 'dt-head-center', targets: "_all", },
+                                    { className: 'dt-body-center', targets: "_all", },
+                                ], scrollX: true, paging: true, destroy: true, data: datas 
+                            });
+                    }
+                    $.each(data, (i, v) => {
+                        let level = '';
+                        if (v.level == 0) level = '학생'
+                        else if (v.level == 1) level = '교사'
+                        else if (v.level == 2) level = '일반'
+                        if (member[0].level == 3) {
+                            datas.push([
+                                v.id,
+                                v.school,
+                                level,
+                                v.name,
+                                v.grade,
+                                v.class,
+                                v.number,
+                                dayjs(v.date).format("YYYY-MM-DD"),
+                                `<button type="button" class="btn btn-success" onclick="modal_func('${v.id}', ${v.level}, 0)"  id="modal_${v.id}">권한관리</button>`,
+                                `<button type="button" class="btn btn-danger" onclick="sign('${v.id}', 1, 0, 0)">삭제</button>`
+                            ])
+                        } else {
+                            datas.push([
+                                v.id,
+                                v.school,
+                                level,
+                                v.name,
+                                dayjs(v.date).format("YYYY-MM-DD"),
+                                `<button type="button" class="btn btn-success" onclick="modal_func('${v.id}', ${v.level}, 0)"  id="modal_${v.id}">권한관리</button>`,
+                                `<button type="button" class="btn btn-danger" onclick="sign('${v.id}', 1, 0, 0)">삭제</button>`
+                            ])
+                        }
+                        if (data.length - 1 == i) {
+                            new DataTable(`#${table}`, 
+                            { 
+                                columnDefs: [
+                                    { className: 'dt-head-center', targets: "_all", },
+                                    { className: 'dt-body-center', targets: "_all", },
+                                ], scrollX: true, paging: true, destroy: true, data: datas 
+                            });
+                        }
+                    })
+        }
+
+
+        function search() {
+            $("#card_search").css('display', '');
             $.ajax({
                 url: "/searchTable",
                 method: "post",
                 data: {
-                    school: $("#school").val(),
+                    school: (member[0].level == 4) ? $("#region").val() : $("#school").val(),
                     grade: '',
                     class: '',
                     level: $("#ulevel").val(),
@@ -316,64 +400,27 @@
                     start: $("#stdate").val().split(" ~ ")[0],
                     end: $("#stdate").val().split(" ~ ")[1],
                 },
-                success:function(data) {
-                    if (data == '') {
-                        new DataTable('#tables', 
-                            { 
-                                columnDefs: [
-                                    {
-                                        className: 'dt-head-center',
-                                        targets: "_all",
-                                    },
-                                    {
-                                        className: 'dt-body-center',
-                                        targets: "_all",
-                                    },
-                                ],
-                                scrollX: true, paging: true, destroy: true, data: datas 
-                            });
-                    }
-                    $.each(data, (i, v) => {
-                        let level = '';
-                        if (v.level == 0) level = '학생'
-                        else if (v.level == 1) level = '교사'
-                        else if (v.level == 2) level = '관리자'
-                        datas.push([
-                            v.id,
-                            v.school,
-                            level,
-                            v.name,
-                            v.grade,
-                            v.class,
-                            v.number,
-                            dayjs(v.date).format("YYYY-MM-DD"),
-                            `<button type="button" class="btn btn-success" onclick="modal_func('${v.id}', ${v.level}, 0)"  id="modal_${v.id}">권한관리</button>`,
-                            `<button type="button" class="btn btn-danger" onclick="sign('${v.id}', 1, 0, 0)">삭제</button>`
-                        ])
-                        if (data.length - 1 == i) {
-                            new DataTable('#tables', 
-                            { 
-                                columnDefs: [
-                                    {
-                                        className: 'dt-head-center',
-                                        targets: "_all",
-                                    },
-                                    {
-                                        className: 'dt-body-center',
-                                        targets: "_all",
-                                    },
-                                ],
-                                scrollX: true, 
-                                paging: true, 
-                                destroy: true, 
-                                data: datas 
-                            });
-                        }
-                    })
-                    
+                success:function(data) {  
+                    console.log(data);
+                    if (member[0].level == 4) creatTables(data, 'gen_tables') 
+                    else creatTables(data, 'tables') 
                 }
             })
         }
+
+        $(document).ready(function() {
+            if (member[0].level == 4) {
+                $("#region").attr('disabled', false);
+                $("#region").attr('disabled', false);
+                $("#school").attr('disabled', true);
+                $("#gen_region").show();
+                $("#school_div").hide();
+                $("#ulevel option[value='2']").attr('selected', true);
+                $("#ulevel").attr('disabled', true);
+                $("#tables").css('display', 'none');
+                $("#gen_tables").css('display', '');
+            }
+        })
     </script>
     
 </body>

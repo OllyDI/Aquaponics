@@ -102,11 +102,35 @@
                                 <option disabled value="" selected>선택하세요</option>
                                 <option value="0">학생</option>
                                 <option value="1">교사</option>
-                                <option value="2">관리자</option>
+                                <option value="2">일반</option>
+                                <option value="3">관리자</option>
+                                <option value="4">관리자</option>
                             </select>
                         </div>
                     </div>
                     <div class="mb-3">
+                        <div class="input-group" id="gen_region" style="display: none;">
+                            <select id="region" name="school" class="form-select" required disabled
+                            oninvalid="this.setCustomValidity('목록중 하나를 선택하세요.')" oninput="this.setCustomValidity('')"> 
+                                <option selected disabled value="" selected>선택하세요</option>
+                                <option value="서울특별시">서울특별시</option>
+                                <option value="광주광역시">광주광역시</option>
+                                <option value="대구광역시">대구광역시</option>
+                                <option value="부산광역시">부산광역시</option>
+                                <option value="울산광역시">울산광역시</option>
+                                <option value="인천광역시">인천광역시</option>
+                                <option value="강원도">강원도</option>
+                                <option value="경기도">경기도</option>
+                                <option value="경상남도">경상남도</option>
+                                <option value="경상북도">경상북도</option>
+                                <option value="전라남도">전라남도</option>
+                                <option value="전라북도">전라북도</option>
+                                <option value="충청남도">충청남도</option>
+                                <option value="충청북도">충청북도</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-3" id="gen_school">
                         <div class="input-group">
                             <span class="input-group-text">학교</span>
                             <input type="text" name="school" id="school" class="form-control" placeholder="학교명" required data-bs-toggle="modal"
@@ -124,7 +148,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="mb-3">
+                    <div class="mb-3" id="gen_grade">
                         <div class="input-group">
                             <span class="input-group-text">학년</span>
                             <input type="text" name="grade" id="grade" class="form-control" placeholder="학년"
@@ -134,7 +158,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="mb-3">
+                    <div class="mb-3" id="gen_class">
                         <div class="input-group">
                             <span class="input-group-text">반</span>
                             <input type="text" name="class" id="class" class="form-control" placeholder="반"
@@ -144,7 +168,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="mb-3">
+                    <div class="mb-3" id="gen_number">
                         <div class="input-group">
                             <span class="input-group-text">번호</span>
                             <input type="text" name="number" id="number" class="form-control" placeholder="번호"
@@ -213,7 +237,8 @@
     <script src="/js/duplicate.js"></script>
     <script src="/js/member_control.js"></script>
     <script>
-        const level = ['학생용', '교사용', '관리자']
+        const level = ['학생용', '교사용', '일반용', '관리자', '관리자']
+        var gen = ['gen_school', 'gen_grade', 'gen_class', 'gen_number']
         var id = null;
 
         function logout() {
@@ -235,19 +260,29 @@
                         location.replace('/login');
                     }
                     else {
-                        console.log(data)
+                        id = data[0].id;
                         $("#userlevel").text(level[data[0].level]);
                         $("#username").text(data[0].name.slice(0, 1));
-                        if (level[data[0].level] == '학생용') $('#stumanag').hide();
+                        if (level[data[0].level] == '학생용' || level[data[0].level] == '일반용') $('#stumanag').hide();
                         if (level[data[0].level] !== '관리자') $('#settings').hide();
-                        id = data[0].id;
-
                         $("#level").val(data[0].level).prop("selected", true);
-                        $("#school").val(data[0].school)
+
+                        if (data[0].level == 2 || data[0].level == 4) {
+                            $("#region").attr('disabled', false);
+                            $("#region").val(data[0].school);
+                            $("#gen_region").show()
+                            $.each(gen, (i, v) => {
+                                $(`#${v}`).hide()
+                                $(`#${v.split("gen_")[1]}`).attr('disabled', true)
+                            })
+                        }
+                        else {
+                            $("#school").val(data[0].school)
+                            $("#grade").val(data[0].grade)
+                            $("#number").val(data[0].number)
+                        }
                         $("#uname").val(data[0].name)
-                        $("#grade").val(data[0].grade)
                         $("#class").val(data[0].class)
-                        $("#number").val(data[0].number)
                     }
                 }
             })

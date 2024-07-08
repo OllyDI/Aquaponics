@@ -96,25 +96,34 @@ app.post('/duplicate', function(req, res) {
 app.post('/register', function(req, res) {
   var base64crypto = (password) => { return crypto.createHash('sha512').update(password).digest('base64') }
   var level = req.body.level;
-  var school = req.body.school;
+  var q = ['members', 'members_temp', 'members']
+  let sql = ''
+  let params = [];
   var name = req.body.name;
-  var grade = req.body.grade;
-  var classNum = req.body.class;
-  var number = req.body.number
+  var school = req.body.school;
   var id = req.body.id
   var pw = base64crypto(req.body.pw)
   var today = new Date();
   var date = today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate();
-  var q = ['members', 'members_temp']
 
-  db.query(`insert into ${q[level]} (level, school, name, grade, class, number, id, pw, date) values (?, ?, ?, ?, ?, ?, ?, ?, ?);`, 
-    [Number(level), school, name, Number(grade), Number(classNum), Number(number), id, pw, date], 
+  if (level == 2) {
+    params = [Number(level), school, name, id, pw, date]
+    sql = `insert into ${q[level]} (level, school, name, id, pw, date) values (?, ?, ?, ?, ?, ?);`
+  } else {
+    var grade = req.body.grade;
+    var classNum = req.body.class;
+    var number = req.body.number
+    params = [Number(level), school, name, Number(grade), Number(classNum), Number(number), id, pw, date]
+    sql = `insert into ${q[level]} (level, school, name, grade, class, number, id, pw, date) values (?, ?, ?, ?, ?, ?, ?, ?, ?);`
+  }
+
+  db.query(sql, params,
     function(err, data) {
       if (err) {
         console.log(err);
         res.send("<script>alert('회원가입에 실패하였습니다. 다시 시도해 주세요.'); location.href='/register';</script>");
       } else {
-        if (level == 0) res.send("<script>alert('회원가입이 완료되었습니다.');location.href='/login';</script>");
+        if (level != 1) res.send("<script>alert('회원가입이 완료되었습니다.');location.href='/login';</script>");
         else res.send("<script>alert('회원가입 신청이 완료되었습니다.\\n\\n회원가입 승인 후 로그인이 가능합니다.');location.href='/login';</script>");
       }
     }
@@ -187,13 +196,16 @@ app.post('/searchTable', function(req, res) {
   let end = req.body.end;
   let sql = '';
   let data = null;
-  
+
   if (userLevel == 1) {
-    sql = `select * from members where id not in (?) and school like ? and level like ? and name like ? and grade=? and class=?`
+    sql = `select * from members where id not in (?) and school like ? and level like ? and name like ? and grade=? and class=? and level < 3`
     data = [ req.user.id, '%'+school+'%', '%'+level+'%', '%'+name+'%', grade, classNum]
   }
-  else {
-    sql = `select * from members where id not in (?) and school like ? and level like ? and name like ?`
+  else if (userLevel == 3) {
+    sql = `select * from members where id not in (?) and school like ? and level like ? and name like ? and level < 3`
+    data = [ req.user.id, '%'+school+'%', '%'+level+'%', '%'+name+'%']
+  } else if (userLevel == 4) {
+    sql = `select * from members where id not in (?) and school like ? and level like ? and name like ? and level < 3`
     data = [ req.user.id, '%'+school+'%', '%'+level+'%', '%'+name+'%']
   }
   if (start == end) sql += ` and date='${end}'`
