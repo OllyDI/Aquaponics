@@ -200,12 +200,12 @@ app.post('/searchTable', function(req, res) {
   if (userLevel == 1) {
     sql = `select * from members where id not in (?) and school like ? and level like ? and name like ? and grade=? and class=? and level < 3`
     data = [ req.user.id, '%'+school+'%', '%'+level+'%', '%'+name+'%', grade, classNum]
-  }
-  else if (userLevel == 3) {
-    sql = `select * from members where id not in (?) and school like ? and level like ? and name like ? and level < 3`
-    data = [ req.user.id, '%'+school+'%', '%'+level+'%', '%'+name+'%']
   } else if (userLevel == 4) {
-    sql = `select * from members where id not in (?) and school like ? and level like ? and name like ? and level < 3`
+    sql = `select * from members where id not in (?) and school like ? and level like ? and name like ? and level=2`
+    data = [ req.user.id, '%'+school+'%', '%'+level+'%', '%'+name+'%']
+  } 
+  else {
+    sql = `select * from members where id not in (?) and school like ? and level like ? and name like ? and level < 2`
     data = [ req.user.id, '%'+school+'%', '%'+level+'%', '%'+name+'%']
   }
   if (start == end) sql += ` and date='${end}'`

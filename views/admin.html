@@ -133,7 +133,7 @@
                                     <div style="padding-bottom: 0.5rem;" class="col-sm-6 col-lg-4">
                                         <div class="input-group flex-nowrap">
                                             <span class="input-group-text">이름</span>
-                                            <input type="text" id="name" name="name" class="form-control" maxlength="45">
+                                            <input type="text" id="name" name="name" class="form-control" maxlength="45" onkeypress="if(event.keyCode == 13){ search(); }">
                                             <select id="ulevel" name="level" class="form-select form-select-sm" style="flex: 0.2 1 auto;">
                                                 <option value="">전체</option>
                                                 <option value="0">학생</option>
