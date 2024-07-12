@@ -13,163 +13,14 @@
     <link rel="stylesheet" href="style/style.css">
     <!-- <link rel="stylesheet" href="style/rotateCard.css"> -->
     <style>
-        .main-container {
-            display: flex;
-            align-items: stretch; /* 비디오 카드와 카드 컨테이너가 상단 정렬되도록 설정 */
-            gap: 20px; /* 비디오 카드와 카드 컨테이너 사이의 간격 설정 */
-            height: 100%; /* 전체 높이를 가득 채우도록 설정 */
-            width: 100%; /* 전체 너비를 가득 채우도록 설정 */
-            box-sizing: border-box; /* 패딩을 포함하여 크기 계산 */
+         .apexcharts-tooltip {
+            background: #f3f3f3;
+            color: black;
         }
-        .video-card {
-            flex: 0 0 auto;
-            max-height: 100%; /* 최대 높이를 100%로 설정 */
-            object-fit: cover;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 그림자 효과 추가 */
-            border-radius: 10px;
-            /* background-color: #000;  */
-            height: 100%;
-            width: 50%;
+        .apexcharts-menu {
+            color: black;
         }
-        .card-container {
-            display: flex;
-            justify-content: space-between;
-            flex: 2;
-            flex-direction: column; /* 카드를 세로로 나열 */
-            gap: 10px; /* 카드 사이의 간격 설정 */
-            overflow-y: auto; /* 카드가 넘칠 경우 세로 스크롤 표시 */
-            /* 카드 컨테이너의 고정 너비 설정 */
-            max-height: 100%; /* 전체 높이를 가득 채우도록 설정 */
-        }
-        .enver-card {
-          flex: 2;
-          height: 120px; /* 카드 높이를 정사각형으로 설정 */
-          perspective: 1000px; /* 3D 효과를 위한 값 */
-          cursor: pointer; /* 마우스 커서를 포인터로 변경하여 클릭 가능함을 나타냄 */
-          position: relative; /* 영상을 겹쳐서 표시하기 위해 상대 위치 설정 */
-          /* overflow: hidden; */
-          border-radius: 10px; /* 카드 모서리를 둥글게 만듦 */
-          margin-bottom: 1rem;
-          padding: 0 0.5rem 0.5rem 0.5rem;
-          --bs-card-border-color: none;
-          /* min-width: 200px !important; */
-        }
-        .card-inner {
-          position: relative;
-          width: 100%;
-          height: 100%;
-          transition: transform 0.6s;
-          transform-style: preserve-3d;
-          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 그림자 효과 추가 */
-          --bs-card-border-color: rgba(0, 0, 0, 0.175);
-        }
-        .enver-card.flipped .card-inner {
-          transform: rotateY(180deg);
-        }
-        .card-face {
-          position: absolute;
-          width: 100%;
-          height: 100%;
-          backface-visibility: hidden;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          text-align: center;
-          padding: 20px;
-          font-size: 1.2rem;
-        }
-        .card-front {
-          /* background-color: #3498db;
-          color: white; */
-        }
-        .card-back {
-          background-color: #2ecc71; /* 뒷면 색상 */
-          color: white;
-          transform: rotateY(180deg);
-        }
-        .video-item {
-            width: 100%;
-            height: 50%;
-            padding: 0 0.5rem 0 0.5rem ;
-        }
-        .card-row {
-            display:  flex;
-            flex-wrap: wrap;
-            /* margin: -; */
-        }
-        .chart {
-            height: 38vh;
-        }
-        .srcn {
-            max-height: calc(100vh - 6.25rem);
-        }
-        @media screen and (max-width: 1124px) {
-            .video-card {
-                width: 100%; /* 비디오 카드 너비 설정 */
-                max-height: calc(200vh - 200px - 3.75rem); /* 화면 높이에서 아래 카드 영역 높이(150px * 2 + 20px)를 뺀 만큼의 최대 높이 설정 */
-                margin-bottom: 20px;
-            }
-            .video-item {
-                width: 100%;
-                margin: 0;
-            }
-            .card-container {
-                overflow-y: visible; /* 가로 스크롤을 표시할 때만 스크롤이 나타나도록 설정 */
-                max-width: 100%; /* 카드 컨테이너의 최대 너비를 설정 */
-                display: flex;
-                justify-content: flex-start;
-            }
-            .card-row {
-                display: flex;
-                flex-wrap: nowrap; /* 카드들이 한 줄에 나열되도록 설정 */
-                gap: 10px; /* 카드 사이의 간격 설정 */
-                padding-bottom: 10px; /* 아래쪽 여백 추가 */
-            }
-            .enver-card {
-                flex: 0 0 auto;
-                width: 50%; /* 카드 너비를 고정 */
-                height: 100px; /* 카드 높이를 정사각형으로 설정 */
-                perspective: 1000px; /* 3D 효과를 위한 값 */
-                cursor: pointer; /* 마우스 커서를 포인터로 변경하여 클릭 가능함을 나타냄 */
-                position: relative; /* 영상을 겹쳐서 표시하기 위해 상대 위치 설정 */
-                overflow: hidden; /* 카드 내부의 내용이 넘칠 때를 대비해 오버플로우 숨김 */
-                border-radius: 10px; /* 카드 모서리를 둥글게 만듦 */
-            }
-            .main-container {
-                display: block;
-                align-items: stretch; /* 비디오 카드와 카드 컨테이너가 상단 정렬되도록 설정 */
-                gap: 20px; /* 비디오 카드와 카드 컨테이너 사이의 간격 설정 */
-                height: 100%; /* 전체 높이를 가득 채우도록 설정 */
-                width: 100%; /* 전체 너비를 가득 채우도록 설정 */
-                box-sizing: border-box; /* 패딩을 포함하여 크기 계산 */
-            }
-            .srcn {
-                max-height: calc(100vh - 5.25rem);
-            }
-        }
-        @media screen and (max-width: 767px) {
-            body {
-                padding: 0;
-            }
-            .video-card {
-                max-height: calc(200vh - 200px - 5.25rem);
-            }
-            .video-item {
-                height: auto;
-            }
-            .chart {
-                height: 35vh;
-            }
-        }
-        @media screen and (max-width: 600px) {
-            .video-card {
-                max-height: calc(30vh + 20vh + 6rem);
-            }
-            .chart {
-                height: 20vh;
-            }
-        }
-      </style>
+    </style>
 </head>
 
 
@@ -213,7 +64,8 @@
                     <span class="fas-3 bi_house" style="color: aliceblue;">아쿠팜</span>
                 </a>
                 <div class="nav_list">
-                    <a href="#" class="nav_link" data-bs-toggle="collapse" data-bs-target="#pages" aria-expanded="false" aria-controls="pages">
+                    <a href="#" class="nav_link" data-bs-toggle="collapse" data-bs-target="#pages" aria-expanded="false"
+                        aria-controls="pages">
                         <i class='bx bx-grid-alt nav_icon'></i>
                         <span class="nav_name">대시보드</span>
                     </a>
@@ -249,24 +101,26 @@
                     <!-- <i class="fas fa-chart-pie mr-1"></i> -->
                     <i class="fa-solid fa-chart-column"></i>
                     <h6 style="display: inline;">온실 차트</h6>
-                </sapn>
-                <ul class="nav nav-pills" style="float: right;">
-                    <li class="nav-item"> 
-                        <a class="nav-link active" href="#" data-bs-target="#temp_chart" data-bs-toggle="tab" style="padding: 5px;">온도/습도</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" data-bs-target="#hum_chart" data-bs-toggle="tab" style="padding: 5px;">환경정보</a>
-                    </li>
-                </ul>
+                    </sapn>
+                    <ul class="nav nav-pills" style="float: right;">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#" data-bs-target="#temp_chart" data-bs-toggle="tab"
+                                style="padding: 5px;">온도/습도</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" data-bs-target="#hum_chart" data-bs-toggle="tab"
+                                style="padding: 5px;">환경정보</a>
+                        </li>
+                    </ul>
             </div>
             <!-- /.card-header -->
             <div class="card-body">
                 <div class="tab-content p-0">
                     <div class="chart tab-pane active" id="temp_chart">
-                        <canvas id="data-chart"></canvas>
+                        <div id="data-chart"></div>
                     </div>
                     <div class="chart tab-pane" id="hum_chart">
-                        <canvas id="data-chart2"></canvas>
+                        <div id="data-chart2"></div>
                     </div>
                 </div>
             </div>
@@ -281,128 +135,108 @@
     <script src="js/memberAuth.js"></script>
     <script src="js/draw_devices.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
     <script src="https://kit.fontawesome.com/57c8b4e229.js"></script>
     <script>
-        const ctx = $("#data-chart");
-        const ctx2 = $("#data-chart2");
-        const loc = decodeURI(location.search.substr(location.search.indexOf("?") + 1)).split(",");
-        var test = null
-        $(document).ready(function() {
-            $("#chartlink").on("click", function() { window.location = (`/chart?${name=loc[0]},${device=loc[1]}`) })
-            $("#dashboard_name").text(loc[0])
-            test = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: ['Item 1', 'Item 2', 'Item 3'],
-                    datasets: [{
-                        data: [10, 20, 30],
-                        label: "sample",
-                    }]
+        var options = {
+            chart: {
+                height: 350,
+                type: "line",
+                stacked: false
+            },
+            dataLabels: {
+                enabled: false,
+                position: 'top',
+            },
+            colors: ["#FF1654", "#247BA0"],
+            series: [
+                {
+                name: "Series A",
+                data: [1.4, 2, 2.5, 1.5, 2.5, 2.8, 3.8, 4.6]
                 },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio : false,
-                    responsiveAnimationDuration: 1000,
-                    legend: {
-                        position: 'top',
-                    }, 
-                    title: {
-                        display: true,
-                        text: 'exmple chart'
-                    },
-                    Plugins: {
-                        colors: {
-                            forceOverride: true
-                        }
-                    },
-                    interaction: {
-                        mode: 'index',
-                        intersect: false,
-                    },
-                    elements: {
-                        point: { radius: 2 },
-                    },
-                    scales: {
-                        // x: {
-                        //     grid: { display:false },
-                        //     title: {
-                        //         display: true, 
-                        //         text: 'date'   
-                        //     },
-                        //     type: "time",
-                        //     time: {
-                        //         unit: "minute",
-                        //         displayFormats: {
-                        //             minute: "MM-DD HH:mm",
-                        //         },
-                        //     },
-                        //     ticks: {
-                        //         autoSkip: true,
-                        //         autoSkipPadding: 20,
-                        //         maxRotation: 0,
-                        //     },
-                        // },
-                        y: {
-                            ticks: { fontColor: 'rgba(60,141,188,0.9)' },
-                            grid: { display:false },
-                            id: 'temp',
-                            position: 'left',
-                            title: { 
-                                display: true,
-                                labelString: "온도 °C" ,
-                            }
-                        },
-                        y2: {
-                            ticks: { fontColor: 'rgba(255, 102, 102, 0.9)' },
-                            grid: { display:false },
-                            id: 'hum',
-                            position: 'right',
-                            title: { 
-                                display: true,
-                                text: "습도 %" ,
-                                fontColor: 'rgba(255, 102, 102, 0.9)'
-                            }
-                        }
+                {
+                name: "Series B",
+                data: [20, 29, 37, 36, 44, 45, 50, 58]
+                }
+            ],
+            stroke: {
+                width: [4, 4]
+            },
+            plotOptions: {
+                bar: {
+                columnWidth: "20%"
+                }
+            },
+            xaxis: {
+                categories: [2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016]
+            },
+            yaxis: [
+                {
+                axisTicks: {
+                    show: true
+                },
+                axisBorder: {
+                    show: true,
+                    color: "#FF1654"
+                },
+                labels: {
+                    style: {
+                    colors: "#FF1654"
+                    }
+                },
+                title: {
+                    text: "Series A",
+                    style: {
+                    color: "#FF1654"
                     }
                 }
-            })
-            new Chart(ctx2, {
-                type: 'line',
-                data: {
-                    labels: ['Item 1', 'Item 2', 'Item 3'],
-                    datasets: [{
-                        data: [10, 20, 50],
-                        label: "sample",
-                    }]
                 },
-                options: {
-                    maintainAspectRatio: false,
-                    responsive: true,
-                    legend: {
-                        position: 'top',
-                    }, 
-                    title: {
-                        display: true,
-                        text: 'exmple chart'
-                    },
-                    Plugins: {
-                        colors: {
-                            forceOverride: true
-                        }
-                    },
-                    interaction: {
-                        mode: 'index',
-                        intersect: false,
-                    },
-                    elements: {
-                        point: { radius: 2 },
-                    },
+                {
+                opposite: true,
+                axisTicks: {
+                    show: true
+                },
+                axisBorder: {
+                    show: true,
+                    color: "#247BA0"
+                },
+                labels: {
+                    style: {
+                    colors: "#247BA0"
+                    }
+                },
+                title: {
+                    text: "Series B",
+                    style: {
+                    color: "#247BA0"
+                    }
                 }
-            })
-        })
+                }
+            ],
+            tooltip: {
+                enabled: true,
+                shared: true,
+                intersect: false,
+                x: {
+                    show: false
+                },
+            },
+            legend: {
+                horizontalAlign: "left",
+                offsetX: 40
+            },
+            grid: {
+                borderColor: "#ffffff",  
+            },
+            };
+
+            var chart = new ApexCharts(document.querySelector("#data-chart"), options);
+
+            chart.render();
     </script>
+
 </body>
 
 </html>
