@@ -50,14 +50,12 @@
                     <span class="fas-3 bi_house" style="color: aliceblue;">아쿠팜</span>
                 </a>
                 <div class="nav_list">
-                    <a href="#" class="nav_link">
+                    <a href="#" class="nav_link" data-bs-toggle="collapse" data-bs-target="#pages" aria-expanded="false" aria-controls="pages">
                         <i class='bx bx-grid-alt nav_icon'></i>
                         <span class="nav_name">대시보드</span>
                     </a>
-                    <a href="#" class="nav_link">
-                        <i class='bx bx-bar-chart-alt-2 nav_icon'></i>
-                        <span class="nav_name">차트</span>
-                    </a>
+                    <ul id="pages" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                    </ul>
                     <a href="/student_manage" class="nav_link" id="stumanag">
                         <i class='bx bx-user nav_icon'></i> <span class="nav_name">학생관리</span>
                     </a>
@@ -65,18 +63,6 @@
                         <i class='bx bx-cog nav_icon'></i>
                         <span class="nav_name">설정</span>
                     </a>
-                    <!-- <a href="#" class="nav_link" id="settings" data-bs-toggle="collapse" data-bs-target="#pages" aria-expanded="false" aria-controls="pages">
-                        <i class='bx bx-cog nav_icon'></i>
-                        <span class="nav_name">설정</span>
-                    </a>
-                    <ul id="pages" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-                        <a href="/admin" class="nav_link" id="stumanag">
-                            <i class='bx bx-user nav_icon'></i> <span class="nav_name">사용자관리</span>
-                        </a>
-                        <a href="#" class="nav_link" id="stumanag">
-                            <i class='bx bx-user nav_icon'></i> <span class="nav_name">가입승인</span>
-                        </a>
-                    </ul> -->
                 </div>
             </div>
 
@@ -236,18 +222,10 @@
     <script src="js/sidebar.js"></script>
     <script src="/js/duplicate.js"></script>
     <script src="/js/member_control.js"></script>
+    <script src="/js/memberAuth.js"></script>
+    <script src="/js/draw_devices.js"></script>
     <script>
-        const level = ['학생용', '교사용', '일반용', '관리자', '관리자']
         var gen = ['gen_school', 'gen_grade', 'gen_class', 'gen_number']
-        var id = null;
-
-        function logout() {
-            var f = document.createElement('form');
-            f.setAttribute('method', 'post');
-            f.setAttribute('action', '/session_logout');
-            document.body.appendChild(f);
-            f.submit();
-        }
 
         $(document).ready(function () {
             $.ajax({

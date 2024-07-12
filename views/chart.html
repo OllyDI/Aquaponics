@@ -22,12 +22,14 @@
             box-sizing: border-box; /* 패딩을 포함하여 크기 계산 */
         }
         .video-card {
+            flex: 0 0 auto;
             max-height: 100%; /* 최대 높이를 100%로 설정 */
             object-fit: cover;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 그림자 효과 추가 */
             border-radius: 10px;
             /* background-color: #000;  */
             height: 100%;
+            width: 50%;
         }
         .card-container {
             display: flex;
@@ -40,7 +42,7 @@
             max-height: 100%; /* 전체 높이를 가득 채우도록 설정 */
         }
         .enver-card {
-          flex: 1;
+          flex: 2;
           height: 120px; /* 카드 높이를 정사각형으로 설정 */
           perspective: 1000px; /* 3D 효과를 위한 값 */
           cursor: pointer; /* 마우스 커서를 포인터로 변경하여 클릭 가능함을 나타냄 */
@@ -50,7 +52,7 @@
           margin-bottom: 1rem;
           padding: 0 0.5rem 0.5rem 0.5rem;
           --bs-card-border-color: none;
-          
+          /* min-width: 200px !important; */
         }
         .card-inner {
           position: relative;
@@ -86,7 +88,7 @@
           transform: rotateY(180deg);
         }
         .video-item {
-            /* width: 50%; */
+            width: 100%;
             height: 50%;
             padding: 0 0.5rem 0 0.5rem ;
         }
@@ -98,10 +100,13 @@
         .chart {
             height: 38vh;
         }
+        .srcn {
+            max-height: calc(100vh - 6.25rem);
+        }
         @media screen and (max-width: 1124px) {
             .video-card {
                 width: 100%; /* 비디오 카드 너비 설정 */
-                max-height: calc(200vh - 200px - 4rem); /* 화면 높이에서 아래 카드 영역 높이(150px * 2 + 20px)를 뺀 만큼의 최대 높이 설정 */
+                max-height: calc(200vh - 200px - 3.75rem); /* 화면 높이에서 아래 카드 영역 높이(150px * 2 + 20px)를 뺀 만큼의 최대 높이 설정 */
                 margin-bottom: 20px;
             }
             .video-item {
@@ -138,13 +143,16 @@
                 width: 100%; /* 전체 너비를 가득 채우도록 설정 */
                 box-sizing: border-box; /* 패딩을 포함하여 크기 계산 */
             }
+            .srcn {
+                max-height: calc(100vh - 5.25rem);
+            }
         }
         @media screen and (max-width: 767px) {
             body {
                 padding: 0;
             }
             .video-card {
-                max-height: calc(200vh - 200px - 4rem);
+                max-height: calc(200vh - 200px - 5.25rem);
             }
             .video-item {
                 height: auto;
@@ -155,7 +163,7 @@
         }
         @media screen and (max-width: 600px) {
             .video-card {
-                max-height: calc(20vh + 20vh + 6rem);
+                max-height: calc(30vh + 20vh + 6rem);
             }
             .chart {
                 height: 20vh;
@@ -205,11 +213,13 @@
                     <span class="fas-3 bi_house" style="color: aliceblue;">아쿠팜</span>
                 </a>
                 <div class="nav_list">
-                    <a href="#" onclick="dashboardOpen()" class="nav_link active">
+                    <a href="#" class="nav_link" data-bs-toggle="collapse" data-bs-target="#pages" aria-expanded="false" aria-controls="pages">
                         <i class='bx bx-grid-alt nav_icon'></i>
                         <span class="nav_name">대시보드</span>
                     </a>
-                    <a href="#" class="nav_link">
+                    <ul id="pages" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                    </ul>
+                    <a href="#" class="nav_link active" id="chartlink" onclick="openChart()">
                         <i class='bx bx-bar-chart-alt-2 nav_icon'></i>
                         <span class="nav_name">차트</span>
                     </a>
@@ -231,156 +241,36 @@
         </nav>
     </div>
 
-    <div class="height-100 bg-light" style="padding: 1rem; max-height: calc(100vh - 5rem);">
-        <div class="main-container">
-            <!-- 비디오 카드 -->
-            <div class="video-card" style="margin-right: 1rem;">
-                <img class="video-item" src="imgs/sample.png" style="border-radius: 10px; margin-bottom: 1rem;">
-                <div class="">
-                    <!-- <canvas id="data-chart" width="100%"></canvas> -->
-                    <div class="video-item" style="padding-bottom: 0.5rem;">
-                        <!-- /.card-header -->
-                        <div class="tab-content">
-                            <ul class="nav nav-pills" style="float: right;">
-                                <li class="nav-item"> 
-                                    <a class="nav-link active" href="#" data-bs-target="#temp_chart" data-bs-toggle="tab" style="padding: 5px;">온도/습도</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#" data-bs-target="#hum_chart" data-bs-toggle="tab" style="padding: 5px;">환경정보</a>
-                                </li>
-                            </ul>
-                            <div class="chart tab-pane active" id="temp_chart">
-                                <canvas id="data-chart"></canvas>
-                            </div>
-                            <div class="chart tab-pane" id="hum_chart">
-                                <canvas id="data-chart2"></canvas>
-                            </div>
-                        </div>
-                        <!-- /.card-body -->
+    <div class="height-100 bg-light srcn" style="padding: 1rem;">
+        <h4 style="padding: 0 0.5rem 0 0.5rem;" id="dashboard_name"></h4>
+        <div class="card">
+            <div class="card-header">
+                <span class="card-title" style="vertical-align: -webkit-baseline-middle; font-size: 16px;">
+                    <!-- <i class="fas fa-chart-pie mr-1"></i> -->
+                    <i class="fa-solid fa-chart-column"></i>
+                    <h6 style="display: inline;">온실 차트</h6>
+                </sapn>
+                <ul class="nav nav-pills" style="float: right;">
+                    <li class="nav-item"> 
+                        <a class="nav-link active" href="#" data-bs-target="#temp_chart" data-bs-toggle="tab" style="padding: 5px;">온도/습도</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-bs-target="#hum_chart" data-bs-toggle="tab" style="padding: 5px;">환경정보</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+                <div class="tab-content p-0">
+                    <div class="chart tab-pane active" id="temp_chart">
+                        <canvas id="data-chart"></canvas>
+                    </div>
+                    <div class="chart tab-pane" id="hum_chart">
+                        <canvas id="data-chart2"></canvas>
                     </div>
                 </div>
             </div>
-
-            <!-- 150px 사이즈의 6개 카드 -->
-            <div class="card-container">
-                <div class="card-row">
-                    <div class="enver-card col-lg-6 col-sm-6" onclick="this.classList.toggle('flipped')">
-                        <div class="card-inner">
-                            <div class="card-face card-front">
-                                <h3>Front 1</h3>
-                                <p>Click to flip</p>
-                            </div>
-                            <div class="card-face card-back">
-                                <h3>Back 1</h3>
-                                <p>Click again to flip back</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="enver-card col-lg-6 col-sm-6" onclick="this.classList.toggle('flipped')">
-                        <div class="card-inner">
-                            <div class="card-face card-front">
-                                <h3>Front 2</h3>
-                                <p>Click to flip</p>
-                            </div>
-                            <div class="card-face card-back">
-                                <h3>Back 2</h3>
-                                <p>Click again to flip back</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-row">
-                    <div class="enver-card col-lg-6 col-sm-6" onclick="this.classList.toggle('flipped')">
-                        <div class="card-inner">
-                            <div class="card-face card-front">
-                                <h3>Front 3</h3>
-                                <p>Click to flip</p>
-                            </div>
-                            <div class="card-face card-back">
-                                <h3>Back 3</h3>
-                                <p>Click again to flip back</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="enver-card col-lg-6 col-sm-6" onclick="this.classList.toggle('flipped')">
-                        <div class="card-inner">
-                            <div class="card-face card-front">
-                                <h3>Front 4</h3>
-                                <p>Click to flip</p>
-                            </div>
-                            <div class="card-face card-back">
-                                <h3>Back 4</h3>
-                                <p>Click again to flip back</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-row">
-                    <div class="enver-card col-lg-6 col-sm-6" onclick="this.classList.toggle('flipped')">
-                        <div class="card-inner">
-                            <div class="card-face card-front">
-                                <h3>Front 5</h3>
-                                <p>Click to flip</p>
-                            </div>
-                            <div class="card-face card-back">
-                                <h3>Back 5</h3>
-                                <p>Click again to flip back</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="enver-card col-lg-6 col-sm-6" onclick="this.classList.toggle('flipped')">
-                        <div class="card-inner">
-                            <div class="card-face card-front">
-                                <h3>Front 6</h3>
-                                <p>Click to flip</p>
-                            </div>
-                            <div class="card-face card-back">
-                                <h3>Back 6</h3>
-                                <p>Click again to flip back</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="enver-card" onclick="this.classList.toggle('flipped')" style="width: 100%;">
-                    <div class="card-inner">
-                        <div class="card-face card-front">
-                            <h3>Front 6</h3>
-                            <p>Click to flip</p>
-                        </div>
-                        <div class="card-face card-back">
-                            <h3>Back 6</h3>
-                            <p>Click again to flip back</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="enver-card" onclick="this.classList.toggle('flipped')" style="width: 100%;">
-                    <div class="card-inner">
-                        <div class="card-face card-front">
-                            <h3>Front 6</h3>
-                            <p>Click to flip</p>
-                        </div>
-                        <div class="card-face card-back">
-                            <h3>Back 6</h3>
-                            <p>Click again to flip back</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="enver-card" onclick="this.classList.toggle('flipped')" style="margin-bottom: 0; width: 100%;">
-                    <div class="card-inner">
-                        <div class="card-face card-front">
-                            <h3>Front 6</h3>
-                            <p>Click to flip</p>
-                        </div>
-                        <div class="card-face card-back">
-                            <h3>Back 6</h3>
-                            <p>Click again to flip back</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <!-- /.card-body -->
         </div>
     </div>
 
@@ -389,12 +279,20 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/sidebar.js"></script>
     <script src="js/memberAuth.js"></script>
+    <script src="js/draw_devices.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <script src="https://kit.fontawesome.com/57c8b4e229.js"></script>
     <script>
         const ctx = $("#data-chart");
         const ctx2 = $("#data-chart2");
+        const loc = decodeURI(location.search.substr(location.search.indexOf("?") + 1)).split(",");
+        var test = null
         $(document).ready(function() {
-            new Chart(ctx, {
+            $("#chartlink").on("click", function() { window.location = (`/chart?${name=loc[0]},${device=loc[1]}`) })
+            $("#dashboard_name").text(loc[0])
+            test = new Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: ['Item 1', 'Item 2', 'Item 3'],
@@ -404,8 +302,9 @@
                     }]
                 },
                 options: {
-                    maintainAspectRatio: false,
                     responsive: true,
+                    maintainAspectRatio : false,
+                    responsiveAnimationDuration: 1000,
                     legend: {
                         position: 'top',
                     }, 
@@ -417,13 +316,56 @@
                         colors: {
                             forceOverride: true
                         }
-                    },interaction: {
-                            mode: 'index',
-                            intersect: false,
+                    },
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    elements: {
+                        point: { radius: 2 },
+                    },
+                    scales: {
+                        // x: {
+                        //     grid: { display:false },
+                        //     title: {
+                        //         display: true, 
+                        //         text: 'date'   
+                        //     },
+                        //     type: "time",
+                        //     time: {
+                        //         unit: "minute",
+                        //         displayFormats: {
+                        //             minute: "MM-DD HH:mm",
+                        //         },
+                        //     },
+                        //     ticks: {
+                        //         autoSkip: true,
+                        //         autoSkipPadding: 20,
+                        //         maxRotation: 0,
+                        //     },
+                        // },
+                        y: {
+                            ticks: { fontColor: 'rgba(60,141,188,0.9)' },
+                            grid: { display:false },
+                            id: 'temp',
+                            position: 'left',
+                            title: { 
+                                display: true,
+                                labelString: "온도 °C" ,
+                            }
                         },
-                        elements: {
-                            point: { radius: 2 },
-                        },
+                        y2: {
+                            ticks: { fontColor: 'rgba(255, 102, 102, 0.9)' },
+                            grid: { display:false },
+                            id: 'hum',
+                            position: 'right',
+                            title: { 
+                                display: true,
+                                text: "습도 %" ,
+                                fontColor: 'rgba(255, 102, 102, 0.9)'
+                            }
+                        }
+                    }
                 }
             })
             new Chart(ctx2, {
@@ -457,7 +399,6 @@
                     elements: {
                         point: { radius: 2 },
                     },
-                    outerHeight: '100'
                 }
             })
         })
