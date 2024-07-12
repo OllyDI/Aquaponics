@@ -35,6 +35,9 @@ router.get('/modify_profile', auth, function(req, res, next) {
 router.get('/dashboard', auth, function(req, res, next) {
   res.sendFile(path.join(__dirname, "../views/dashboard.html"))
 });
+router.get('/chart', auth, function(req, res, next) {
+  res.sendFile(path.join(__dirname, "../views/chart.html"))
+});
 
 router.get('/student_manage', auth, function(req, res, next) {
   if (req.user.level == 1 || req.user.level == 3) res.sendFile(path.join(__dirname, "../views/student_manage.html"))

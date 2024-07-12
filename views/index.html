@@ -49,10 +49,18 @@
                     <span class="fas-3 bi_house" style="color: aliceblue;">아쿠팜</span>
                 </a>
                 <div class="nav_list">
-                    <a href="#" class="nav_link">
+                    <a href="#" class="nav_link" data-bs-toggle="collapse" data-bs-target="#pages" aria-expanded="false" aria-controls="pages">
                         <i class='bx bx-grid-alt nav_icon'></i>
                         <span class="nav_name">대시보드</span>
                     </a>
+                    <ul id="pages" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                        <!-- <a href="#" class="nav_link">
+                            <i class='bx bx-devices nav_icon'></i> <span class="nav_name">fdssdfsdffsdfsddsfdssfdsdfdfsdsdf</span>
+                        </a>
+                        <a href="#" class="nav_link">
+                            <i class='bx bx-devices nav_icon'></i> <span class="nav_name">가입승인</span>
+                        </a> -->
+                    </ul>
                     <a href="#" class="nav_link">
                         <i class='bx bx-bar-chart-alt-2 nav_icon'></i>
                         <span class="nav_name">차트</span>
@@ -104,7 +112,7 @@
                 data: { id: id },
                 success:function(data) {
                     let html = '';
-
+                    let deviceHtml = '';
                     $.each(data, (i, val) => {
                         html += `<div class="card" style="margin-bottom: 1rem;">
                                     <a href="#" onclick="window.open('/dashboard?${name=val.name},${device=val.device_id}')" style="color: black;">
@@ -114,7 +122,13 @@
                                         </div>
                                     </a>
                                 </div>`
-                        if (data.length - 1 == i) $("#device_card").append(html);
+                        deviceHtml += `<a href="/dashboard?${name=val.name},${device=val.device_id}" class="nav_link">
+                                        <i class='bx bx-devices nav_icon'></i> <span class="nav_name">${val.name}</span>
+                                    </a>`
+                        if (data.length - 1 == i) {
+                            $("#device_card").append(html);
+                            $("#pages").append(deviceHtml);
+                        }
                     })
                 }
             })

@@ -22,35 +22,32 @@
             box-sizing: border-box; /* 패딩을 포함하여 크기 계산 */
         }
         .video-card {
+            flex: 1; /* 비디오 카드가 가로로 남은 공간을 모두 차지하도록 설정 */
             max-height: 100%; /* 최대 높이를 100%로 설정 */
-            object-fit: cover;
+            object-fit: cover; /* 비디오가 카드에 꽉 차게 표시되도록 설정 */
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 그림자 효과 추가 */
-            border-radius: 10px;
-            /* background-color: #000;  */
-            height: 100%;
+            border-radius: 10px; /* 카드 모서리를 둥글게 만듦 */
+            background-color: #000; /* 비디오가 없을 때 배경색 */
         }
         .card-container {
             display: flex;
-            justify-content: space-between;
-            flex: 2;
             flex-direction: column; /* 카드를 세로로 나열 */
             gap: 10px; /* 카드 사이의 간격 설정 */
             overflow-y: auto; /* 카드가 넘칠 경우 세로 스크롤 표시 */
             /* 카드 컨테이너의 고정 너비 설정 */
             max-height: 100%; /* 전체 높이를 가득 채우도록 설정 */
         }
-        .enver-card {
-          flex: 1;
-          height: 120px; /* 카드 높이를 정사각형으로 설정 */
+        .card {
+          flex: 0 0 auto; /* 카드의 너비를 고정 */
+          width: 150px; /* 카드 너비를 고정 */
+          height: 150px; /* 카드 높이를 정사각형으로 설정 */
           perspective: 1000px; /* 3D 효과를 위한 값 */
           cursor: pointer; /* 마우스 커서를 포인터로 변경하여 클릭 가능함을 나타냄 */
           position: relative; /* 영상을 겹쳐서 표시하기 위해 상대 위치 설정 */
-          /* overflow: hidden; */
+          overflow: hidden; /* 카드 내부의 내용이 넘칠 때를 대비해 오버플로우 숨김 */
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 그림자 효과 추가 */
           border-radius: 10px; /* 카드 모서리를 둥글게 만듦 */
           margin-bottom: 1rem;
-          padding: 0 0.5rem 0.5rem 0.5rem;
-          --bs-card-border-color: none;
-          
         }
         .card-inner {
           position: relative;
@@ -58,10 +55,8 @@
           height: 100%;
           transition: transform 0.6s;
           transform-style: preserve-3d;
-          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 그림자 효과 추가 */
-          --bs-card-border-color: rgba(0, 0, 0, 0.175);
         }
-        .enver-card.flipped .card-inner {
+        .card.flipped .card-inner {
           transform: rotateY(180deg);
         }
         .card-face {
@@ -77,8 +72,8 @@
           font-size: 1.2rem;
         }
         .card-front {
-          /* background-color: #3498db;
-          color: white; */
+          background-color: #3498db; /* 앞면 색상 */
+          color: white;
         }
         .card-back {
           background-color: #2ecc71; /* 뒷면 색상 */
@@ -86,33 +81,35 @@
           transform: rotateY(180deg);
         }
         .video-item {
-            /* width: 50%; */
-            height: 50%;
-            padding: 0 0.5rem 0 0.5rem ;
+            width: 100%;
+            height: 100%;
         }
-        .card-row {
-            display:  flex;
-            flex-wrap: wrap;
-            /* margin: -; */
-        }
-        .chart {
-            height: 38vh;
-        }
-        .srcn {
-            max-height: calc(100vh - 6.25rem);
+        @media screen and (max-width: 768px) {
+            .video-card {
+                max-height: calc(100vh - 200px); /* 화면 높이에서 아래 카드 영역 높이(150px * 2 + 20px)를 뺀 만큼의 최대 높이 설정 */
+                object-fit: cover; /* 비디오가 카드에 꽉 차게 표시되도록 설정 */
+                margin-bottom: 20px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 그림자 효과 추가 */
+                border-radius: 10px; /* 카드 모서리를 둥글게 만듦 */
+                overflow-x: scroll;
+            }
+            .video-item {
+                max-height: calc(100vh - 200px - 4rem);
+                width: auto;
+            }
         }
         @media screen and (max-width: 1124px) {
             .video-card {
                 width: 100%; /* 비디오 카드 너비 설정 */
-                max-height: calc(200vh - 200px - 3.75rem); /* 화면 높이에서 아래 카드 영역 높이(150px * 2 + 20px)를 뺀 만큼의 최대 높이 설정 */
+                max-height: calc(100vh - 200px - 4rem); /* 화면 높이에서 아래 카드 영역 높이(150px * 2 + 20px)를 뺀 만큼의 최대 높이 설정 */
+                object-fit: cover; /* 비디오가 카드에 꽉 차게 표시되도록 설정 */
                 margin-bottom: 20px;
-            }
-            .video-item {
-                width: 100%;
-                margin: 0;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 그림자 효과 추가 */
+                border-radius: 10px; /* 카드 모서리를 둥글게 만듦 */
+                overflow-x: scroll;
             }
             .card-container {
-                overflow-y: visible; /* 가로 스크롤을 표시할 때만 스크롤이 나타나도록 설정 */
+                overflow-x: auto; /* 가로 스크롤을 표시할 때만 스크롤이 나타나도록 설정 */
                 max-width: 100%; /* 카드 컨테이너의 최대 너비를 설정 */
                 display: flex;
                 justify-content: flex-start;
@@ -122,15 +119,17 @@
                 flex-wrap: nowrap; /* 카드들이 한 줄에 나열되도록 설정 */
                 gap: 10px; /* 카드 사이의 간격 설정 */
                 padding-bottom: 10px; /* 아래쪽 여백 추가 */
+                overflow-x: auto; /* 카드들이 넘치면 가로 스크롤 표시 */
             }
-            .enver-card {
-                flex: 0 0 auto;
-                width: 50%; /* 카드 너비를 고정 */
-                height: 100px; /* 카드 높이를 정사각형으로 설정 */
+            .card {
+                flex: 0 0 auto; /* 카드의 너비를 고정 */
+                width: 150px; /* 카드 너비를 고정 */
+                height: 150px; /* 카드 높이를 정사각형으로 설정 */
                 perspective: 1000px; /* 3D 효과를 위한 값 */
                 cursor: pointer; /* 마우스 커서를 포인터로 변경하여 클릭 가능함을 나타냄 */
                 position: relative; /* 영상을 겹쳐서 표시하기 위해 상대 위치 설정 */
                 overflow: hidden; /* 카드 내부의 내용이 넘칠 때를 대비해 오버플로우 숨김 */
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 그림자 효과 추가 */
                 border-radius: 10px; /* 카드 모서리를 둥글게 만듦 */
             }
             .main-container {
@@ -140,31 +139,6 @@
                 height: 100%; /* 전체 높이를 가득 채우도록 설정 */
                 width: 100%; /* 전체 너비를 가득 채우도록 설정 */
                 box-sizing: border-box; /* 패딩을 포함하여 크기 계산 */
-            }
-            .srcn {
-                max-height: calc(100vh - 3.25rem);
-            }
-        }
-        @media screen and (max-width: 767px) {
-            body {
-                padding: 0;
-            }
-            .video-card {
-                max-height: calc(200vh - 200px - 5.25rem);
-            }
-            .video-item {
-                height: auto;
-            }
-            .chart {
-                height: 35vh;
-            }
-        }
-        @media screen and (max-width: 600px) {
-            .video-card {
-                max-height: calc(20vh + 20vh + 6rem);
-            }
-            .chart {
-                height: 20vh;
             }
         }
       </style>
@@ -215,7 +189,7 @@
                         <i class='bx bx-grid-alt nav_icon'></i>
                         <span class="nav_name">대시보드</span>
                     </a>
-                    <a href="/chart" class="nav_link">
+                    <a href="#" class="nav_link">
                         <i class='bx bx-bar-chart-alt-2 nav_icon'></i>
                         <span class="nav_name">차트</span>
                     </a>
@@ -237,41 +211,38 @@
         </nav>
     </div>
 
-    <div class="height-100 bg-light srcn" style="padding: 1rem;">
-            <h4 style="padding: 0 0.5rem 0 0.5rem;" id="dashboard_name"></h4>
+    <div class="height-100 bg-light" style="padding: 1rem; max-height: calc(100vh - 4rem);">
+        <!-- <div class="wrapper">
+            <div class="card_content" id="content" style="position: relative;">
+                <div class="card card_front" style="position: absolute;">
+                    <a href="#" class="">
+                        <div class="card-header">front</div>
+                        <div class="card-body">
+                            <span id="">body</span>
+                        </div>
+                    </a>
+                </div>
+                <div class="card card_back" id="back" style="position: absolute;">
+                    <a href="#" class="">
+                        <div class="card-header">back</div>
+                        <div class="card-body">
+                            <span id="">body</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div> -->
+
         <div class="main-container">
             <!-- 비디오 카드 -->
-            <div class="video-card" style="margin-right: 1rem;">
-                <img class="video-item" src="imgs/sample.png" style="border-radius: 10px; margin-bottom: 1rem;">
-                <div class="">
-                    <!-- <canvas id="data-chart" width="100%"></canvas> -->
-                    <div class="video-item" style="padding-bottom: 0.5rem;">
-                        <!-- /.card-header -->
-                        <div class="tab-content">
-                            <ul class="nav nav-pills" style="float: right;">
-                                <li class="nav-item"> 
-                                    <a class="nav-link active" href="#" data-bs-target="#temp_chart" data-bs-toggle="tab" style="padding: 5px;">온도/습도</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#" data-bs-target="#hum_chart" data-bs-toggle="tab" style="padding: 5px;">환경정보</a>
-                                </li>
-                            </ul>
-                            <div class="chart tab-pane active" id="temp_chart">
-                                <canvas id="data-chart"></canvas>
-                            </div>
-                            <div class="chart tab-pane" id="hum_chart">
-                                <canvas id="data-chart2"></canvas>
-                            </div>
-                        </div>
-                        <!-- /.card-body -->
-                    </div>
-                </div>
+            <div class="video-card">
+                <img class="video-item" src="imgs/sample.png" style=" border-radius: 10px;">
             </div>
 
             <!-- 150px 사이즈의 6개 카드 -->
             <div class="card-container">
                 <div class="card-row">
-                    <div class="enver-card col-lg-6 col-sm-6" onclick="this.classList.toggle('flipped')">
+                    <div class="card" onclick="this.classList.toggle('flipped')">
                         <div class="card-inner">
                             <div class="card-face card-front">
                                 <h3>Front 1</h3>
@@ -284,7 +255,7 @@
                         </div>
                     </div>
 
-                    <div class="enver-card col-lg-6 col-sm-6" onclick="this.classList.toggle('flipped')">
+                    <div class="card" onclick="this.classList.toggle('flipped')">
                         <div class="card-inner">
                             <div class="card-face card-front">
                                 <h3>Front 2</h3>
@@ -296,9 +267,8 @@
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="card-row">
-                    <div class="enver-card col-lg-6 col-sm-6" onclick="this.classList.toggle('flipped')">
+
+                    <div class="card" onclick="this.classList.toggle('flipped')">
                         <div class="card-inner">
                             <div class="card-face card-front">
                                 <h3>Front 3</h3>
@@ -311,7 +281,7 @@
                         </div>
                     </div>
 
-                    <div class="enver-card col-lg-6 col-sm-6" onclick="this.classList.toggle('flipped')">
+                    <div class="card" onclick="this.classList.toggle('flipped')">
                         <div class="card-inner">
                             <div class="card-face card-front">
                                 <h3>Front 4</h3>
@@ -323,9 +293,8 @@
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="card-row">
-                    <div class="enver-card col-lg-6 col-sm-6" onclick="this.classList.toggle('flipped')">
+
+                    <div class="card" onclick="this.classList.toggle('flipped')">
                         <div class="card-inner">
                             <div class="card-face card-front">
                                 <h3>Front 5</h3>
@@ -338,7 +307,7 @@
                         </div>
                     </div>
 
-                    <div class="enver-card col-lg-6 col-sm-6" onclick="this.classList.toggle('flipped')">
+                    <div class="card" onclick="this.classList.toggle('flipped')" style="margin-bottom: 0;">
                         <div class="card-inner">
                             <div class="card-face card-front">
                                 <h3>Front 6</h3>
@@ -351,42 +320,6 @@
                         </div>
                     </div>
                 </div>
-                <div class="enver-card" onclick="this.classList.toggle('flipped')" style="width: 100%;">
-                    <div class="card-inner">
-                        <div class="card-face card-front">
-                            <h3>Front 6</h3>
-                            <p>Click to flip</p>
-                        </div>
-                        <div class="card-face card-back">
-                            <h3>Back 6</h3>
-                            <p>Click again to flip back</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="enver-card" onclick="this.classList.toggle('flipped')" style="width: 100%;">
-                    <div class="card-inner">
-                        <div class="card-face card-front">
-                            <h3>Front 6</h3>
-                            <p>Click to flip</p>
-                        </div>
-                        <div class="card-face card-back">
-                            <h3>Back 6</h3>
-                            <p>Click again to flip back</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="enver-card" onclick="this.classList.toggle('flipped')" style="margin-bottom: 0; width: 100%;">
-                    <div class="card-inner">
-                        <div class="card-face card-front">
-                            <h3>Front 6</h3>
-                            <p>Click to flip</p>
-                        </div>
-                        <div class="card-face card-back">
-                            <h3>Back 6</h3>
-                            <p>Click again to flip back</p>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
@@ -396,82 +329,24 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/sidebar.js"></script>
     <script src="js/memberAuth.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
     <script>
-        const ctx = $("#data-chart");
-        const ctx2 = $("#data-chart2");
-        const loc = decodeURI(location.search.substr(location.search.indexOf("?") + 1)).split(",");
+        // const div = document.getElementById('content');
+        // var cnt = 1;
 
-        $(document).ready(function() {
-            
-            $("#dashboard_name").text(loc[0])
-            new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: ['Item 1', 'Item 2', 'Item 3'],
-                    datasets: [{
-                        data: [10, 20, 30],
-                        label: "sample",
-                    }]
-                },
-                options: {
-                    maintainAspectRatio: false,
-                    responsive: true,
-                    legend: {
-                        position: 'top',
-                    }, 
-                    title: {
-                        display: true,
-                        text: 'exmple chart'
-                    },
-                    Plugins: {
-                        colors: {
-                            forceOverride: true
-                        }
-                    },interaction: {
-                            mode: 'index',
-                            intersect: false,
-                        },
-                        elements: {
-                            point: { radius: 2 },
-                        },
-                }
-            })
-            new Chart(ctx2, {
-                type: 'line',
-                data: {
-                    labels: ['Item 1', 'Item 2', 'Item 3'],
-                    datasets: [{
-                        data: [10, 20, 50],
-                        label: "sample",
-                    }]
-                },
-                options: {
-                    maintainAspectRatio: false,
-                    responsive: true,
-                    legend: {
-                        position: 'top',
-                    }, 
-                    title: {
-                        display: true,
-                        text: 'exmple chart'
-                    },
-                    Plugins: {
-                        colors: {
-                            forceOverride: true
-                        }
-                    },
-                    interaction: {
-                        mode: 'index',
-                        intersect: false,
-                    },
-                    elements: {
-                        point: { radius: 2 },
-                    },
-                    outerHeight: '100'
-                }
-            })
-        })
+        // div.addEventListener('click', (event) => {
+        //     console.log(cnt);
+        //     if (cnt % 2 == 1) {
+        //         document.getElementById("back").style.transform = "rotateY(180deg)";
+        //         document.getElementById("content").style.transform = "rotateY(180deg)";
+        //     } else {
+        //         document.getElementById("back").style.transform = "rotateY(180deg)";
+        //         document.getElementById("content").style.transform = "rotateY(0deg)";
+        //     }
+        //     cnt += 1;
+        // });
+        // function dashboardOpen() {
+        //     window.location = `/dashboard${decodeURI(location.search.substr(location.search))}`;
+        // }
     </script>
 </body>
 
