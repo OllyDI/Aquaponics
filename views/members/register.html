@@ -20,8 +20,8 @@
         <div class="card sel_register_card">
             <div class="card-body select-card">
                 <button class="btn sel_register_btn row" type="button" id="general_btn" onclick="sel_register(this.id)">
-                    <i class="fa-solid fa-user"></i>
-                    일반용
+                    <i class="fa-solid fa-user register-icon"></i>
+                    <span class="register-font">일반용</span>
                 </button>
             </div>
         </div>
@@ -30,8 +30,8 @@
         <div class="card sel_register_card">
             <div class="card-body select-card">
                 <button class="btn sel_register_btn row" type="button" id="school_btn" onclick="sel_register(this.id)">
-                    <i class="fa-solid fa-graduation-cap" style="font-size: 70px;"></i>
-                    <span>학교용</span>
+                    <i class="fa-solid fa-graduation-cap register-icon"></i>
+                    <span class="register-font">학교용</span>
                 </button>
             </div>
         </div>
@@ -159,14 +159,14 @@
     </div>
 </div>
 <div class="modal" id="schoolSerch" tabindex="-1">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">학교 검색</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div class="maps" id="kakao_map" style="width:400px; height:400px;"></div>
+                <div class="maps" id="kakao_map" style="width:100%; height:400px;"></div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
@@ -205,28 +205,12 @@
 
     $(document).ready(function() {
         const node = document.getElementById('kakao_map'); // 지도를 표시할 div
-        const center = new kakao.maps.LatLng(37.50802, 127.062835);
         const options = {
-            center,
+            center: new kakao.maps.LatLng(33.450701, 126.570667),
             level: 3
         };
         const map = new kakao.maps.Map(node, options);
     })
-    // const script = document.createElement("script");
-    // script.src = "http://dapi.kakao.com/v2/maps/sdk.js?appkey= JAVASCRIPT_APP_KEY=826fecb6d8bc041c95f1ebfbd7dedcdc";
-    // document.head.appendChild(script);
-    // script.onload = () => {
-    //     console.log(123);
-    //     kakao.maps.load(() => {
-    //         const node = document.getElementById('kakao_map'); // 지도를 표시할 div
-    //         const center = new kakao.maps.LatLng(37.50802, 127.062835);
-    //         const options = {
-    //             center,
-    //             level: 3
-    //         };
-    //         const map = new kakao.maps.Map(node, options);
-    //     });
-    // };
 </script>
 </body>
 </html>

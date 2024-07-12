@@ -94,11 +94,20 @@ label {
     height: 268px; 
     font-weight: 400; 
     font-size: 30px;
+    margin-left: 0;
 }
 .select-card {
     width: 300px; 
     height: 300px; 
-    }
+}
+.register-icon {
+    font-size: 70px; 
+    padding-bottom: 1rem;
+}
+.register-font {
+    font-weight: bold; 
+    font-size: 33px;
+}
 @media screen and (max-width: 767px) {
     .row {
         display: block;
@@ -110,8 +119,15 @@ label {
         height: 118px;
     }
     .sel_register_card {
-        --bs-card-border-color: rgba(0, 0, 0, 0.175);
         border-radius: 1rem;
         border-width: 0.5rem;
+    }
+    .register-icon {
+        font-size: 45px; 
+        padding-bottom: 1rem;
+    }
+    .register-font {
+        font-weight: 500; 
+        font-size: 30px;
     }
 }
