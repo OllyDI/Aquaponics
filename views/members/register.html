@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
     <link rel="stylesheet" href="/style/member.css">
+    <script src="https://kit.fontawesome.com/57c8b4e229.js"></script>
 </head>
 
 <body class="login-page">
@@ -18,14 +19,20 @@
     <div class="col-lg-6 col-md-6 col-sm-12" >
         <div class="card sel_register_card">
             <div class="card-body select-card">
-                <button class="btn sel_register_btn" type="button" id="general_btn" onclick="sel_register(this.id)">일반용</button>
+                <button class="btn sel_register_btn row" type="button" id="general_btn" onclick="sel_register(this.id)">
+                    <i class="fa-solid fa-user"></i>
+                    일반용
+                </button>
             </div>
         </div>
     </div>
     <div class="col-lg-6 col-md-6 col-sm-12" >
         <div class="card sel_register_card">
             <div class="card-body select-card">
-                <button class="btn sel_register_btn" type="button" id="school_btn" onclick="sel_register(this.id)">학교용</button>
+                <button class="btn sel_register_btn row" type="button" id="school_btn" onclick="sel_register(this.id)">
+                    <i class="fa-solid fa-graduation-cap" style="font-size: 70px;"></i>
+                    <span>학교용</span>
+                </button>
             </div>
         </div>
     </div>
@@ -159,7 +166,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <p>Modal body text goes here.</p>
+                <div class="maps" id="kakao_map" style="width:400px; height:400px;"></div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
@@ -172,6 +179,8 @@
 <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="/js/duplicate.js"></script>
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=826fecb6d8bc041c95f1ebfbd7dedcdc"></script>
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=APIKEY&826fecb6d8bc041c95f1ebfbd7dedcdc=services"></script>
 <script>
     var gen = ['gen_school', 'gen_grade', 'gen_class', 'gen_number']
 
@@ -193,6 +202,31 @@
         $("#login_box").show();
     }
     function actions() { $("#level").attr('disabled', false); }
+
+    $(document).ready(function() {
+        const node = document.getElementById('kakao_map'); // 지도를 표시할 div
+        const center = new kakao.maps.LatLng(37.50802, 127.062835);
+        const options = {
+            center,
+            level: 3
+        };
+        const map = new kakao.maps.Map(node, options);
+    })
+    // const script = document.createElement("script");
+    // script.src = "http://dapi.kakao.com/v2/maps/sdk.js?appkey= JAVASCRIPT_APP_KEY=826fecb6d8bc041c95f1ebfbd7dedcdc";
+    // document.head.appendChild(script);
+    // script.onload = () => {
+    //     console.log(123);
+    //     kakao.maps.load(() => {
+    //         const node = document.getElementById('kakao_map'); // 지도를 표시할 div
+    //         const center = new kakao.maps.LatLng(37.50802, 127.062835);
+    //         const options = {
+    //             center,
+    //             level: 3
+    //         };
+    //         const map = new kakao.maps.Map(node, options);
+    //     });
+    // };
 </script>
 </body>
 </html>

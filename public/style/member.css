@@ -84,7 +84,7 @@ label {
 
 /* 회원가입 선택 */
 .sel_register_card {
-    --bs-card-border-color: rgba(0, 0, 0, 0.175);
+    --bs-card-border-color: #6575d1;
     border-radius: 3rem;
     border-width: 0.7rem;
     margin-bottom: 1rem;
