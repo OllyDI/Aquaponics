@@ -8,7 +8,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
     <link rel="stylesheet" href="/style/member.css">
-    <script src="https://kit.fontawesome.com/57c8b4e229.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
+    <link rel="stylesheet" href="/style/kakao_map.css">
 </head>
 
 <body class="login-page">
@@ -76,9 +77,9 @@
                 </div>
                 <div class="mb-3">
                     <div class="input-group" id="gen_school">
-                        <input type="text" name="school" id="school" class="form-control" placeholder="학교명" data-bs-toggle="modal"
-                        data-bs-target="#schoolSerch" required oninvalid="this.setCustomValidity('학교명을 입력하세요.')" oninput="this.setCustomValidity('')">
-                        <button type="button" class="btn btn-success" id="school_btn" data-bs-toggle="modal" data-bs-target="#schoolSerch">검색</button>
+                        <input type="text" name="school" id="school" class="form-control" placeholder="학교명" onclick="openModal()"
+                        required oninvalid="this.setCustomValidity('학교명을 입력하세요.')" oninput="this.setCustomValidity('')">
+                        <button type="button" class="btn btn-success" id="school_btn" onclick="openModal()">검색</button>
                     </div>
                 </div>
                 <div class="mb-3">
@@ -166,11 +167,25 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div class="maps" id="kakao_map" style="width:100%; height:400px;"></div>
+                <div class="map_wrap">
+                    <div class="maps" id="kakao_map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
+                    <div id="menu_wrap" class="bg_white">
+                        <div class="option">
+                            <div class="input-group" style="margin-bottom: 1rem;">
+                                <input type="text" name="search_map" id="search_map" class="form-control" placeholder="검색" onkeypress="if(window.event.keyCode==13) { search_school() }">
+                                <a class="input-group-text" href="#" onclick="search_school()">
+                                    <i class="fa-solid fa-magnifying-glass"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <hr>
+                        <ul id="placesList"></ul>
+                        <div id="pagination"></div>
+                    </div>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-                <button type="button" class="btn btn-primary">완료</button>
             </div>
         </div>
     </div>
@@ -179,8 +194,9 @@
 <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="/js/duplicate.js"></script>
-<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=826fecb6d8bc041c95f1ebfbd7dedcdc"></script>
-<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=APIKEY&826fecb6d8bc041c95f1ebfbd7dedcdc=services"></script>
+<script src="https://kit.fontawesome.com/57c8b4e229.js"></script>
+<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=826fecb6d8bc041c95f1ebfbd7dedcdc&libraries=services"></script>
+<script src="/js/kakao_map.js"></script>
 <script>
     var gen = ['gen_school', 'gen_grade', 'gen_class', 'gen_number']
 
@@ -202,15 +218,6 @@
         $("#login_box").show();
     }
     function actions() { $("#level").attr('disabled', false); }
-
-    $(document).ready(function() {
-        const node = document.getElementById('kakao_map'); // 지도를 표시할 div
-        const options = {
-            center: new kakao.maps.LatLng(33.450701, 126.570667),
-            level: 3
-        };
-        const map = new kakao.maps.Map(node, options);
-    })
 </script>
 </body>
 </html>

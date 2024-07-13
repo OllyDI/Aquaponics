@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="style/style.css">
     <link rel="stylesheet" href="style/sidebar.css">
     <link rel="stylesheet" href="style/modify_profile.css">
+    <link rel="stylesheet" href="style/kakao_map.css">
 </head>
 
 
@@ -28,7 +29,7 @@
         <nav class="navbar navbar-expand navbar-light bg-light">
             <ui class="d-flex navbar-nav" style="margin-left: auto !important;">
                 <li class="navbar-text" style="padding: 0.5rem;">
-                    <span id="userlevel"></span>
+                    <span id="level"></span>
                 </li>
                 <li class="navbar-text usericon" style="color: black; padding: 0.5rem;">
                     <a id="username" data-bs-toggle="dropdown" role="button" style="height: 28px;"></a>
@@ -82,7 +83,7 @@
                 <form class="form" action="/modify_profile" name="userRegister" method="post">
                     <div class="mb-3">
                         <div class="input-group">
-                            <select id="level" name="level" class="form-select" required disabled
+                            <select id="userlevel" name="level" class="form-select" required disabled
                                 oninvalid="this.setCustomValidity('목록중 하나를 선택하세요.')"
                                 oninput="this.setCustomValidity('')">
                                 <option disabled value="" selected>선택하세요</option>
@@ -119,8 +120,8 @@
                     <div class="mb-3" id="gen_school">
                         <div class="input-group">
                             <span class="input-group-text">학교</span>
-                            <input type="text" name="school" id="school" class="form-control" placeholder="학교명" required data-bs-toggle="modal"
-                            data-bs-target="#schoolSerch" oninvalid="this.setCustomValidity('학교명을 입력하세요.')" oninput="this.setCustomValidity('')">
+                            <input type="text" name="school" id="school" class="form-control" placeholder="학교명" required onclick="openModal()"
+                             oninvalid="this.setCustomValidity('학교명을 입력하세요.')" oninput="this.setCustomValidity('')">
                         </div>
                     </div>
                     <div class="mb-3">
@@ -188,10 +189,10 @@
 
                     <!-- /.col -->
                     <div class="mb-3" style="margin-top: 25px;">
-                        <button type="submit" class="btn btn-danger btn-block" id="delete_member" onclick="">회원탈퇴</button>
+                        <button type="submit" class="btn btn-success btn-block" id="reg">회원정보수정</button>
                     </div>
                     <div class="mb-3" style="margin-top: 25px;">
-                        <button type="submit" class="btn btn-success btn-block" id="reg">회원정보수정</button>
+                        <button type="button" class="btn btn-danger btn-block" id="delete_member" onclick="">회원탈퇴</button>
                     </div>
                 </form>
                 <!-- <iframe name="iframe" style="display: none;"></iframe> -->
@@ -200,18 +201,32 @@
         </div>
     </div>
     <div class="modal" id="schoolSerch" tabindex="-1">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">학교 검색</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <p>Modal body text goes here.</p>
+                    <div class="map_wrap">
+                        <div class="maps" id="kakao_map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
+                        <div id="menu_wrap" class="bg_white">
+                            <div class="option">
+                                <div class="input-group" style="margin-bottom: 1rem;">
+                                    <input type="text" name="search_map" id="search_map" class="form-control" placeholder="검색" onkeypress="if(window.event.keyCode==13) { search_school() }">
+                                    <a class="input-group-text" href="#" onclick="search_school()">
+                                        <i class="fa-solid fa-magnifying-glass"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <hr>
+                            <ul id="placesList"></ul>
+                            <div id="pagination"></div>
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-                    <button type="button" class="btn btn-primary">완료</button>
                 </div>
             </div>
         </div>
@@ -224,6 +239,8 @@
     <script src="/js/member_control.js"></script>
     <script src="/js/memberAuth.js"></script>
     <script src="/js/draw_devices.js"></script>
+    <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=826fecb6d8bc041c95f1ebfbd7dedcdc&libraries=services"></script>
+    <script src="/js/kakao_map.js"></script>
     <script>
         var gen = ['gen_school', 'gen_grade', 'gen_class', 'gen_number']
 
@@ -233,17 +250,14 @@
                 method: "get",
                 async: false,
                 success: function (data) {
+                    
                     if (data[0].auth == false) {
                         alert("로그인 후 이용해주세요.");
                         location.replace('/login');
                     }
                     else {
                         id = data[0].id;
-                        $("#userlevel").text(level[data[0].level]);
-                        $("#username").text(data[0].name.slice(0, 1));
-                        if (level[data[0].level] == '학생용' || level[data[0].level] == '일반용') $('#stumanag').hide();
-                        if (level[data[0].level] !== '관리자') $('#settings').hide();
-                        $("#level").val(data[0].level).prop("selected", true);
+                        $("#userlevel").val(data[0].level).prop("selected", true);
 
                         if (data[0].level == 2 || data[0].level == 4) {
                             $("#region").attr('disabled', false);
@@ -254,13 +268,11 @@
                                 $(`#${v.split("gen_")[1]}`).attr('disabled', true)
                             })
                         }
-                        else {
-                            $("#school").val(data[0].school)
-                            $("#grade").val(data[0].grade)
-                            $("#number").val(data[0].number)
-                        }
-                        $("#uname").val(data[0].name)
+                        $("#school").val(data[0].school)
+                        $("#grade").val(data[0].grade)
+                        $("#number").val(data[0].number)
                         $("#class").val(data[0].class)
+                        $("#uname").val(data[0].name)
                     }
                 }
             })
