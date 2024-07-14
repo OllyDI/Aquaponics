@@ -188,5 +188,6 @@ $RECYCLE.BIN/
 
 # DB option
 /lib/db.txt
+/lib/gmail.txt
 
 # End of https://www.toptal.com/developers/gitignore/api/windows,node,visualstudiocode

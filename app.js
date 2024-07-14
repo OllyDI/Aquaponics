@@ -13,12 +13,15 @@ var app = express();
 var indexRouter = require('./routes/index');
 var crypto = require('crypto');
 var flash = require('connect-flash');
+var fs = require('fs');
 
 const { JSDOM } = require("jsdom");
 const { window } = new JSDOM("");
 const $ = require("jquery")(window);
-
-var fs = require('fs');
+const sendEmail = require('.lib/sendMail');
+var randomNumber = function (min, max) {
+  var randNum = Math.floor(Math.random() * max - min + 1) + min;
+}
 var txt = fs.readFileSync('lib/db.txt').toString().replace(/\r/g, "").split('\n');
 const options = {
   host: txt[0], 
@@ -68,20 +71,26 @@ app.use(flash());
 app.use('/', indexRouter);
 require('./lib/passport')(passport, options);
 
+
+app.post('/smtp', function(req, res) {
+  const number = randomNumber(111111, 999999);
+  const email = req.body.email;
+})
+
+
+
 // 아이디 중복 검사 및 회원가입
 app.post('/duplicate', function(req, res) {
   var uid = req.body.uid;
   var level = req.body.level;
   var val = true;
 
-  if (level == 1) {
-    db.query('select * from members_temp where id=?' , [uid],
-      function(err, data) {
-        if (err) throw(err);
-        if (data[0]) val = false;
-      }
-    )
-  }
+  db.query('select * from members_temp where id=?' , [uid],
+    function(err, data) {
+      if (err) throw(err);
+      if (data[0]) val = false;
+    }
+  )
   if (val == false) res.send(val)
   else {
     db.query('select * from members where id=?', [uid],
@@ -176,11 +185,27 @@ app.post('/session_logout', function(req, res) {
 
 app.post('/get_device', function(req, res) {
   let id = req.body.id;
-  
+  let datas = [];
+  let devices = [];
   db.query('select * from link where user_id=?', [id],
     function(err, data) {
       if (err) throw(err);
-      res.send(data);
+      if (data.length - 1 == 0) res.send();
+      $.each(data, function(i, v) {
+        devices.push(v.device_id);
+        
+        if (data.length - 1 == i) {
+          db.query('select * from devices where device_id in (?)', [devices], 
+            function(err, data2) {
+              if (err) throw(err);
+              $.each(data2, function(i2, v2) {
+                data[i2].join = v2.date;
+                if (data2.length - 1 == i2) res.send(data);
+              })
+            }
+          )
+        }
+      })
     }
   )
 });

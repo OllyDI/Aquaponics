@@ -36,3 +36,9 @@
 #pagination {margin:10px auto;text-align: center;}
 #pagination a {display:inline-block;margin-right:10px;}
 #pagination .on {font-weight: bold; cursor: default;color:#777;}
+@media screen and (max-width: 768px) {
+    #menu_wrap {
+        width: 94%;
+        margin:10px 10px 30px 10px;
+    }
+}
