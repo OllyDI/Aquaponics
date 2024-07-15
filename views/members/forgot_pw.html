@@ -27,9 +27,8 @@
                 </div>
                 <div class="mb-3">
                     <div class="input-group">
-                        <input type="text" name="id" id="uid" class="form-control" placeholder="아이디" pattern=".{6,12}" title="6에서 12자리까지만 입력가능합니다."
-                        required oninvalid="this.setCustomValidity('아이디를 입력하세요.')" oninput="this.setCustomValidity('')">
-                        <button type="button" class="btn btn-success">인증</button>
+                        <input type="email" name="id" id="uid" class="form-control" placeholder="아이디">
+                        <button type="button" class="btn btn-success" onclick="sendmail()">인증</button>
                     </div>
                     <label id="lUid" style="color: red;" hidden>아이디를 입력하세요.</label>
                 </div>
@@ -37,11 +36,12 @@
                     <div class="input-group">
                         <input type="text" name="valid" id="valid" class="form-control" placeholder="인증번호"
                         required oninvalid="this.setCustomValidity('인증번호를 입력하세요.')" oninput="this.setCustomValidity('')">
+                        <button type="button" class="btn btn-success" id="mail_button" disabled>확인</button>
                     </div>
                 </div>
                 <!-- /.col -->
                 <div class="mb-3" style="margin-top: 25px;">
-                    <button type="submit" class="btn btn-success btn-block" id="reg" onclick="">비밀번호 찾기</button>
+                    <button type="button" class="btn btn-success btn-block" id="reg" onclick="">비밀번호 찾기</button>
                 </div>
             </form>
 
@@ -79,6 +79,51 @@
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="/js/duplicate.js"></script>
+<script>
+    var number = null
+    function sendmail() {
+        $.ajax({
+            url: '/duplicate',
+            method: 'post',
+            data: {
+                uid: $("#uid").val(),
+            },
+            datatype: 'json',
+            success: function (data) {
+                if (data) alert('존재하지 않는 회원입니다.');
+                else {
+                    $.ajax({
+                        url: '/smtp',
+                        method: 'post',
+                        data: {
+                            email: $("#uid").val()
+                        },
+                        success: function(data) {
+                            alert(data.msg);
+                            number = data.key;
+                            if (data.ok) $("#mail_button").attr('disabled', false);
+                        }
+                    })
+                }
+            }
+        });
+        
+    }
+    
+    function authMail() {
+        $.ajax({
+            url: '/authMail',
+            method: 'post',
+            data: {
+                userNumber: $("#valid").val(),
+                number: number,
+            },
+            success: function(data) {
+                alert(data.msg);
+                if (data.ok) $("#reg").attr('type', 'submit');
+            }
+        })
+    }
+</script>
 </body>
 </html>

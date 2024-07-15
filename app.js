@@ -18,10 +18,24 @@ var fs = require('fs');
 const { JSDOM } = require("jsdom");
 const { window } = new JSDOM("");
 const $ = require("jquery")(window);
-const sendEmail = require('.lib/sendMail');
-var randomNumber = function (min, max) {
-  var randNum = Math.floor(Math.random() * max - min + 1) + min;
-}
+
+var nodemailer = require('nodemailer');
+var mail = fs.readFileSync('lib/gmail.txt').toString().replace(/\r/g, "").split('\n');
+const transporter = nodemailer.createTransport({
+    service: 'gamil',
+    host: 'smtp.gmail.com',
+    port: 587,
+    secure: false,
+    requireTLS: true,
+    auth: {
+        user: mail[0],
+        pass: mail[1]
+    }
+});
+var randomNumber = function (min, max) { return Math.floor(Math.random() * max - min + 1) + min; };
+
+
+
 var txt = fs.readFileSync('lib/db.txt').toString().replace(/\r/g, "").split('\n');
 const options = {
   host: txt[0], 
@@ -73,16 +87,45 @@ require('./lib/passport')(passport, options);
 
 
 app.post('/smtp', function(req, res) {
+  var base64crypto = (password) => { return crypto.createHash('sha512').update(password).digest('base64') }
   const number = randomNumber(111111, 999999);
+  console.log(number);
+  var passkey = base64crypto(number.toString());
   const email = req.body.email;
+
+  const mailOptions = {
+    from: mail[0],
+    to: email,
+    subject: "인증관련 메일입니다.",
+    html: `<h1>인증 번호를 입력해주세요. \n\n\n</h1>${number}`
+  }
+
+  transporter.sendMail(mailOptions, (err, info) => {
+    console.log("info", info);
+
+    if (err) {
+      res.send({ ok: false, msg: '메일 전송에 실패하였습니다.', key: null });
+      throw(err);
+    } else {
+      transporter.close();
+      res.send({ ok: true, msg: '메일 전송에 성공하였습니다.', key: passkey });
+    }
+  })
 })
+app.post('/authMail', function(req, res) {
+  var base64crypto = (password) => { return crypto.createHash('sha512').update(password).digest('base64') }
+  const userNumber = base64crypto(req.body.userNumber);
+  const number = req.body.number;
 
+  console.log(userNumber, number);
 
+  if (userNumber == number) res.send({msg: '인증에 성공하였습니다.', ok: true });
+  else res.send({msg: '인증에 실패하였습니다.', ok: false });
+})
 
 // 아이디 중복 검사 및 회원가입
 app.post('/duplicate', function(req, res) {
   var uid = req.body.uid;
-  var level = req.body.level;
   var val = true;
 
   db.query('select * from members_temp where id=?' , [uid],
