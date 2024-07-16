@@ -82,158 +82,155 @@
 
     <div class="height-100 bg-light" style="padding: 1rem;">
         <div class="wrapper" id="device_card">
-            <!-- <div class="container-fluid"> -->
-                <!-- <h4>학생 관리</h4> -->
-            <!-- <div class="card"> -->
-                <ul class="nav nav-tabs" id="nav-tabs" style="padding: 0 0.2rem 0 0.1rem; border-color: transparent;">
-                    <li class="nav-item" role="presentation">
-                        <a class="nav-link active" data-bs-toggle="tab" href="#" data-bs-target="#manager">사용자 관리</a>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <a class="nav-link" data-bs-toggle="tab" href="#" data-bs-target="#submit" onclick="ap_table()">가입 승인</a>
-                    </li>
-                </ul>
-                <div class="tab-content">
-                    <div class="tab-pane fade show active" id="manager" role="tabpanel" aria-labelledby="manager-tab">
-                        <div class="card">
-                            <div class="card-header"> 
-                                <span class="card-title">사용자 검색</span>
-                            </div>
-                            <div class="card-body">
-                                <div class="row">
-                                    <div style="padding-bottom: 0.5rem;" class="col-sm-6 col-lg-3" id="school_div">
-                                        <div class="input-group flex-nowrap">
-                                            <span class="input-group-text">학교</span>
-                                            <input type="text" id="school" name="school" class="form-control" maxlength="45">
-                                            <button type="button" class="btn btn-success" onclick="openModal()" aria-controls="home" aria-selected="true">검색</button>
-                                        </div>
-                                    </div>
-                                    <div style="padding-bottom: 0.5rem; display: none;" class="col-sm-6 col-lg-3" id="gen_region">
-                                        <div class="input-group flex-nowrap">
-                                            <select id="region" name="school" class="form-select" disabled> 
-                                                <option selected value="" selected>전체</option>
-                                                <option value="서울특별시">서울특별시</option>
-                                                <option value="광주광역시">광주광역시</option>
-                                                <option value="대구광역시">대구광역시</option>
-                                                <option value="부산광역시">부산광역시</option>
-                                                <option value="울산광역시">울산광역시</option>
-                                                <option value="인천광역시">인천광역시</option>
-                                                <option value="강원도">강원도</option>
-                                                <option value="경기도">경기도</option>
-                                                <option value="경상남도">경상남도</option>
-                                                <option value="경상북도">경상북도</option>
-                                                <option value="전라남도">전라남도</option>
-                                                <option value="전라북도">전라북도</option>
-                                                <option value="충청남도">충청남도</option>
-                                                <option value="충청북도">충청북도</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div style="padding-bottom: 0.5rem;" class="col-sm-6 col-lg-4">
-                                        <div class="input-group flex-nowrap">
-                                            <span class="input-group-text">이름</span>
-                                            <input type="text" id="name" name="name" class="form-control" maxlength="45" onkeypress="if(event.keyCode == 13){ search(); }">
-                                            <select id="ulevel" name="level" class="form-select form-select-sm" style="flex: 0.2 1 auto;">
-                                                <option value="">전체</option>
-                                                <option value="0">학생</option>
-                                                <option value="1">교사</option>
-                                                <option value="2">일반</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div style="padding-bottom: 0.5rem;" class="col-sm-6 col-lg-4">
-                                        <div class="input-group flex-nowrap">
-                                            <span class="input-group-text">가입일</span>
-                                                <input type="text" name="stdate" id="stdate" class ="form-control" autocomplete="off">
-                                        </div>
-                                    </div>
-                                    <div class="d-grid col-sm-6 col-lg-1" style="padding-bottom: 0.5rem;">
-                                        <button id="upload_button" onclick="search()" class="btn btn-primary waves-effect waves-light" style="float:right; min-width: 58.75px;">검색</button>
+            <ul class="nav nav-tabs" id="nav-tabs" style="padding: 0 0.2rem 0 0.1rem; border-color: transparent;">
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link active" data-bs-toggle="tab" href="#" data-bs-target="#manager">사용자 관리</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" data-bs-toggle="tab" href="#" data-bs-target="#submit" onclick="ap_table()">가입 승인</a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane fade show active" id="manager" role="tabpanel" aria-labelledby="manager-tab">
+                    <div class="card">
+                        <div class="card-header"> 
+                            <span class="card-title">사용자 검색</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div style="padding-bottom: 0.5rem;" class="col-sm-6 col-lg-3" id="school_div">
+                                    <div class="input-group flex-nowrap">
+                                        <span class="input-group-text">학교</span>
+                                        <input type="text" id="school" name="school" class="form-control" maxlength="45">
+                                        <button type="button" class="btn btn-success" onclick="openModal()" aria-controls="home" aria-selected="true">검색</button>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="row" style="padding: 2rem 0 2rem 0;">
-                            <div class="col-12">
-                                <div class="card" id="card_search" style="display: none;">
-                                    <div class="card-header">
-                                        <span class="card-title">사용자 검색 결과</span>
+                                <div style="padding-bottom: 0.5rem; display: none;" class="col-sm-6 col-lg-3" id="gen_region">
+                                    <div class="input-group flex-nowrap">
+                                        <select id="region" name="school" class="form-select" disabled> 
+                                            <option selected value="" selected>전체</option>
+                                            <option value="서울특별시">서울특별시</option>
+                                            <option value="광주광역시">광주광역시</option>
+                                            <option value="대구광역시">대구광역시</option>
+                                            <option value="부산광역시">부산광역시</option>
+                                            <option value="울산광역시">울산광역시</option>
+                                            <option value="인천광역시">인천광역시</option>
+                                            <option value="강원도">강원도</option>
+                                            <option value="경기도">경기도</option>
+                                            <option value="경상남도">경상남도</option>
+                                            <option value="경상북도">경상북도</option>
+                                            <option value="전라남도">전라남도</option>
+                                            <option value="전라북도">전라북도</option>
+                                            <option value="충청남도">충청남도</option>
+                                            <option value="충청북도">충청북도</option>
+                                        </select>
                                     </div>
-                                    <!-- card-header end -->
-                                    <div class="card-body">
-                                        <div class="table-responsive" >
-                                            <table class="table table-hover" id="tables" style="white-space: nowrap; width: 100%;">
-                                                <thead>
-                                                    <tr>
-                                                        <th>아이디</th>
-                                                        <th>학교</th>
-                                                        <th>직급</th>
-                                                        <th>이름</th>
-                                                        <th>학년</th>
-                                                        <th>반</th>
-                                                        <th>번호</th>
-                                                        <th>가입날짜</th>
-                                                        <th>기기권한</th>
-                                                        <th>관리</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody id="table_body" style="min-height: 200px;">
-                                                </tbody>
-                                            </table>
-
-                                            <table class="table table-hover" id="gen_tables" style="white-space: nowrap; width: 100%; display: none;">
-                                                <thead>
-                                                    <tr>
-                                                        <th>아이디</th>
-                                                        <th>지역</th>
-                                                        <th>직급</th>
-                                                        <th>이름</th>
-                                                        <th>가입날짜</th>
-                                                        <th>기기권한</th>
-                                                        <th>관리</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody id="gen_table_body" style="min-height: 200px;">
-                                                </tbody>
-                                            </table>
-                                        </div>
+                                </div>
+                                <div style="padding-bottom: 0.5rem;" class="col-sm-6 col-lg-4">
+                                    <div class="input-group flex-nowrap">
+                                        <span class="input-group-text">이름</span>
+                                        <input type="text" id="name" name="name" class="form-control" maxlength="45" onkeypress="if(event.keyCode == 13){ search(); }">
+                                        <select id="ulevel" name="level" class="form-select form-select-sm" style="flex: 0.2 1 auto;">
+                                            <option value="">전체</option>
+                                            <option value="0">학생</option>
+                                            <option value="1">교사</option>
+                                            <option value="2">일반</option>
+                                        </select>
                                     </div>
-                                    <!-- card-body end -->
+                                </div>
+                                <div style="padding-bottom: 0.5rem;" class="col-sm-6 col-lg-4">
+                                    <div class="input-group flex-nowrap">
+                                        <span class="input-group-text">가입일</span>
+                                            <input type="text" name="stdate" id="stdate" class ="form-control" autocomplete="off">
+                                    </div>
+                                </div>
+                                <div class="d-grid col-sm-6 col-lg-1" style="padding-bottom: 0.5rem;">
+                                    <button id="upload_button" onclick="search()" class="btn btn-primary waves-effect waves-light" style="float:right; min-width: 58.75px;">검색</button>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="tab-pane fade" id="submit" role="tabpanel" aria-labelledby="submit-tab">
-                        <div class="card">
-                            <div class="card-header">
-                                <span class="card-title">가입 요청 사용자</span>
-                            </div>
-                            <!-- card-header end -->
-                            <div class="card-body">
-                                <div class="table-responsive">
-                                    <table class="table table-hover" id="ap_tables" style="white-space: nowrap; width: 100%;">
-                                        <thead>
-                                            <tr>
-                                                <th>아이디</th>
-                                                <th>학교</th>
-                                                <th>직급</th>
-                                                <th>이름</th>
-                                                <th>학년</th>
-                                                <th>반</th>
-                                                <th>번호</th>
-                                                <th>가입날짜</th>
-                                                <th>#</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                        </tbody>
-                                    </table>
+                    <div class="row" style="padding: 2rem 0 2rem 0;">
+                        <div class="col-12">
+                            <div class="card" id="card_search" style="display: none;">
+                                <div class="card-header">
+                                    <span class="card-title">사용자 검색 결과</span>
                                 </div>
+                                <!-- card-header end -->
+                                <div class="card-body">
+                                    <div class="table-responsive" >
+                                        <table class="table table-hover" id="tables" style="white-space: nowrap; width: 100%;">
+                                            <thead>
+                                                <tr>
+                                                    <th>아이디</th>
+                                                    <th>학교</th>
+                                                    <th>직급</th>
+                                                    <th>이름</th>
+                                                    <th>학년</th>
+                                                    <th>반</th>
+                                                    <th>번호</th>
+                                                    <th>가입날짜</th>
+                                                    <th>기기권한</th>
+                                                    <th>관리</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="table_body" style="min-height: 200px;">
+                                            </tbody>
+                                        </table>
+
+                                        <table class="table table-hover" id="gen_tables" style="white-space: nowrap; width: 100%; display: none;">
+                                            <thead>
+                                                <tr>
+                                                    <th>아이디</th>
+                                                    <th>지역</th>
+                                                    <th>직급</th>
+                                                    <th>이름</th>
+                                                    <th>가입날짜</th>
+                                                    <th>기기권한</th>
+                                                    <th>관리</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="gen_table_body" style="min-height: 200px;">
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <!-- card-body end -->
                             </div>
-                            <!-- card-body end -->
                         </div>
                     </div>
                 </div>
+                <div class="tab-pane fade" id="submit" role="tabpanel" aria-labelledby="submit-tab">
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">가입 요청 사용자</span>
+                        </div>
+                        <!-- card-header end -->
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover" id="ap_tables" style="white-space: nowrap; width: 100%;">
+                                    <thead>
+                                        <tr>
+                                            <th>아이디</th>
+                                            <th>학교</th>
+                                            <th>직급</th>
+                                            <th>이름</th>
+                                            <th>학년</th>
+                                            <th>반</th>
+                                            <th>번호</th>
+                                            <th>가입날짜</th>
+                                            <th>#</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <!-- card-body end -->
+                    </div>
+                </div>
+            </div>
             <!-- </div> -->
         </div>
     </div>

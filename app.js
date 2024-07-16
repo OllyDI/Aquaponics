@@ -183,6 +183,21 @@ app.post('/register', function(req, res) {
 })
 
 
+app.post('/change_pw', function(req, res) {
+  var base64crypto = (password) => { return crypto.createHash('sha512').update(password).digest('base64') }
+  const id = req.body.id;
+  const pw = base64crypto(req.body.pw);
+  db.query('update members set pw=? where id=?', [pw, id], 
+    function(err) {
+      if (err) {
+        res.send({ msg: '비밀번호 변경에 실패했습니다.', ok: false })
+        throw(err)
+      } else res.send({ msg: '비밀번호 변경에 성공했습니다.', ok: true, url: '/login' })
+    }
+  )
+})
+
+
 // app.post('/session_login', 
 //   passport.authenticate('local', {successRedirect: '/', failureRedirect: '/login', failureFlash: true, }
 // ));

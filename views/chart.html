@@ -95,36 +95,74 @@
 
     <div class="height-100 bg-light srcn" style="padding: 1rem;">
         <h4 style="padding: 0 0.5rem 0 0.5rem;" id="dashboard_name"></h4>
-        <div class="card">
-            <div class="card-header">
-                <span class="card-title" style="vertical-align: -webkit-baseline-middle; font-size: 16px;">
-                    <!-- <i class="fas fa-chart-pie mr-1"></i> -->
-                    <i class="fa-solid fa-chart-column"></i>
-                    <h6 style="display: inline;">온실 차트</h6>
-                    </sapn>
-                    <ul class="nav nav-pills" style="float: right;">
-                        <li class="nav-item">
-                            <a class="nav-link active" href="#" data-bs-target="#temp_chart" data-bs-toggle="tab"
-                                style="padding: 5px;">온도/습도</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#" data-bs-target="#hum_chart" data-bs-toggle="tab"
-                                style="padding: 5px;">환경정보</a>
-                        </li>
-                    </ul>
-            </div>
-            <!-- /.card-header -->
-            <div class="card-body">
-                <div class="tab-content p-0">
-                    <div class="chart tab-pane active" id="temp_chart">
-                        <div id="data-chart"></div>
+
+        <div class="wrapper">
+            <ul class="nav nav-tabs" id="nav-tabs" style="padding: 0 0.2rem 0 0.1rem; border-color: transparent;">
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link active" data-bs-toggle="tab" href="#" data-bs-target="#temp">온도</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" data-bs-toggle="tab" href="#" data-bs-target="#envir">환경정보</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" data-bs-toggle="tab" href="#" data-bs-target="#led">조도</a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane fade show active" id="temp" role="tabpanel" aria-labelledby="manager-tab">
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title" style="vertical-align: -webkit-baseline-middle; font-size: 16px;">
+                                <!-- <i class="fas fa-chart-pie mr-1"></i> -->
+                                <i class="fa-solid fa-chart-column"></i>
+                                <h6 style="display: inline;">온도차트</h6>
+                            </sapn>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <div id="data-chart"></div>
+                        </div>
+                        <!-- /.card-body -->
                     </div>
-                    <div class="chart tab-pane" id="hum_chart">
-                        <div id="data-chart2"></div>
+                </div>
+
+                <div class="tab-pane fade show" id="envir" role="tabpanel" aria-labelledby="manager-tab">
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title" style="vertical-align: -webkit-baseline-middle; font-size: 16px;">
+                                <!-- <i class="fas fa-chart-pie mr-1"></i> -->
+                                <i class="fa-solid fa-chart-column"></i>
+                                <h6 style="display: inline;">환경정보차트</h6>
+                            </sapn>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <div id="data-chart2"></div>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                </div>
+
+                <div class="tab-pane fade show" id="led" role="tabpanel" aria-labelledby="manager-tab">
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title" style="vertical-align: -webkit-baseline-middle; font-size: 16px;">
+                                <!-- <i class="fas fa-chart-pie mr-1"></i> -->
+                                <i class="fa-solid fa-chart-column"></i>
+                                <h6 style="display: inline;">조도차트</h6>
+                            </sapn>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <div id="data-chart3"></div>
+                        </div>
+                        <!-- /.card-body -->
                     </div>
                 </div>
             </div>
-            <!-- /.card-body -->
+            <div class="table">
+                sdfsfd
+            </div>
         </div>
     </div>
 
@@ -138,6 +176,8 @@
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <script src="https://cdn.datatables.net/2.0.8/js/dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/2.0.8/js/dataTables.bootstrap5.min.js"></script>
     <script src="https://kit.fontawesome.com/57c8b4e229.js"></script>
     <script>
         var options = {
@@ -233,8 +273,12 @@
             };
 
             var chart = new ApexCharts(document.querySelector("#data-chart"), options);
+            var chart2 = new ApexCharts(document.querySelector("#data-chart2"), options);
+            var chart3 = new ApexCharts(document.querySelector("#data-chart3"), options);
 
             chart.render();
+            chart2.render();
+            chart3.render();
     </script>
 
 </body>

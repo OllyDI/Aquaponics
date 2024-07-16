@@ -119,14 +119,18 @@
                 </div>
                 <div class="mb-3">
                     <div class="input-group">
-                        <input type="text" name="id" id="uid" class="form-control" placeholder="아이디" pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,15}$" 
-                        title="영숫자 조합으로&#13;6에서 15자리까지만 입력가능합니다." required oninvalid="this.setCustomValidity('아이디를 입력하세요.')" oninput="this.setCustomValidity('')">
-                        <div class="input-group-append">
-                        </div>
+                        <input type="text" name="id" id="uid" class="form-control" placeholder="아이디" pattern="[a-zA-Z0-9]+[@][a-zA-Z0-9]+[.]+[a-zA-Z]+[.]*[a-zA-Z]*">
+                        <button type="button" class="btn btn-success" onclick="sendmail()">인증</button>
                     </div>
                     <label id="lUid" style="color: red;" hidden>사용할 수 없는 아이디입니다.</label>
                 </div>
-
+                <div class="mb-3" id="valid_div" hidden>
+                    <div class="input-group">
+                        <input type="text" name="valid" id="valid" class="form-control" placeholder="인증번호"
+                        required oninvalid="this.setCustomValidity('인증번호를 입력하세요.')" oninput="this.setCustomValidity('')">
+                        <button type="button" class="btn btn-success" id="mail_button" onclick="authMail()" disabled>확인</button>
+                    </div>
+                </div>
                 <div class="mb-3">
                     <div class="input-group">
                         <input type="password" name="pw" id="upw" class="form-control" placeholder="비밀번호" title="영숫자 조합으로&#13;6에서 15자리까지만 입력가능합니다." 
@@ -138,7 +142,7 @@
 
                 <!-- /.col -->
                 <div class="mb-3" style="margin-top: 25px;">
-                    <button type="submit" class="btn btn-success btn-block" id="reg" onclick="">회원가입</button>
+                    <button type="button" class="btn btn-success btn-block" id="reg" onclick="">회원가입</button>
                 </div>
             </form>
 
@@ -172,7 +176,7 @@
                     <div id="menu_wrap" class="bg_white">
                         <div class="option">
                             <div class="input-group" style="margin-bottom: 1rem;">
-                                <input type="text" name="search_map" id="search_map" class="form-control" placeholder="검색" onkeypress="if(window.event.keyCode==13) { search_school() }">
+                                <input type="text" name="search_map" id="search_map" class="form-control" placeholder="검색" autocomplete="off" onkeypress="if(window.event.keyCode==13) { search_school() }">
                                 <a class="input-group-text" href="#" onclick="search_school()">
                                     <i class="fa-solid fa-magnifying-glass"></i>
                                 </a>
@@ -193,12 +197,18 @@
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="/js/duplicate.js"></script>
 <script src="https://kit.fontawesome.com/57c8b4e229.js"></script>
 <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=826fecb6d8bc041c95f1ebfbd7dedcdc&libraries=services"></script>
 <script src="/js/kakao_map.js"></script>
 <script>
     var gen = ['gen_school', 'gen_grade', 'gen_class', 'gen_number']
+    var number = null;
+
+    $(function() {
+        $("#reg").on('click', function(e) {
+            if(e.target.type == 'button') alert('모든 입력을 완료하거나\n아이디 인증을 완료해주세요.');
+        })
+    }) 
 
     function sel_register(id) {
         if (id =='general_btn') {
@@ -218,6 +228,51 @@
         $("#login_box").show();
     }
     function actions() { $("#level").attr('disabled', false); }
+
+    function sendmail() {
+        $.ajax({
+            url: '/duplicate',
+            method: 'post',
+            data: {
+                uid: $("#uid").val(),
+            },
+            datatype: 'json',
+            success: function (data) {
+                if (data) {
+                    $("#valid_div").attr("hidden", false);
+                    $.ajax({
+                        url: '/smtp',
+                        method: 'post',
+                        data: {
+                            email: $("#uid").val()
+                        },
+                        success: function(data) {
+                            alert(data.msg);
+                            number = data.key;
+                            if (data.ok) $("#mail_button").attr('disabled', false);
+                        }
+                    })
+                    
+                }
+                else alert('사용할 수 없는 아이디입니다.');
+            }
+        });
+    }
+    
+    function authMail() {
+        $.ajax({
+            url: '/authMail',
+            method: 'post',
+            data: {
+                userNumber: $("#valid").val(),
+                number: number,
+            },
+            success: function(data) {
+                alert(data.msg);
+                if (data.ok) $("#reg").attr('type', 'submit');
+            }
+        })
+    }
 </script>
 </body>
 </html>
