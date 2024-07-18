@@ -413,11 +413,11 @@
     <script>
         const ctx = $("#data-chart");
         const ctx2 = $("#data-chart2");
-        const loc = decodeURI(location.search.substr(location.search.indexOf("?") + 1)).split(",");
-
+        const params = new URLSearchParams(location.search);
+        
         $(document).ready(function() {
-            $("#chartlink").on("click", function() { window.location = (`/chart?${name=loc[0]},${device=loc[1]}`) })
-            $("#dashboard_name").text(loc[0])
+            $("#chartlink").on("click", function() { window.location = (`/chart?name=${params.get('name')}&device=${params.get('device')}&service=${params.get('service')}`) })
+            $("#dashboard_name").text(params.get('name'))
             new Chart(ctx, {
                 type: 'line',
                 data: {

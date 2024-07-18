@@ -350,53 +350,53 @@
             var datas = [];
 
             if (data == '') {
-                        new DataTable(`#${table}`, 
-                            { 
-                                columnDefs: [
-                                    { className: 'dt-head-center', targets: "_all", },
-                                    { className: 'dt-body-center', targets: "_all", },
-                                ], scrollX: true, paging: true, destroy: true, data: datas 
-                            });
-                    }
-                    $.each(data, (i, v) => {
-                        let level = '';
-                        if (v.level == 0) level = '학생'
-                        else if (v.level == 1) level = '교사'
-                        else if (v.level == 2) level = '일반'
-                        if (member[0].level == 3) {
-                            datas.push([
-                                v.id,
-                                v.school,
-                                level,
-                                v.name,
-                                v.grade,
-                                v.class,
-                                v.number,
-                                dayjs(v.date).format("YYYY-MM-DD"),
-                                `<button type="button" class="btn btn-success" onclick="modal_func('${v.id}', ${v.level}, 0)"  id="modal_${v.id}">권한관리</button>`,
-                                `<button type="button" class="btn btn-danger" onclick="sign('${v.id}', 1, 0, 0)">삭제</button>`
-                            ])
-                        } else {
-                            datas.push([
-                                v.id,
-                                v.school,
-                                level,
-                                v.name,
-                                dayjs(v.date).format("YYYY-MM-DD"),
-                                `<button type="button" class="btn btn-success" onclick="modal_func('${v.id}', ${v.level}, 0)"  id="modal_${v.id}">권한관리</button>`,
-                                `<button type="button" class="btn btn-danger" onclick="sign('${v.id}', 1, 0, 0)">삭제</button>`
-                            ])
-                        }
-                        if (data.length - 1 == i) {
-                            new DataTable(`#${table}`, 
-                            { 
-                                columnDefs: [
-                                    { className: 'dt-head-center', targets: "_all", },
-                                    { className: 'dt-body-center', targets: "_all", },
-                                ], scrollX: true, paging: true, destroy: true, data: datas 
-                            });
-                        }
-                    })
+                new DataTable(`#${table}`, 
+                    { 
+                        columnDefs: [
+                            { className: 'dt-head-center', targets: "_all", },
+                            { className: 'dt-body-center', targets: "_all", },
+                        ], scrollX: true, paging: true, destroy: true, data: datas 
+                    });
+            }
+            $.each(data, (i, v) => {
+                let level = '';
+                if (v.level == 0) level = '학생'
+                else if (v.level == 1) level = '교사'
+                else if (v.level == 2) level = '일반'
+                if (member[0].level == 3) {
+                    datas.push([
+                        v.id,
+                        v.school,
+                        level,
+                        v.name,
+                        v.grade,
+                        v.class,
+                        v.number,
+                        dayjs(v.date).format("YYYY-MM-DD"),
+                        `<button type="button" class="btn btn-success" onclick="modal_func('${v.id}', ${v.level}, 0)"  id="modal_${v.id}">권한관리</button>`,
+                        `<button type="button" class="btn btn-danger" onclick="sign('${v.id}', 1, 0, 0)">삭제</button>`
+                    ])
+                } else {
+                    datas.push([
+                        v.id,
+                        v.school,
+                        level,
+                        v.name,
+                        dayjs(v.date).format("YYYY-MM-DD"),
+                        `<button type="button" class="btn btn-success" onclick="modal_func('${v.id}', ${v.level}, 0)"  id="modal_${v.id}">권한관리</button>`,
+                        `<button type="button" class="btn btn-danger" onclick="sign('${v.id}', 1, 0, 0)">삭제</button>`
+                    ])
+                }
+                if (data.length - 1 == i) {
+                    new DataTable(`#${table}`, 
+                    { 
+                        columnDefs: [
+                            { className: 'dt-head-center', targets: "_all", },
+                            { className: 'dt-body-center', targets: "_all", },
+                        ], scrollX: true, paging: true, destroy: true, data: datas 
+                    });
+                }
+            })
         }
 
 

@@ -258,6 +258,7 @@ app.post('/get_device', function(req, res) {
               if (err) throw(err);
               $.each(data2, function(i2, v2) {
                 data[i2].join = v2.date;
+                data[i2].service = v2.service;
                 if (data2.length - 1 == i2) res.send(data);
               })
             }
@@ -512,6 +513,28 @@ app.post('/update_link', function(req, res) {
       }
     )
     if (items.length - 1 == i) res.send();
+  })
+})
+
+
+app.post('/search_envir', function(req, res) {
+  const device_id = req.body.device_id;
+  const start = req.body.start;
+  const end = req.body.end;
+  let sql = '';
+
+  sql = 'select * from envir where device=?'
+  if (start == end) sql += ` and time='${end}'`
+  else if (start != '' && start != undefined) sql += ` and time between str_to_date('${start}', '%Y-%m-%d %H:%i:%s') and str_to_date('${end}', '%Y-%m-%d %H:%i:%s')`
+  db.query(sql, [Number(device_id)], function(err, data) {
+    if (err) throw(err);
+    else {
+      if (data.length == 0) res.send();
+      else {
+        data = data.sort(function(a, b) { return new Date(a.time) - new Date(b.time); })
+        res.send(data);
+      }
+    }
   })
 })
 
