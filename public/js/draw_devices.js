@@ -6,7 +6,7 @@ $(document).ready(function() {
         success:function(data) {
             let deviceHtml = '';
             $.each(data, (i, val) => {
-                deviceHtml += `<a href="/dashboard?${name=val.name},${device=val.device_id}" class="nav_link">
+                deviceHtml += `<a href="/dashboard?name=${val.name}&device=${val.device_id}&service=${val.service}" class="nav_link">
                                 <i class='bx bx-devices nav_icon'></i> <span class="nav_name">${val.name}</span>
                             </a>`
                 if (data.length - 1 == i) $("#pages").append(deviceHtml);

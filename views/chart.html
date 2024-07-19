@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/2.0.8/css/dataTables.bootstrap5.min.css"/>
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/3.0.2/css/buttons.bootstrap5.min.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+    <link rel="stylesheet" href="style/circle_progressbar.css">
     <link rel="stylesheet" href="style/style.css">
     <!-- <link rel="stylesheet" href="style/rotateCard.css"> -->
     <style>
@@ -29,12 +30,38 @@
         .device-range {
             float: right;
         }
+        .envir-card {
+            padding: 0 0.5rem 0 0.5rem;
+            height: 150px;
+            color: black;
+            min-width: 230px;
+            overflow-x: scroll;
+        }
+        .card-outer {
+            padding: 0.5rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            --bs-card-border-color: rgba(0, 0, 0, 0.1);
+            height: 100%;
+            width: 100%;
+            font-size: 1.2rem;
+            display: flex;
+            text-align: center;
+            justify-content: center;
+            align-items: center;
+            flex-direction: row;
+        }
+        .card-inner {
+            padding: 0.5rem;
+        }
         @media screen and (max-width: 768px) {
             body {
                 padding: 0;
             }
             .chart-card {
                 padding: 16px 0 16px 0;
+            }
+            .envir-card {
+                margin-bottom: 0.5rem;
             }
         }
     </style>
@@ -112,9 +139,9 @@
 
     <div class="bg-light srcn" style="padding: 1rem 1rem 1.5rem 1rem;">
         <div class="row">
-            <h4 class="col-md-3" id="dashboard_name"></h4>
-            <div class="col-md-6"></div>
-            <div class="col-md-3">
+            <h4 class="col-md-4 col-sm-4" id="dashboard_name"></h4>
+            <div class="col-md-5 col-sm-5"></div>
+            <div class="col-md-3 col-sm-3">
                 <div class="input-group input-group-sm">
                     <span class="input-group-text">기간</span>
                     <input type="text" name="stdate" id="stdate" class ="form-control" autocomplete="off">
@@ -124,7 +151,7 @@
         </div>
 
         <div class="wrapper" style="margin: 1rem 0 0 0;">
-            <ul class="nav nav-tabs" id="nav-tabs" style="padding: 0 0.2rem 0 0.1rem; border-color: transparent;">
+            <ul class="nav nav-tabs" id="nav-tabs" style="padding: 0 0.2rem 0 0.5rem; border-color: transparent;">
                 <li class="nav-item" role="presentation">
                     <a class="nav-link active" data-bs-toggle="tab" href="#" data-bs-target="#temp">온도</a>
                 </li>
@@ -134,12 +161,14 @@
                 <li class="nav-item" role="presentation">
                     <a class="nav-link" data-bs-toggle="tab" href="#" data-bs-target="#illum">조도</a>
                 </li>
-                <li class="nav-item" role="presentation">
+                <li class="nav-item" role="presentation" id="premium-tabs">
                     <a class="nav-link" data-bs-toggle="tab" href="#" data-bs-target="#premium">EC/pH/DO</a>
                 </li>
             </ul>
             <div class="tab-content">
                 <div class="tab-pane fade show active" id="temp" role="tabpanel" aria-labelledby="manager-tab">
+                    <div class="card-container row gx-2" style="margin: 0 0 1rem 0; overflow-x: scroll;" id="temp-outer">
+                    </div>
                     <div class="card">
                         <div class="card-header">
                             <span class="card-title" style="vertical-align: -webkit-baseline-middle; font-size: 16px;">
@@ -157,6 +186,9 @@
                 </div>
 
                 <div class="tab-pane fade show" id="sensor" role="tabpanel" aria-labelledby="manager-tab">
+                    <div class="card-container row gx-2" style="margin: 0 0 1rem 0; overflow-x: scroll;" id="sensor-outer">
+
+                    </div>
                     <div class="card">
                         <div class="card-header">
                             <span class="card-title" style="vertical-align: -webkit-baseline-middle; font-size: 16px;">
@@ -174,6 +206,9 @@
                 </div>
 
                 <div class="tab-pane fade show" id="illum" role="tabpanel" aria-labelledby="manager-tab">
+                    <div class="card-container row gx-2" style="margin: 0 0 1rem 0; overflow-x: scroll;" id="illum-outer">
+                        
+                    </div>
                     <div class="card">
                         <div class="card-header">
                             <span class="card-title" style="vertical-align: -webkit-baseline-middle; font-size: 16px;">
@@ -190,6 +225,9 @@
                     </div>
                 </div>
                 <div class="tab-pane fade show" id="premium" role="tabpanel" aria-labelledby="manager-tab">
+                    <div class="card-container row gx-2" style="margin: 0 0 1rem 0; overflow-x: scroll;" id="premium-outer">
+                        
+                    </div>
                     <div class="card">
                         <div class="card-header">
                             <span class="card-title" style="vertical-align: -webkit-baseline-middle; font-size: 16px;">
@@ -248,8 +286,12 @@
         const BASIC = [{title: '외부온도'}, {title: '수온'}, {title: '습도'}, {title: '조도'}, {title: '모터'}, {title: '기포'}, {title: 'LED'}, {title: '시간'}]
         const PREMIUM = [{title: '외부온도'}, {title: '수온'}, {title: '습도'}, {title: '조도'}, {title: '모터'}, 
                         {title: '기포'}, {title: 'LED'}, {title: 'EC'}, {title: 'pH'}, {title: 'DO'}, {title: '시간'}]
-        const colors = ["#FF1654", "#247BA0", '#009000']
-        
+        const colors = ["#FF1654", "#247BA0", "#009000"]
+        const GROUP = [['외부온도', '수온', '습도'], ['모터', '기포', 'LED'], ['조도'], ['EC', 'pH', 'DO']];
+        const ENVIR_NAME = [['ex_temp', 'water_temp', 'hum'], ['motor', 'bubble', 'led'], ['illum'], ['ec', 'ph', 'do']];
+        var max = [{ extemp: 0, water: 0, hum: 0, illum: 0, ec: 0, ph: 0, do: 0 }]
+        var min = [{ extemp: 0, water: 0, hum: 0, illum: 0, ec: 0, ph: 0, do: 0 }]
+
         $("#dashboard_name").text(params.get('name'));
 
         $( function() { 
@@ -265,16 +307,16 @@
             $("#stdate").on('cancel.daterangepicker', function(ev, picker) { $(this).val(''); });
         });
 
-        function create_chart(data, time, id, col, group, num) {
+        function create_chart(data, time, id, group, col, num) {
             let chartdata = [];
             let y = [];
-            $.each(col, (i, v) => {
+            $.each(group, (i, v) => {
                 chartdata.push({
                     name: v,
                     data: data[i]
                 })
             })
-            if (group == 'temp') {
+            if (col == 'temp') {
                 $.each(['외부온도', '외부온도', '습도'], (i, v) => {
                     y.push({
                         opposite: i == 2 ? true : false,
@@ -286,7 +328,7 @@
                         title: { text: i < 2 ? '외부온도/수온' : '습도', style: { color: colors[i] } }
                     })
                 })
-            } else if (group == 'sensor') {
+            } else if (col == 'sensor') {
                 $.each(['ON/OFF'], (i, v) => {
                     y.push({
                         opposite: false,
@@ -298,7 +340,7 @@
                         title: { text: v, style: { color: colors[i] } }
                     })
                 })
-            } else if (group == 'illum') {
+            } else if (col == 'illum') {
                 $.each(['조도'], (i, v) => {
                     y.push({
                         opposite: false,
@@ -382,8 +424,8 @@
                 },
             },
         };
-        console.log(options)
         new ApexCharts(document.querySelector(id), options).render();
+        window.dispatchEvent(new Event('resize'));
         }
         function create_table(data) {
             let datas = [];
@@ -405,6 +447,8 @@
                 }
             })
         }
+
+        var test = null;
         function search_envir() {
             $.ajax({
                 url: '/search_envir',
@@ -421,6 +465,7 @@
                     let premium_data = [[], [], []];
                     let time = [];
                     
+                    
                     $.each(data, (i, v) => {
                         temp_data[0].push(v.ex_temp);
                         temp_data[1].push(v.water_temp);
@@ -434,10 +479,11 @@
                         premium_data[2].push(v.do)
                         time.push(dayjs(v.time).format("YY-MM-DD HH:mm"));
                         if (data.length - 1 == i) {
-                            create_chart(temp_data, time, "#temp-chart", ['외부온도', '수온', '습도'], 'temp', 3);
-                            create_chart(senor_data, time, "#sensor-chart", ['모터', '기포', 'LED'], 'sensor', 3);
-                            create_chart(illum_data, time, "#illum-chart", ['조도'], 'illum', 1);
-                            if (service == 1) create_chart(premium_data, time, "#premium-chart", ['EC', 'pH', 'DO'], 'premium', 3);
+                            create_envircard(data, {text: '외부온도', name: 'ex_temp'}, time.at(-1))
+                            create_chart(temp_data, time, "#temp-chart", GROUP[0], 'temp', 3);
+                            create_chart(senor_data, time, "#sensor-chart", GROUP[1], 'sensor', 3);
+                            create_chart(illum_data, time, "#illum-chart", GROUP[2], 'illum', 1);
+                            if (service == 1) create_chart(premium_data, time, "#premium-chart", GROUP[3], 'premium', 3);
                             create_table(data);
                         }
                     })
@@ -445,9 +491,74 @@
                 }
             })
         }
-        $(document).ready(function() {
-            search_envir();
+        $(document).ready(function() { 
+            if (service==0) $("#premium-tabs").hide()
+            search_envir(); 
         })
+
+        function create_envircard(data, tabs, time) {
+            let card = ['#temp-outer', '#sensor-outer', '#illum-outer', '#premium-outer']
+            let icons = [['fa-solid fa-temperature-low', 'fa-solid fa-droplet', 'fa-solid fa-cloud'],
+                        ['fa-solid fa-sliders', 'fa-solid fa-sliders', 'fa-solid fa-sliders'], 
+                        ['fa-solid fa-lightbulb'], 
+                        ['fa-solid fa-bolt', 'fa-solid fa-sliders', 'fa-solid fa-sliders']]
+            $.each(ENVIR_NAME, (i, v) => {
+                let html = '';
+                $(card[i]).html('');
+                if (service == 0 && i == 3) return
+                $.each(v, (i2, v2) => {
+                    let max = data.reduce( (a, b) => { return a[v2] >= b[v2] ? a : b })[v2]
+                    let min = data.reduce( (a, b) => { return a[v2] <= b[v2] ? a : b })[v2]
+                    let val = data.at(-1)[v2]
+                    let pg = ((val-min) / (max-min)) * 100
+                    html += `<div class="col-lg-${12/v.length} col-md-12 col-sm-12 envir-card">
+                                <div class="card card-outer">
+                                    <div class="row card-inner">
+                                        <div class="row col" style="align-items: center; font-size: 35px; color: ${colors[i2]};">
+                                            <i class="${icons[i][i2]}"></i>
+                                            <h2 class="h6" style="margin: 0.5rem 0 0 0;">${GROUP[i][i2]}</h2>
+                                        </div>
+                                        <div class="col-3">
+                                            <div class="progress mx-auto" data-value='${pg}'>
+                                                <span class="progress-left">
+                                                    <span class="progress-bar border-primary" style="border-color: ${colors[i2]} !important;"></span>
+                                                </span>
+                                                <span class="progress-right">
+                                                    <span class="progress-bar border-primary" style="border-color: ${colors[i2]} !important;"></span>
+                                                </span>
+                                                <div class="progress-value w-100 h-100 rounded-circle d-flex align-items-center justify-content-center">
+                                                    <span id="progress-hum-text" style="font-size: 15px;">${val}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-6 row" style="align-items: center;">
+                                            <span class="h6">MAX: ${max}</span>
+                                            <span class="h6">MIN: ${min}</span>
+                                            <span style="font-size: 13px;">${time}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>`
+                })
+                $(card[i]).append(html);
+            })
+
+            $(".progress").each(function() {
+                var value = $(this).attr('data-value');
+                var left = $(this).find('.progress-left .progress-bar');
+                var right = $(this).find('.progress-right .progress-bar');
+
+                if (value > 0) {
+                    if (value <= 50) {
+                    right.css('transform', 'rotate(' + percentageToDegrees(value) + 'deg)')
+                    } else {
+                    right.css('transform', 'rotate(180deg)')
+                    left.css('transform', 'rotate(' + percentageToDegrees(value - 50) + 'deg)')
+                    }
+                }
+            })
+            function percentageToDegrees(percentage) { return percentage / 100 * 360 }
+        }
     </script>
     
 </body>
