@@ -31,6 +31,9 @@ router.get('/modify_profile', auth, function(req, res, next) {
 router.get('/dashboard', auth, function(req, res, next) {
   res.sendFile(path.join(__dirname, "../views/dashboard.html"))
 });
+router.get('/dashboard_premium', auth, function(req, res, next) {
+  res.sendFile(path.join(__dirname, "../views/dashboard_premium.html"))
+});
 router.get('/chart', auth, function(req, res, next) {
   res.sendFile(path.join(__dirname, "../views/chart.html"))
 });

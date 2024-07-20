@@ -17,7 +17,7 @@
     <link rel="stylesheet" href="style/style.css">
     <!-- <link rel="stylesheet" href="style/rotateCard.css"> -->
     <style>
-         .apexcharts-tooltip {
+        .apexcharts-tooltip {
             background: #f3f3f3;
             color: black;
         }
@@ -35,7 +35,6 @@
             height: 150px;
             color: black;
             min-width: 230px;
-            overflow-x: scroll;
         }
         .card-outer {
             padding: 0.5rem;
@@ -61,7 +60,7 @@
                 padding: 16px 0 16px 0;
             }
             .envir-card {
-                margin-bottom: 0.5rem;
+                padding: 0 0 0.5rem 0;
             }
         }
     </style>
@@ -167,7 +166,7 @@
             </ul>
             <div class="tab-content">
                 <div class="tab-pane fade show active" id="temp" role="tabpanel" aria-labelledby="manager-tab">
-                    <div class="card-container row gx-2" style="margin: 0 0 1rem 0; overflow-x: scroll;" id="temp-outer">
+                    <div class="card-container row gx-2" style="margin: 0 0 1rem 0;" id="temp-outer">
                     </div>
                     <div class="card">
                         <div class="card-header">
@@ -186,7 +185,7 @@
                 </div>
 
                 <div class="tab-pane fade show" id="sensor" role="tabpanel" aria-labelledby="manager-tab">
-                    <div class="card-container row gx-2" style="margin: 0 0 1rem 0; overflow-x: scroll;" id="sensor-outer">
+                    <div class="card-container row gx-2" style="margin: 0 0 1rem 0;" id="sensor-outer">
 
                     </div>
                     <div class="card">
@@ -206,7 +205,7 @@
                 </div>
 
                 <div class="tab-pane fade show" id="illum" role="tabpanel" aria-labelledby="manager-tab">
-                    <div class="card-container row gx-2" style="margin: 0 0 1rem 0; overflow-x: scroll;" id="illum-outer">
+                    <div class="card-container row gx-2" style="margin: 0 0 1rem 0;" id="illum-outer">
                         
                     </div>
                     <div class="card">
@@ -225,7 +224,7 @@
                     </div>
                 </div>
                 <div class="tab-pane fade show" id="premium" role="tabpanel" aria-labelledby="manager-tab">
-                    <div class="card-container row gx-2" style="margin: 0 0 1rem 0; overflow-x: scroll;" id="premium-outer">
+                    <div class="card-container row gx-2" style="margin: 0 0 1rem 0;" id="premium-outer">
                         
                     </div>
                     <div class="card">
@@ -279,6 +278,7 @@
     <script src="js/sidebar.js"></script>
     <script src="js/memberAuth.js"></script>
     <script src="js/draw_devices.js"></script>
+    <script src="js/create_chart.js"></script>
     <script>
         const params = new URLSearchParams(location.search);
         const device_id = params.get('device');
@@ -307,126 +307,6 @@
             $("#stdate").on('cancel.daterangepicker', function(ev, picker) { $(this).val(''); });
         });
 
-        function create_chart(data, time, id, group, col, num) {
-            let chartdata = [];
-            let y = [];
-            $.each(group, (i, v) => {
-                chartdata.push({
-                    name: v,
-                    data: data[i]
-                })
-            })
-            if (col == 'temp') {
-                $.each(['외부온도', '외부온도', '습도'], (i, v) => {
-                    y.push({
-                        opposite: i == 2 ? true : false,
-                        seriesName: v,
-                        show: i == 1 ? false : true, 
-                        axisTicks: { show: true },
-                        axisBorder: { show: true, color: colors[i] },
-                        labels: { style: { colors: colors[i] } },
-                        title: { text: i < 2 ? '외부온도/수온' : '습도', style: { color: colors[i] } }
-                    })
-                })
-            } else if (col == 'sensor') {
-                $.each(['ON/OFF'], (i, v) => {
-                    y.push({
-                        opposite: false,
-                        seriesName: v,
-                        show: true, 
-                        axisTicks: { show: true },
-                        axisBorder: { show: true, color: colors[i] },
-                        labels: { style: { colors: colors[i] } },
-                        title: { text: v, style: { color: colors[i] } }
-                    })
-                })
-            } else if (col == 'illum') {
-                $.each(['조도'], (i, v) => {
-                    y.push({
-                        opposite: false,
-                        seriesName: v,
-                        show: true, 
-                        axisTicks: { show: true },
-                        axisBorder: { show: true, color: colors[i] },
-                        labels: { style: { colors: colors[i] } },
-                        title: { text: v, style: { color: colors[i] } }
-                    })
-                })
-            } else {
-                $.each(['EC', 'pH/DO', 'pH/DO'], (i, v) => {
-                    y.push({
-                        opposite: i > 0 ? true : false,
-                        seriesName: v,
-                        show: i == 2 ? false : true, 
-                        axisTicks: { show: true },
-                        axisBorder: { show: true, color: colors[i] },
-                        labels: { style: { colors: colors[i] } },
-                        title: { text: v, style: { color: colors[i] } }
-                    })
-                })
-            }
-
-
-            var options = {
-            chart: {
-                height: 350,
-                type: "line",
-                stacked: false, 
-                zoom: {
-                    enabled: true,
-                    type: 'x',
-                    resetIcon: {
-                        offsetX: -10,
-                        offsetY: 0,
-                        fillColor: '#fff',
-                        strokeColor: '#37474F'
-                    },
-                    selection: {
-                        background: '#90CAF9',
-                        border: '#0D47A1'
-                    } 
-                    
-                }
-            },
-            dataLabels: {
-                enabled: false,
-                position: 'top',
-            },
-            colors: colors.slice(0, num),
-            series: chartdata,
-            stroke: {
-                width: [4, 4, 4]
-            },
-            plotOptions: {
-                bar: {
-                columnWidth: "20%"
-                }
-            },
-            xaxis: {
-                categories: time
-            },
-            yaxis: y,
-            tooltip: {
-                enabled: true,
-                shared: true,
-                intersect: false,
-                x: { show: false },
-            },
-            legend: {
-                horizontalAlign: "left",
-                offsetX: 40
-            },
-            grid: {
-                borderColor: '#e7e7e7',
-                row: {
-                    colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
-                    opacity: 0.5
-                },
-            },
-        };
-        new ApexCharts(document.querySelector(id), options).render();
-        window.dispatchEvent(new Event('resize'));
-        }
         function create_table(data) {
             let datas = [];
             $.each(data, (i, v) => {
@@ -479,7 +359,7 @@
                         premium_data[2].push(v.do)
                         time.push(dayjs(v.time).format("YY-MM-DD HH:mm"));
                         if (data.length - 1 == i) {
-                            create_envircard(data, {text: '외부온도', name: 'ex_temp'}, time.at(-1))
+                            create_envircard(data, time.at(-1))
                             create_chart(temp_data, time, "#temp-chart", GROUP[0], 'temp', 3);
                             create_chart(senor_data, time, "#sensor-chart", GROUP[1], 'sensor', 3);
                             create_chart(illum_data, time, "#illum-chart", GROUP[2], 'illum', 1);
@@ -496,12 +376,13 @@
             search_envir(); 
         })
 
-        function create_envircard(data, tabs, time) {
-            let card = ['#temp-outer', '#sensor-outer', '#illum-outer', '#premium-outer']
-            let icons = [['fa-solid fa-temperature-low', 'fa-solid fa-droplet', 'fa-solid fa-cloud'],
-                        ['fa-solid fa-sliders', 'fa-solid fa-sliders', 'fa-solid fa-sliders'], 
-                        ['fa-solid fa-lightbulb'], 
-                        ['fa-solid fa-bolt', 'fa-solid fa-sliders', 'fa-solid fa-sliders']]
+        function create_envircard(data, time) {
+            const card = ['#temp-outer', '#sensor-outer', '#illum-outer', '#premium-outer']
+            const icons = [['fa-solid fa-temperature-low', 'fa-solid fa-droplet', 'fa-solid fa-cloud'],
+                        ['fa-solid fa-gauge-high', 'fa-solid fa-water', 'fa-solid fa-lightbulb'], 
+                        ['fa-solid fa-solar-panel'], 
+                        ['fa-solid fa-bolt', 'fa-solid fa-pallet', 'fa-solid fa-sliders']]
+            const notation = [['°C', '°C', '%'], ['', '', ''], ['lx'], ['μS/cm', 'pH', 'mg/L']]
             $.each(ENVIR_NAME, (i, v) => {
                 let html = '';
                 $(card[i]).html('');
@@ -516,9 +397,9 @@
                                     <div class="row card-inner">
                                         <div class="row col" style="align-items: center; font-size: 35px; color: ${colors[i2]};">
                                             <i class="${icons[i][i2]}"></i>
-                                            <h2 class="h6" style="margin: 0.5rem 0 0 0;">${GROUP[i][i2]}</h2>
+                                            <h2 class="h6" style="margin: 0; padding: 0;">${GROUP[i][i2]}</h2>
                                         </div>
-                                        <div class="col-3">
+                                        <div class="col-4">
                                             <div class="progress mx-auto" data-value='${pg}'>
                                                 <span class="progress-left">
                                                     <span class="progress-bar border-primary" style="border-color: ${colors[i2]} !important;"></span>
@@ -527,13 +408,13 @@
                                                     <span class="progress-bar border-primary" style="border-color: ${colors[i2]} !important;"></span>
                                                 </span>
                                                 <div class="progress-value w-100 h-100 rounded-circle d-flex align-items-center justify-content-center">
-                                                    <span id="progress-hum-text" style="font-size: 15px;">${val}</span>
+                                                    <span id="progress-hum-text" style="font-size: 14px;">${i==1?(val==1?'ON':'OFF'):val}${notation[i][i2]}</span>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-6 row" style="align-items: center;">
-                                            <span class="h6">MAX: ${max}</span>
-                                            <span class="h6">MIN: ${min}</span>
+                                            <span class="h6" style="font-size: 14px;">최대: ${max}${notation[i][i2]}</span>
+                                            <span class="h6" style="font-size: 14px;">최소: ${min}${notation[i][i2]}</span>
                                             <span style="font-size: 13px;">${time}</span>
                                         </div>
                                     </div>
