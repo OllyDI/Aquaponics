@@ -85,7 +85,7 @@
         <div class="main-container">
             <!-- 비디오 카드 -->
             <div class="row w-100 row-screen">
-                <div class="col-12 col-lg-6 col-sm-12 col-md-8">
+                <div class="col-12 col-lg-6 col-sm-12 col-md-12">
                     <div class="row">
                         <div class="video-card">
                             <div class="card-inner card" onclick="display()">
@@ -116,17 +116,17 @@
                                             <a class="nav-link" href="#" data-bs-target="#premium-tabs" data-bs-toggle="tab" style="padding: 5px;">EC/pH/DO</a>
                                         </li>
                                     </ul>
-                                    <div class="tab-content">
-                                        <div class="tab-pane active" id="temp-tabs">
+                                    <div class="tab-content" style="height: 100%;">
+                                        <div class="tab-pane active chart-height" id="temp-tabs">
                                             <div id="temp-chart"></div>
                                         </div>
-                                        <div class="tab-pane" id="sensor-tabs">
+                                        <div class="tab-pane chart-height" id="sensor-tabs">
                                             <div id="sensor-chart"></div>
                                         </div>
-                                        <div class="tab-pane" id="illum-tabs">
+                                        <div class="tab-pane chart-height" id="illum-tabs">
                                             <div id="illum-chart"></div>
                                         </div>
-                                        <div class="tab-pane" id="premium-tabs">
+                                        <div class="tab-pane chart-height" id="premium-tabs">
                                             <div id="premium-chart"></div>
                                         </div>
                                     </div>
@@ -136,7 +136,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-6 col-md-4 col-sm-12 card-all">
+                <div class="col-lg-6 col-md-12 col-sm-12 card-all">
                     <div class="card-container">
                         <div class="row" style="margin: calc(-1 * var(--bs-gutter-y)) 0 0 0;">
                             <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 enver-card" onclick="this.classList.toggle('flipped')" id="ex_temp">

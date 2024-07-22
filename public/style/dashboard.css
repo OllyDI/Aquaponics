@@ -63,13 +63,16 @@
     position: absolute;
     width: 100%;
     height: 100%;
-    backface-visibility: hidden;
+    -moz-backface-visibility: hidden !important;
+    -webkit-backface-visibility: hidden !important;
+    backface-visibility: hidden !important;
     display: flex;
     justify-content: center;
     align-items: center;
     text-align: center;
     padding: 20px;
     font-size: 1.2rem;
+    z-index: 1;
 }
 
 .card-back {
@@ -93,7 +96,16 @@
 .srcn {
     max-height: calc(100vh - 6.25rem);
 }
+.chart-height {
+    height: 90%;
+}
 
+@media screen and (max-width: 1200px) {
+    .enver-card {
+        height: 12.5vh;
+        margin-bottom: 0.5rem;
+    }
+}
 
 @media screen and (max-width: 1124px) {
     .video-card {
@@ -129,6 +141,9 @@
 
     .srcn {
         max-height: calc(100vh - 5.25rem);
+    }
+    .chart-height {
+        min-height: 330px;
     }
 }
 

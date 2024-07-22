@@ -22,7 +22,7 @@ height: 100%;
 overflow: hidden;
 position: absolute;
 top: 0;
-z-index: 1;
+z-index: 100;
 }
 
 .progress .progress-left {
@@ -66,3 +66,10 @@ position: absolute;
 top: 0;
 left: 0;
 }
+
+/* @media screen and (max-width: 1200px) {
+    .progress {
+        width: 60px;
+        height: 60px;
+    }
+} */

@@ -60,7 +60,7 @@ function create_chart(data, time, id, group, col, num) {
 
     var options = {
         chart: {
-            height: 350,
+            height: '100%',
             type: "line",
             stacked: false, 
             zoom: {

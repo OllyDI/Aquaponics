@@ -229,26 +229,33 @@
     }
     function actions() { $("#level").attr('disabled', false); }
 
-    function sendmail() {
+    function sendmail() {  
+        let e = $("#uid").val();
+        email_regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i;
+        if(!email_regex.test(e)) {
+            alert('이메일 형식에 맞게 입력해주세요.');
+            return;
+        }
+
         $.ajax({
             url: '/duplicate',
             method: 'post',
             data: {
-                uid: $("#uid").val(),
+                uid: e,
             },
             datatype: 'json',
             success: function (data) {
                 if (data) {
-                    $("#valid_div").attr("hidden", false);
                     $.ajax({
                         url: '/smtp',
                         method: 'post',
                         data: {
-                            email: $("#uid").val()
+                            email: e
                         },
                         success: function(data) {
                             alert(data.msg);
                             number = data.key;
+                            $("#valid_div").attr("hidden", false);
                             if (data.ok) $("#mail_button").attr('disabled', false);
                         }
                     })
