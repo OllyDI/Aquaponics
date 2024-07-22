@@ -538,6 +538,28 @@ app.post('/search_envir', function(req, res) {
   })
 })
 
+app.get('/get_sensor', function(req, res) {
+  const device_id = req.query.device_id;
+
+  db.query('select * from sensor where sd_id=?', [Number(device_id)],
+    function(err, data) {
+      if (err) throw(err);
+      res.send(data);
+    }
+  )
+})
+app.get('/update_sensor', function(req, res) {
+  const device_id = req.query.device_id;
+  const sensor = req.query.sensor;
+  const val = req.query.val;
+
+  db.query(`update sensor set ${sensor}=? where sd_id=?`, [Number(val), Number(device_id)], 
+    function(err, data) {
+      if (err) throw(err);
+      res.send();
+    }
+  )
+})
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

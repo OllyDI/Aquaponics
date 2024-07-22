@@ -12,190 +12,10 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
     <link rel="stylesheet" href="style/style.css">
     <link rel="stylesheet" href="style/circle_progressbar.css">
-    <!-- <link rel="stylesheet" href="style/rotateCard.css"> -->
+    <link rel="stylesheet" href="style/dashboard.css">
     <style>
-        .apexcharts-tooltip {
-           background: #f3f3f3;
-           color: black;
-       }
-       .apexcharts-menu {
-           color: black;
-       }
-        .main-container {
-            display: flex;
-            align-items: stretch;
-            gap: 20px;
-            height: 100%;
-            width: 100%;
-            box-sizing: border-box;
-        }
-
-        .video-card {
-            flex: 0 0 auto;
-            max-height: 80%;
-            object-fit: cover;
-            /* background-color: #000;  */
-            height: 42vh;
-            width: 100%;
-            /* overflow-y: scroll; */
-        }
-
-        .card-container {
-            display: flex;
-            justify-content: space-between;
-            flex: 2;
-            flex-direction: column;
-            gap: 10px;
-            overflow-y: auto;
-            overflow-x: hidden;
-            max-height: 100%;
-        }
-
         .enver-card {
-            height: 12.9vh;
-            perspective: 1000px;
-            cursor: pointer;
-            position: relative;
-            /* overflow: hidden; */
-            border-radius: 10px;
-            margin-bottom: 0.9rem;
-            padding: 0 0.5rem 0.5rem 0.5rem;
-            --bs-card-border-color: none;
-            min-width: 210px !important;
-        }
-
-        .card-inner {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            transition: transform 0.6s;
-            transform-style: preserve-3d;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            --bs-card-border-color: rgba(0, 0, 0, 0.1);
-        }
-
-        .enver-card.flipped .card-inner {
-            transform: rotateY(180deg);
-        }
-
-        .card-face {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            backface-visibility: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 20px;
-            font-size: 1.2rem;
-        }
-
-        .card-back {
-            transform: rotateY(180deg);
-        }
-
-        .video-item {
-            width: 100%;
-            height: 100%;
-            padding: 0.5rem ;
-        }
-
-        .card-row {
-            display: flex;
-            flex-wrap: wrap;
-            /* margin: -; */
-        }
-        .card-inner:has(.chart){
-            height:32vh;
-        }
-        .srcn {
-            max-height: calc(100vh - 6.25rem);
-        }
-
-
-        @media screen and (max-width: 1124px) {
-            .video-card {
-                width: 100%;
-                /* 비디오 카드 너비 설정 */
-                height:100%;
-                /* 화면 높이에서 아래 카드 영역 높이(150px * 2 + 20px)를 뺀 만큼의 최대 높이 설정 */
-                margin-bottom: 20px;
-            }
-
-            .video-item {
-                width: 100%;
-                margin: 0;
-            }
-
-            .card-container {
-                overflow-y: visible;
-                /* 가로 스크롤을 표시할 때만 스크롤이 나타나도록 설정 */
-                max-width: 100%;
-                /* 카드 컨테이너의 최대 너비를 설정 */
-                display: flex;
-                justify-content: flex-start;
-            }
-
-            .card-row {
-                display: flex;
-                /* 카드들이 한 줄에 나열되도록 설정 */
-                gap: 10px;
-                /* 카드 사이의 간격 설정 */
-                padding-bottom: 10px;
-                /* 아래쪽 여백 추가 */
-            }
-
-            .enver-card {
-                height: 100px;
-                overflow: none;
-            }
-
-            .main-container {
-                display: block;
-                align-items: stretch;
-                /* 비디오 카드와 카드 컨테이너가 상단 정렬되도록 설정 */
-                gap: 20px;
-                /* 비디오 카드와 카드 컨테이너 사이의 간격 설정 */
-                height: 100%;
-                /* 전체 높이를 가득 채우도록 설정 */
-                width: 100%;
-                /* 전체 너비를 가득 채우도록 설정 */
-                box-sizing: border-box;
-                /* 패딩을 포함하여 크기 계산 */
-            }
-
-            .srcn {
-                max-height: calc(100vh - 5.25rem);
-            }
-        }
-
-        @media screen and (max-width: 767px) {
-            body {
-                padding: 0;
-            }
-            .video-card {
-                height: 100%;
-                padding: 0;
-            }
-            .video-item {
-                height: auto;
-            }
-            .card-all {
-                padding: 0;
-            }
-            .row-screen {
-                margin: 0;
-            }
-        }
-
-        @media screen and (max-width: 600px) {
-            .video-card {
-                height: 100%;
-            }
-            .enver-card {
-                padding: 0;
-            }
+            height: 16.08vh;
         }
     </style>
 </head>
@@ -216,9 +36,6 @@
                 <li class="navbar-text" style="padding: 0.5rem;">
                     <span id="level"></span>
                 </li>
-                <!-- <li class="navbar-text usericon" style="color: black; padding: 0.5rem;">
-                    <span id="username" style="height: 28px;">홍길동</span>
-                </li> -->
                 <li class="navbar-text usericon" style="color: black; padding: 0.5rem;">
                     <a id="username" data-bs-toggle="dropdown" role="button" style="height: 28px;"></a>
                     <ul class="dropdown-menu" aria-labelledby="username" style="width: 2rem; min-width: 100px;">
@@ -252,7 +69,6 @@
                         <i class='bx bx-bar-chart-alt-2 nav_icon'></i>
                         <span class="nav_name">차트</span>
                     </a>
-                    <!--@if($level->학생용) -->
                     <a href="/student_manage" class="nav_link" id="stumanag">
                         <i class='bx bx-user nav_icon'></i> <span class="nav_name">학생관리</span>
                     </a>
@@ -260,7 +76,6 @@
                         <i class='bx bx-cog nav_icon'></i>
                         <span class="nav_name">설정</span>
                     </a>
-                    <!--@end-->
                 </div>
             </div>
 
@@ -278,12 +93,16 @@
                 <div class="col-12 col-lg-6 col-sm-12 col-md-8">
                     <div class="row">
                         <div class="video-card">
-                            <div class="card-inner">
-                                <img class="video-item" src="imgs/sample.png" style="border-radius: 10px; margin-bottom: 1rem;">
+                            <div class="card-inner card" onclick="display()">
+                                <img class="video-item" src="imgs/sample.png" style="border-radius: 10px; margin-bottom: 1rem; position: relative;" id="plant">
+                                <img class="video-item" src="imgs/sample2.png" style="border-radius: 10px; margin-bottom: 1rem; position: relative;" id="fish" hidden>
+                                <div class="video-btn" style="position: absolute; margin: 1rem;">
+                                    <button type="button" class="btn btn-primary btn-sm" onclick="display()" id="display-btn" value='0' style="pointer-events: none;">전환</button>
+                                </div>
                             </div>
                         </div>
                         <div class="video-card">
-                            <div class="card-inner">
+                            <div class="card-inner card">
                                 <div class="video-item" style="padding-bottom: 0.5rem;">
                                     <!-- /.card-header -->
                                      
@@ -298,9 +117,6 @@
                                         <li class="nav-item">
                                             <a class="nav-link" href="#" data-bs-target="#illum-tabs" data-bs-toggle="tab" style="padding: 5px;">조도</a>
                                         </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="#" data-bs-target="#premium-tabs" data-bs-toggle="tab" style="padding: 5px;">EC/pH/DO</a>
-                                        </li>
                                     </ul>
                                     <div class="tab-content">
                                         <div class="tab-pane active" id="temp-tabs">
@@ -312,9 +128,6 @@
                                         <div class="tab-pane" id="illum-tabs">
                                             <div id="illum-chart"></div>
                                         </div>
-                                        <div class="tab-pane" id="premium-tabs">
-                                            <div id="premium-chart"></div>
-                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -325,34 +138,26 @@
                 <div class="col-lg-6 col-md-4 col-sm-12 card-all">
                     <div class="card-container">
                         <div class="row" style="margin: calc(-1 * var(--bs-gutter-y)) 0 0 0;">
-                            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 enver-card" onclick="this.classList.toggle('flipped')" id="ex_temp">
+                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 enver-card " onclick="this.classList.toggle('flipped')" id="ex_temp">
                             </div>
-                            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 enver-card " onclick="this.classList.toggle('flipped')" id="water_temp">
-                            </div>
-                            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 enver-card " onclick="this.classList.toggle('flipped')" id="hum">
+                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 enver-card " onclick="this.classList.toggle('flipped')" id="water_temp">
                             </div>
 
+                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 enver-card " onclick="this.classList.toggle('flipped')" id="hum">
+                            </div>
                             <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 enver-card " onclick="this.classList.toggle('flipped')" id="illum">
                             </div>
-                            <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 enver-card " onclick="this.classList.toggle('flipped')" id="ec">
-                            </div>
 
-                            <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 enver-card " onclick="this.classList.toggle('flipped')" id="ph">
+                            <div class="col-12 enver-card" onclick="toggle_sensor(this)" style="width: 100%;" id="motor" value="0">
                             </div>
-                            <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 enver-card " onclick="this.classList.toggle('flipped')" id="do">
+                            <div class="col-12 enver-card" onclick="toggle_sensor(this)" style="width: 100%;" id="bubble" value="0">
                             </div>
-
-                            <div class="col-12 enver-card" onclick="this.classList.toggle('flipped')" style="width: 100%;" id="motor">
-                            </div>
-                            <div class="col-12 enver-card" onclick="this.classList.toggle('flipped')" style="width: 100%;" id="bubble">
-                            </div>
-                            <div class="col-12 enver-card" onclick="this.classList.toggle('flipped')" style="margin-bottom: 0; width: 100%;" id="led">
+                            <div class="col-12 enver-card" onclick="toggle_sensor(this)" style="margin-bottom: 0; width: 100%;" id="led" value="0">
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- 150px 사이즈의 6개 카드 -->
         </div>
     </div>
 
@@ -384,11 +189,9 @@
                     end: ''.split(" ~ ")[1],
                 },
                 success: function(data) {
-                    console.log(data);
                     let temp_data = [[], [], []];
-                    let senor_data = [[], [], []];
+                    let sensor_data = [[], [], []];
                     let illum_data = [[]];
-                    let premium_data = [[], [], []];
                     let time = [];
                     
                     
@@ -396,20 +199,16 @@
                         temp_data[0].push(v.ex_temp);
                         temp_data[1].push(v.water_temp);
                         temp_data[2].push(v.hum);
-                        senor_data[0].push(v.motor)
-                        senor_data[1].push(v.bubble)
-                        senor_data[2].push(v.led)
+                        sensor_data[0].push(v.motor)
+                        sensor_data[1].push(v.bubble)
+                        sensor_data[2].push(v.led)
                         illum_data[0].push(v.illum)
-                        premium_data[0].push(v.ec)
-                        premium_data[1].push(v.ph)
-                        premium_data[2].push(v.do)
                         time.push(dayjs(v.time).format("YY-MM-DD HH:mm"));
                         if (data.length - 1 == i) {
                             create_envircard(data, time.at(-1))
                             create_chart(temp_data, time, "#temp-chart", ['외부온도', '수온', '습도'], 'temp', 3);
-                            create_chart(senor_data, time, "#sensor-chart", ['모터', '기포', 'LED'], 'sensor', 3);
+                            create_chart(sensor_data, time, "#sensor-chart", ['모터', '기포', 'LED'], 'sensor', 3);
                             create_chart(illum_data, time, "#illum-chart", ['조도'], 'illum', 1);
-                            if (service == 1) create_chart(premium_data, time, "#premium-chart", ['EC', 'pH', 'DO'], 'premium', 3);
                         }
                     })
                     
@@ -417,20 +216,56 @@
             })
         })
 
+        function update_pg() {
+            $(".progress").each(function() {
+                var value = $(this).attr('data-value');
+                var left = $(this).find('.progress-left .progress-bar');
+                var right = $(this).find('.progress-right .progress-bar');
+
+                if (value > 0) {
+                    if (value <= 50) {
+                        right.css('transform', 'rotate(' + percentageToDegrees(value) + 'deg)')
+                    } else {
+                        right.css('transform', 'rotate(180deg)')
+                        left.css('transform', 'rotate(' + percentageToDegrees(value - 50) + 'deg)')
+                    } 
+                } else {
+                    right.css('transform', 'rotate(0deg)')
+                    left.css('transform', 'rotate(0deg)')
+                }
+            })
+            function percentageToDegrees(percentage) { return percentage / 100 * 360 }
+        }
+
         function create_envircard(data, time) {
+            let sensors = null;
+            $.ajax({
+                url: '/get_sensor',
+                method: 'get',
+                data: { device_id: device_id, },
+                async: false,
+                success: function(data) { sensors = data; }
+            })
             const icons = ['fa-solid fa-temperature-low', 'fa-solid fa-droplet', 'fa-solid fa-cloud', 
-                        'fa-solid fa-solar-panel', 'fa-solid fa-bolt', 'fa-solid fa-pallet', 'fa-solid fa-sliders', 
-                        'fa-solid fa-gauge-high', 'fa-solid fa-water', 'fa-solid fa-lightbulb'];
+                        'fa-solid fa-solar-panel','fa-solid fa-gauge-high', 'fa-solid fa-water', 'fa-solid fa-lightbulb'];
             const GROUP = [['외부온도', 'ex_temp', '°C'], ['수온', 'water_temp', '°C'], ['습도', 'hum', '%'], ['조도', 'illum', 'lx'], 
-            ['EC', 'ec', 'μS/cm'], ['pH', 'ph', 'pH'], ['DO', 'do', 'mg/L'], ['모터', 'motor', ''], ['기포', 'bubble', ''], ['LED', 'led', '']]
+            ['모터', 'motor', ''], ['기포', 'bubble', ''], ['LED', 'led', '']]
             // const colors = ["#FF1654", "#247BA0", "#009000", "#FF1654", "#247BA0", "#FF1654", "#247BA0", "#FF1654", "#247BA0", "#009000"]
             $.each(GROUP, (i, v) => {
+                let val = 0, min = 0, max = 0;
+                if (i > 3) {
+                    max = 1;
+                    min = 0;
+                    val = sensors[0][v[1]]
+                    $("#" + v[1]).attr('value', val)
+                } else {
+                    max = data.reduce( (a, b) => { return a[v[1]] >= b[v[1]] ? a : b })[v[1]]
+                    min = data.reduce( (a, b) => { return a[v[1]] <= b[v[1]] ? a : b })[v[1]]
+                    val = data.at(-1)[v[1]]
+                }
                 let html = '';
-                let max = data.reduce( (a, b) => { return a[v[1]] >= b[v[1]] ? a : b })[v[1]]
-                let min = data.reduce( (a, b) => { return a[v[1]] <= b[v[1]] ? a : b })[v[1]]
-                let val = data.at(-1)[v[1]]
                 let pg = ((val-min) / (max-min)) * 100
-                console.log((val==1&&i>6))
+
                 html = `<div class="card card-inner">
                             <div class="card-face card-front">
                                 <div class="row col" style="align-items: center; font-size: 35px; color: #25252599;">
@@ -438,7 +273,7 @@
                                     <h2 class="h6" style="margin: 0; padding: 0;">${v[0]}</h2>
                                 </div>
                                 <div class="col">
-                                    <div class="progress mx-auto" data-value='${pg}'>
+                                    <div class="progress mx-auto" id="pg-${v[1]}" data-value='${pg}'>
                                         <span class="progress-left">
                                             <span class="progress-bar border-primary" style="border-color: #25252599 !important;"></span>
                                         </span>
@@ -446,7 +281,7 @@
                                             <span class="progress-bar border-primary" style="border-color: #25252599 !important;"></span>
                                         </span>
                                         <div class="progress-value w-100 h-100 rounded-circle d-flex align-items-center justify-content-center">
-                                            <span id="progress-hum-text" style="font-size: 14px;">${i>6?(val==1?'ON':'OFF'):val}${v[2]}</span>
+                                            <span id="progress-hum-text-${v[1]}" style="font-size: 14px;">${i>3?(val==1?'ON':'OFF'):val}${v[2]}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -467,21 +302,40 @@
                 $("#" + v[1]).html('')
                 $("#" + v[1]).append(html)
             })
-            $(".progress").each(function() {
-                var value = $(this).attr('data-value');
-                var left = $(this).find('.progress-left .progress-bar');
-                var right = $(this).find('.progress-right .progress-bar');
+            update_pg();
+        }
 
-                if (value > 0) {
-                    if (value <= 50) {
-                    right.css('transform', 'rotate(' + percentageToDegrees(value) + 'deg)')
-                    } else {
-                    right.css('transform', 'rotate(180deg)')
-                    left.css('transform', 'rotate(' + percentageToDegrees(value - 50) + 'deg)')
-                    }
+        function toggle_sensor(sensor) {
+            let id = sensor.id;
+            let val = Number(!Number($("#" + id).attr('value')));
+
+            $.ajax({
+                url: '/update_sensor',
+                method: 'get',
+                data: {
+                    device_id: device_id,
+                    sensor: id,
+                    val: val,
+                },
+                success: function(data) {
+                    $("#" + id).attr('value', val);
+                    $("#pg-" + id).attr('data-value', val==0 ? 0 : 100)
+                    $("#progress-hum-text-" + id).text(val==1?'ON':'OFF')
+                    update_pg();
                 }
             })
-            function percentageToDegrees(percentage) { return percentage / 100 * 360 }
+        }
+        
+        function display() {
+            const value =  $('#display-btn').attr('value');
+            $('#display-btn').attr('value', Number(!Number(value)));
+            if (value == 0) {
+                $("#fish").attr('hidden', false)
+                $("#plant").attr('hidden', true)
+            } else {
+                $("#fish").attr('hidden', true)
+                $("#plant").attr('hidden', false)
+            }
         }
     </script>
 </body>

@@ -143,7 +143,7 @@
                     console.log(data);
                     $.each(data, (i, val) => {
                         html += `<div class="card device_card" style="margin-bottom: 1rem;">
-                                    <a href="#" onclick="window.location = ('/dashboard?name=${val.name}&device=${val.device_id}&service=${val.service}')" style="color: black;">
+                                    <a href="#" onclick="window.location = ('/dashboard${val.service==1?'_premium':''}?name=${val.name}&device=${val.device_id}&service=${val.service}')" style="color: black;">
                                         <div class="card-body devices" style="display: flex;">
                                             <img class="device_img" src="imgs/sample.png">
                                             <div class="row card_row">
