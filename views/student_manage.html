@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="style/sidebar.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
     <link rel="stylesheet" href="style/style.css">
+    <link rel="stylesheet" href="style/btn.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/dual-listbox/dist/dual-listbox.css"/>
     <link rel="stylesheet" href="style/duallist.css">
 </head>
@@ -38,7 +39,7 @@
                     <span id="username" style="height: 28px;">홍길동</span>
                 </li> -->
                 <li class="navbar-text usericon" style="color: black; padding: 0.5rem;">
-                    <a id="username" data-bs-toggle="dropdown" role="button" style="height: 28px;"></a>
+                    <a id="username" data-bs-toggle="dropdown" role="button" style="height: 28px; display: flex; align-items: center;"></a>
                     <ul class="dropdown-menu" aria-labelledby="username" style="width: 2rem; min-width: 100px;">
                         <li><a class="dropdown-item" href="/modify_profile">정보수정</a></li>
                         <li><a class="dropdown-item" href="#">기기정보</a></li>
@@ -91,7 +92,7 @@
                             <div class="input-group flex-nowrap">
                                 <span class="input-group-text">학교</span>
                                 <input type="text" id="school" name="school" class="form-control" maxlength="45">
-                                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#schoolSerch" aria-controls="home" aria-selected="true">검색</button>
+                                <button type="button" class="btn btn-purple" data-bs-toggle="modal" data-bs-target="#schoolSerch" aria-controls="home" aria-selected="true">검색</button>
                             </div>
                         </div>
                         <div style="padding-bottom: 0.5rem;" class="col-sm-12 col-md-5 col-lg-6">
@@ -112,7 +113,7 @@
                             </div>
                         </div>
                         <div class="d-grid col-sm-12 col-md-2 col-lg-1" style="padding-bottom: 0.5rem;">
-                            <button id="upload_button" onclick="search()" class="btn btn-primary waves-effect waves-light" style="float:right; min-width: 58.75px;">검색</button>
+                            <button id="upload_button" onclick="search()" class="btn btn-purple waves-effect waves-light" style="float:right; min-width: 58.75px;">검색</button>
                         </div>
                     </div>
                 </div>
@@ -206,7 +207,6 @@
     <script src="js/member_control.js"></script>
     <script>
         var multiplelist = null;
-        var devices = [];
 
         function search() {
             $("#card_search").css('display', '');
@@ -216,7 +216,7 @@
                 url: "/searchTable",
                 method: "post",
                 data: {
-                    school: member[0].school,
+                    school: member[0].level==3? member[0].school:member[0].school,
                     level: $("#ulevel").val(),
                     userLevel: 2,
                     grade: member[0].grade,

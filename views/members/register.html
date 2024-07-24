@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
     <link rel="stylesheet" href="/style/member.css">
+    <link rel="stylesheet" href="/style/btn.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
     <link rel="stylesheet" href="/style/kakao_map.css">
 </head>
@@ -79,7 +80,7 @@
                     <div class="input-group" id="gen_school">
                         <input type="text" name="school" id="school" class="form-control" placeholder="학교명" onclick="openModal()"
                         required oninvalid="this.setCustomValidity('학교명을 입력하세요.')" oninput="this.setCustomValidity('')">
-                        <button type="button" class="btn btn-success" id="school_btn" onclick="openModal()">검색</button>
+                        <button type="button" class="btn btn-purple" id="school_btn" onclick="openModal()">검색</button>
                     </div>
                 </div>
                 <div class="mb-3">
@@ -120,7 +121,7 @@
                 <div class="mb-3">
                     <div class="input-group">
                         <input type="text" name="id" id="uid" class="form-control" placeholder="이메일" pattern="[a-zA-Z0-9]+[@][a-zA-Z0-9]+[.]+[a-zA-Z]+[.]*[a-zA-Z]*">
-                        <button type="button" class="btn btn-success" onclick="sendmail()">인증</button>
+                        <button type="button" class="btn btn-purple" onclick="sendmail()">인증</button>
                     </div>
                     <label id="lUid" style="color: red;" hidden>사용할 수 없는 이메일입니다.</label>
                 </div>
@@ -128,7 +129,7 @@
                     <div class="input-group">
                         <input type="text" name="valid" id="valid" class="form-control" placeholder="인증번호"
                         required oninvalid="this.setCustomValidity('인증번호를 입력하세요.')" oninput="this.setCustomValidity('')">
-                        <button type="button" class="btn btn-success" id="mail_button" onclick="authMail()" disabled>확인</button>
+                        <button type="button" class="btn btn-purple" id="mail_button" onclick="authMail()" disabled>확인</button>
                     </div>
                 </div>
                 <div class="mb-3">
@@ -142,7 +143,7 @@
 
                 <!-- /.col -->
                 <div class="mb-3" style="margin-top: 25px;">
-                    <button type="button" class="btn btn-success btn-block" id="reg" onclick="">회원가입</button>
+                    <button type="button" class="btn btn-purple btn-block" id="reg" onclick="">회원가입</button>
                 </div>
             </form>
 
@@ -231,9 +232,9 @@
 
     function sendmail() {  
         let e = $("#uid").val();
-        email_regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i;
+        email_regex = /^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-za-z0-9\-]+/;;
         if(!email_regex.test(e)) {
-            alert('이메일 형식에 맞게 입력해주세요.');
+            alert('이메일 형식이 올바르지 않습니다.');
             return;
         }
 

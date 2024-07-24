@@ -15,6 +15,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
     <link rel="stylesheet" href="style/circle_progressbar.css">
     <link rel="stylesheet" href="style/style.css">
+    <link rel="stylesheet" href="style/btn.css">
     <!-- <link rel="stylesheet" href="style/rotateCard.css"> -->
     <style>
         .apexcharts-tooltip {
@@ -52,6 +53,9 @@
         .card-inner {
             padding: 0.5rem;
         }
+        .chart-card {
+            height: 350px;
+        }
         @media screen and (max-width: 768px) {
             body {
                 padding: 0;
@@ -82,11 +86,8 @@
                 <li class="navbar-text" style="padding: 0.5rem;">
                     <span id="level"></span>
                 </li>
-                <!-- <li class="navbar-text usericon" style="color: black; padding: 0.5rem;">
-                    <span id="username" style="height: 28px;">홍길동</span>
-                </li> -->
                 <li class="navbar-text usericon" style="color: black; padding: 0.5rem;">
-                    <a id="username" data-bs-toggle="dropdown" role="button" style="height: 28px;"></a>
+                    <a id="username" data-bs-toggle="dropdown" role="button" style="height: 28px; display: flex; align-items: center;"></a>
                     <ul class="dropdown-menu" aria-labelledby="username" style="width: 2rem; min-width: 100px;">
                         <li><a class="dropdown-item" href="/modify_profile">정보수정</a></li>
                         <li><a class="dropdown-item" href="#">기기정보</a></li>
@@ -144,7 +145,7 @@
                 <div class="input-group input-group-sm">
                     <span class="input-group-text">기간</span>
                     <input type="text" name="stdate" id="stdate" class ="form-control" autocomplete="off">
-                    <button type="button" class="btn btn-success" onclick="search_envir()"  id="modal_${v.id}">검색</button>
+                    <button type="button" class="btn btn-purple" onclick="search_envir()"  id="modal_${v.id}">검색</button>
                 </div>
             </div>
         </div>
@@ -171,7 +172,6 @@
                     <div class="card">
                         <div class="card-header">
                             <span class="card-title" style="vertical-align: -webkit-baseline-middle; font-size: 16px;">
-                                <!-- <i class="fas fa-chart-pie mr-1"></i> -->
                                 <i class="fa-solid fa-chart-column"></i>
                                 <h6 style="display: inline;">온도차트</h6>
                             </sapn>
@@ -191,7 +191,6 @@
                     <div class="card">
                         <div class="card-header">
                             <span class="card-title" style="vertical-align: -webkit-baseline-middle; font-size: 16px;">
-                                <!-- <i class="fas fa-chart-pie mr-1"></i> -->
                                 <i class="fa-solid fa-chart-column"></i>
                                 <h6 style="display: inline;">센서차트</h6>
                             </sapn>
@@ -211,7 +210,6 @@
                     <div class="card">
                         <div class="card-header">
                             <span class="card-title" style="vertical-align: -webkit-baseline-middle; font-size: 16px;">
-                                <!-- <i class="fas fa-chart-pie mr-1"></i> -->
                                 <i class="fa-solid fa-chart-column"></i>
                                 <h6 style="display: inline;">조도차트</h6>
                             </sapn>
@@ -230,7 +228,6 @@
                     <div class="card">
                         <div class="card-header">
                             <span class="card-title" style="vertical-align: -webkit-baseline-middle; font-size: 16px;">
-                                <!-- <i class="fas fa-chart-pie mr-1"></i> -->
                                 <i class="fa-solid fa-chart-column"></i>
                                 <h6 style="display: inline;">EC/pH/DO차트</h6>
                             </sapn>

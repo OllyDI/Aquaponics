@@ -89,7 +89,6 @@ require('./lib/passport')(passport, options);
 app.post('/smtp', function(req, res) {
   var base64crypto = (password) => { return crypto.createHash('sha512').update(password).digest('base64') }
   const number = randomNumber(111111, 999999);
-  console.log(number);
   var passkey = base64crypto(number.toString());
   const email = req.body.email;
 
@@ -97,11 +96,18 @@ app.post('/smtp', function(req, res) {
     from: mail[0],
     to: email,
     subject: "인증관련 메일입니다.",
-    html: `<h1>인증 번호를 입력해주세요. \n\n\n</h1>${number}`
+    attachments: [{
+      filename: "aqufarm.png",
+      path: "public/imgs/aqufarm.png",
+      cid: "aqufarm"
+    }],
+    html: `
+    <img src="cid:aqufarm" style="height: 60px; padding: 0.5rem;">
+    <h3>\n\n &nbsp;인증번호는 ${number} 입니다.\n</h3>
+    `
   }
 
   transporter.sendMail(mailOptions, (err, info) => {
-    console.log("info", info);
 
     if (err) {
       res.send({ ok: false, msg: '메일 전송에 실패하였습니다.', key: null });
@@ -116,8 +122,6 @@ app.post('/authMail', function(req, res) {
   var base64crypto = (password) => { return crypto.createHash('sha512').update(password).digest('base64') }
   const userNumber = base64crypto(req.body.userNumber);
   const number = req.body.number;
-
-  console.log(userNumber, number);
 
   if (userNumber == number) res.send({msg: '인증에 성공하였습니다.', ok: true });
   else res.send({msg: '인증에 실패하였습니다.', ok: false });
@@ -172,7 +176,6 @@ app.post('/register', function(req, res) {
   db.query(sql, params,
     function(err, data) {
       if (err) {
-        console.log(err);
         res.send("<script>alert('회원가입에 실패하였습니다. 다시 시도해 주세요.'); location.href='/register';</script>");
       } else {
         if (level != 1) res.send("<script>alert('회원가입이 완료되었습니다.');location.href='/login';</script>");
@@ -198,16 +201,29 @@ app.post('/change_pw', function(req, res) {
 })
 
 
-// app.post('/session_login', 
-//   passport.authenticate('local', {successRedirect: '/', failureRedirect: '/login', failureFlash: true, }
-// ));
+// 아이디 저장 체크박스
+app.post('/check_idbox', function(req, res) {
+  const uid = req.cookies['idCookie'];
+  if (uid !== undefined) res.send(uid);
+  else res.send(undefined);
+})
+
+
+// 로그인
 app.post("/session_login", (req, res) => {
+  const check = req.body.cookie;
+  const id = req.body.uid;
+
   passport.authenticate("local",
       (err, user, options) => {
         if (user) {
           req.login(user, (error)=>{
             if (error) res.send(error);
-            else res.redirect("/");
+            else {
+              if (check) res.cookie('idCookie', id, { maxAge: 7 * 24 * 60 * 60 * 1000 });
+              else res.clearCookie('idCookie');
+              res.redirect("/");
+            }
           });
         } else res.send("<script>alert('로그인에 실패하였습니다. 다시 시도해 주세요.'); location.href='/login';</script>");
   })(req, res)
@@ -244,27 +260,26 @@ app.post('/session_logout', function(req, res) {
 app.post('/get_device', function(req, res) {
   let id = req.body.id;
   let datas = [];
-  let devices = [];
-  db.query('select * from link where user_id=?', [id],
+
+  db.query('select * from link left join devices on link.device_id = devices.device_id where link.user_id=?', [id], 
     function(err, data) {
       if (err) throw(err);
-      if (data.length - 1 == 0) res.send();
+      if (data.length == 0) res.send();
+      
       $.each(data, function(i, v) {
-        devices.push(v.device_id);
-        
-        if (data.length - 1 == i) {
-          db.query('select * from devices where device_id in (?)', [devices], 
-            function(err, data2) {
-              if (err) throw(err);
-              $.each(data2, function(i2, v2) {
-                data[i2].join = v2.date;
-                data[i2].service = v2.service;
-                if (data2.length - 1 == i2) res.send(data);
-              })
-            }
-          )
-        }
+        datas.push({
+          name: v.name,
+          user_id: v.user_id,
+          device_id: v.device_id,
+          time: v.time,
+          link_level: v.link_level,
+          join: v.date,
+          service: v.service
+        })
+
+        if (data.length - 1 == i) res.send(datas);
       })
+      
     }
   )
 });
@@ -294,7 +309,6 @@ app.post('/searchTable', function(req, res) {
   }
   if (start == end) sql += ` and date='${end}'`
   else if (start != '' && start != undefined) sql += ` and date between str_to_date('${start}', '%Y-%m-%d') and str_to_date('${end}', '%Y-%m-%d')`
-  console.log(sql);
   db.query(sql, data,
     function(err, data) {
       if(err) throw(err);
@@ -462,7 +476,6 @@ app.post('/delete_link', function(req, res) {
     db.query(sql, [uid, v.device_id], 
       function(err, data) {
         if (err) throw(err);
-        else  console.log('del_success');
       }
     )
     if (items.length - 1 == i) res.send();
@@ -485,7 +498,6 @@ app.post('/insert_link', function(req, res) {
     db.query(sql, [params, Number(v.device_id)],
       function(err, data) {
         if (err) throw(err);
-        else console.log('ins_success');
       }
     )
     if (items.length - 1 == i) res.send();
@@ -509,7 +521,6 @@ app.post('/update_link', function(req, res) {
     db.query(sql, params, 
       function(err, data) {
         if (err) throw(err);
-        else console.log('upd_success')
       }
     )
     if (items.length - 1 == i) res.send();

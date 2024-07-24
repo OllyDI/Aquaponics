@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="style/sidebar.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
     <link rel="stylesheet" href="style/style.css">
+    <link rel="stylesheet" href="style/btn.css">
     <link rel="stylesheet" href="style/circle_progressbar.css">
     <link rel="stylesheet" href="style/dashboard.css">
     <style>
@@ -37,7 +38,7 @@
                     <span id="level"></span>
                 </li>
                 <li class="navbar-text usericon" style="color: black; padding: 0.5rem;">
-                    <a id="username" data-bs-toggle="dropdown" role="button" style="height: 28px;"></a>
+                    <a id="username" data-bs-toggle="dropdown" role="button" style="height: 28px; display: flex; align-items: center;"></a>
                     <ul class="dropdown-menu" aria-labelledby="username" style="width: 2rem; min-width: 100px;">
                         <li><a class="dropdown-item" href="/modify_profile">정보수정</a></li>
                         <li><a class="dropdown-item" href="#">기기정보</a></li>
@@ -118,14 +119,14 @@
                                             <a class="nav-link" href="#" data-bs-target="#illum-tabs" data-bs-toggle="tab" style="padding: 5px;">조도</a>
                                         </li>
                                     </ul>
-                                    <div class="tab-content">
-                                        <div class="tab-pane active" id="temp-tabs">
+                                    <div class="tab-content" style="height: 100%;">
+                                        <div class="tab-pane chart-height active" id="temp-tabs">
                                             <div id="temp-chart"></div>
                                         </div>
-                                        <div class="tab-pane" id="sensor-tabs">
+                                        <div class="tab-pane chart-height" id="sensor-tabs">
                                             <div id="sensor-chart"></div>
                                         </div>
-                                        <div class="tab-pane" id="illum-tabs">
+                                        <div class="tab-pane chart-height" id="illum-tabs">
                                             <div id="illum-chart"></div>
                                         </div>
                                     </div>
@@ -175,6 +176,7 @@
         const params = new URLSearchParams(location.search);
         const device_id = params.get('device');
         const service = params.get('service');
+        const device_level = params.get('level');
         const colors = ["#FF1654", "#247BA0", "#009000"]
         
         $(document).ready(function () {
@@ -309,21 +311,24 @@
             let id = sensor.id;
             let val = Number(!Number($("#" + id).attr('value')));
 
-            $.ajax({
-                url: '/update_sensor',
-                method: 'get',
-                data: {
-                    device_id: device_id,
-                    sensor: id,
-                    val: val,
-                },
-                success: function(data) {
-                    $("#" + id).attr('value', val);
-                    $("#pg-" + id).attr('data-value', val==0 ? 0 : 100)
-                    $("#progress-hum-text-" + id).text(val==1?'ON':'OFF')
-                    update_pg();
-                }
-            })
+            if (device_level < 1) alert('기기제어 권한이 없습니다.'); 
+            else {
+                $.ajax({
+                    url: '/update_sensor',
+                    method: 'get',
+                    data: {
+                        device_id: device_id,
+                        sensor: id,
+                        val: val,
+                    },
+                    success: function(data) {
+                        $("#" + id).attr('value', val);
+                        $("#pg-" + id).attr('data-value', val==0 ? 0 : 100)
+                        $("#progress-hum-text-" + id).text(val==1?'ON':'OFF')
+                        update_pg();
+                    }
+                })
+            }
         }
         
         function display() {

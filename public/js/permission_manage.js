@@ -1,3 +1,5 @@
+var devices = [];
+
 $(document).ready(function() {
     $.ajax({
         url: "/device_all",
