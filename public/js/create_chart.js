@@ -61,23 +61,9 @@ function create_chart(data, time, id, group, col, num) {
     var options = {
         chart: {
             height: '100%',
+            width: '100%',
             type: "line",
             stacked: false, 
-            zoom: {
-                    enabled: true,
-                    type: 'x',
-                    resetIcon: {
-                        offsetX: -10,
-                        offsetY: 0,
-                        fillColor: '#fff',
-                        strokeColor: '#37474F'
-                    },
-                    selection: {
-                        background: '#90CAF9',
-                        border: '#0D47A1'
-                    } 
-                    
-                }
         },
         dataLabels: {
             enabled: false,
@@ -86,6 +72,7 @@ function create_chart(data, time, id, group, col, num) {
         colors: colors.slice(0, num),
         series: chartdata,
         stroke: {
+            curve: 'smooth',
             width: [4, 4, 4]
         },
         plotOptions: {
@@ -95,7 +82,7 @@ function create_chart(data, time, id, group, col, num) {
         },
         xaxis: {
             categories: time,
-            tickAmount: 3,
+            tickAmount: 10,
         },
         yaxis: y,
         tooltip: {

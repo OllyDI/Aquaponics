@@ -38,7 +38,7 @@
                     <span id="level"></span>
                 </li>
                 <li class="navbar-text usericon" style="color: black; padding: 0.5rem;">
-                    <a id="username" data-bs-toggle="dropdown" role="button" style="height: 28px; display: flex; align-items: center;"></a>
+                    <a id="username" data-bs-toggle="dropdown" role="button" style="height: 28px;"></a>
                     <ul class="dropdown-menu" aria-labelledby="username" style="width: 2rem; min-width: 100px;">
                         <li><a class="dropdown-item" href="/modify_profile">정보수정</a></li>
                         <li><a class="dropdown-item" href="#">기기정보</a></li>
@@ -94,11 +94,11 @@
                 <div class="col-12 col-lg-6 col-sm-12 col-md-8">
                     <div class="row">
                         <div class="video-card">
-                            <div class="card-inner card" onclick="display()">
+                            <div class="card-inner card" onclick="display()" style="cursor: pointer;">
                                 <img class="video-item" src="imgs/sample.png" style="border-radius: 10px; margin-bottom: 1rem; position: relative;" id="plant">
                                 <img class="video-item" src="imgs/sample2.png" style="border-radius: 10px; margin-bottom: 1rem; position: relative;" id="fish" hidden>
                                 <div class="video-btn" style="position: absolute; margin: 1rem;">
-                                    <button type="button" class="btn btn-primary btn-sm" onclick="display()" id="display-btn" value='0' style="pointer-events: none;">전환</button>
+                                    <button type="button" class="btn btn-purple btn-sm" onclick="display()" id="display-btn" value='0' style="pointer-events: none;">전환</button>
                                 </div>
                             </div>
                         </div>
@@ -119,7 +119,7 @@
                                             <a class="nav-link" href="#" data-bs-target="#illum-tabs" data-bs-toggle="tab" style="padding: 5px;">조도</a>
                                         </li>
                                     </ul>
-                                    <div class="tab-content" style="height: 100%;">
+                                    <div class="tab-content" style="height: 100%; overflow-y: hidden; overflow-x: scroll;">
                                         <div class="tab-pane chart-height active" id="temp-tabs">
                                             <div id="temp-chart"></div>
                                         </div>

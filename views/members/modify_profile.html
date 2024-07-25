@@ -35,7 +35,7 @@
                     <span id="level"></span>
                 </li>
                 <li class="navbar-text usericon" style="color: black; padding: 0.5rem;">
-                    <a id="username" data-bs-toggle="dropdown" role="button" style="height: 28px; display: flex; align-items: center;"></a>
+                    <a id="username" data-bs-toggle="dropdown" role="button" style="height: 28px;"></a>
                     <ul class="dropdown-menu" aria-labelledby="username" style="width: 2rem; min-width: 100px;">
                         <li><a class="dropdown-item" href="/modify_profile">정보수정</a></li>
                         <li><a class="dropdown-item" href="#">기기정보</a></li>
@@ -76,7 +76,7 @@
         </nav>
     </div>
 
-    <div class="login-logo">
+    <div class="login-logo" style="margin-top: 2rem;">
         <b>내정보</b>
     </div>
     <div class="login-box">
@@ -192,7 +192,7 @@
 
                     <!-- /.col -->
                     <div class="mb-3" style="margin-top: 25px;">
-                        <button type="submit" class="btn btn-success btn-block" id="reg">회원정보수정</button>
+                        <button type="submit" class="btn btn-purple btn-block" id="reg">회원정보수정</button>
                     </div>
                     <div class="mb-3" style="margin-top: 25px;" id="select_device">
                         
@@ -275,7 +275,7 @@
             $("#userlevel").val(member[0].level).prop("selected", true);
 
             if (member[0].level == 3 || member[0].level == 4) {
-                $("#select_device").append(`<button type="button" class="btn btn-success btn-block" onclick="modal_func('${member[0].id}', ${member[0].level}, 0)">권한관리</button>`)
+                $("#select_device").append(`<button type="button" class="btn btn-purple btn-block" onclick="modal_func('${member[0].id}', ${member[0].level}, 0)">권한관리</button>`)
             }
             if (member[0].level == 2 || member[0].level == 4) {
                 $("#region").attr('disabled', false);

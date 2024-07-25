@@ -98,8 +98,12 @@
 }
 .chart-height {
     height: 90%;
+    min-width: 600px;
 }
 
+.nav-item {
+    --bs-nav-pills-link-active-bg: #6575d1;
+}
 @media screen and (max-width: 1200px) {
     .enver-card {
         height: 12.5vh;

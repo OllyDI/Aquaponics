@@ -54,7 +54,9 @@
             padding: 0.5rem;
         }
         .chart-card {
-            height: 350px;
+            height: 400px;
+            overflow-y: hidden;
+            overflow-x: scroll;
         }
         @media screen and (max-width: 768px) {
             body {
@@ -87,7 +89,7 @@
                     <span id="level"></span>
                 </li>
                 <li class="navbar-text usericon" style="color: black; padding: 0.5rem;">
-                    <a id="username" data-bs-toggle="dropdown" role="button" style="height: 28px; display: flex; align-items: center;"></a>
+                    <a id="username" data-bs-toggle="dropdown" role="button" style="height: 28px;"></a>
                     <ul class="dropdown-menu" aria-labelledby="username" style="width: 2rem; min-width: 100px;">
                         <li><a class="dropdown-item" href="/modify_profile">정보수정</a></li>
                         <li><a class="dropdown-item" href="#">기기정보</a></li>
@@ -178,7 +180,7 @@
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body chart-card">
-                            <div id="temp-chart"></div>
+                            <div id="temp-chart" style="min-width: 600px;"></div>
                         </div>
                         <!-- /.card-body -->
                     </div>
@@ -197,7 +199,7 @@
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body chart-card">
-                            <div id="sensor-chart"></div>
+                            <div id="sensor-chart" style="min-width: 600px;"></div>
                         </div>
                         <!-- /.card-body -->
                     </div>
@@ -216,7 +218,7 @@
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body chart-card">
-                            <div id="illum-chart"></div>
+                            <div id="illum-chart" style="min-width: 600px;"></div>
                         </div>
                         <!-- /.card-body -->
                     </div>
@@ -234,7 +236,7 @@
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body chart-card">
-                            <div id="premium-chart"></div>
+                            <div id="premium-chart" style="min-width: 600px;"></div>
                         </div>
                         <!-- /.card-body -->
                     </div>
