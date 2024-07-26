@@ -82,7 +82,7 @@
 .video-item {
     width: 100%;
     height: 100%;
-    padding: 0.5rem ;
+    padding: 0.5rem;
 }
 
 .card-row {
@@ -103,6 +103,9 @@
 
 .nav-item {
     --bs-nav-pills-link-active-bg: #6575d1;
+}
+.nav-link {
+    color: #6575d1;
 }
 @media screen and (max-width: 1200px) {
     .enver-card {
@@ -156,7 +159,6 @@
         padding: 0;
     }
     .video-card {
-        height: 100%;
         padding: 0;
     }
     .video-item {
@@ -171,9 +173,6 @@
 }
 
 @media screen and (max-width: 600px) {
-    .video-card {
-        height: 100%;
-    }
     .enver-card {
         padding: 0;
     }

@@ -58,6 +58,9 @@
             overflow-y: hidden;
             overflow-x: scroll;
         }
+        .nav-link {
+            color: #6575d1;
+        }
         @media screen and (max-width: 768px) {
             body {
                 padding: 0;
@@ -321,7 +324,7 @@
                             { className: 'dt-body-center', targets: "_all", },
                         ], scrollX: true, paging: true, destroy: true, data: datas,
                         dom: 'Bfrtip',
-                        buttons: ["copy", "csv", "print", "colvis"],
+                        buttons: ["copy", {extend: "csv", charset: "UTF-8", bom: true}, "print", "colvis"],
                     });
                 }
             })
