@@ -35,7 +35,7 @@ const transporter = nodemailer.createTransport({
 var randomNumber = function (min, max) { return Math.floor(Math.random() * max - min + 1) + min; };
 
 
-
+// DB 설정
 var txt = fs.readFileSync('lib/db.txt').toString().replace(/\r/g, "").split('\n');
 const options = {
   host: txt[0], 
@@ -51,7 +51,6 @@ const sessionStore = new mysqlStore(options);
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
-
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -67,7 +66,7 @@ app.use(session({
   cookie: { 
     httpOnly: true,
     secure: false,
-    maxAge: 120 * 60 * 1000 // 1000: 1초 -> 30분
+    maxAge: 30 * 60 * 1000 // 1000: 1초 -> 30분
   }
 }));
 app.use(passport.authenticate('session'));
@@ -86,6 +85,7 @@ app.use('/', indexRouter);
 require('./lib/passport')(passport, options);
 
 
+// SMTP 전송 및 인증
 app.post('/smtp', function(req, res) {
   var base64crypto = (password) => { return crypto.createHash('sha512').update(password).digest('base64') }
   const number = randomNumber(111111, 999999);
@@ -108,7 +108,6 @@ app.post('/smtp', function(req, res) {
   }
 
   transporter.sendMail(mailOptions, (err, info) => {
-
     if (err) {
       res.send({ ok: false, msg: '메일 전송에 실패하였습니다.', key: null });
       throw(err);
@@ -127,7 +126,24 @@ app.post('/authMail', function(req, res) {
   else res.send({msg: '인증에 실패하였습니다.', ok: false });
 })
 
-// 아이디 중복 검사 및 회원가입
+
+// 비밀번호 변경
+app.post('/change_pw', function(req, res) {
+  var base64crypto = (password) => { return crypto.createHash('sha512').update(password).digest('base64') }
+  const id = req.body.id;
+  const pw = base64crypto(req.body.pw);
+  db.query('update members set pw=? where id=?', [pw, id], 
+    function(err) {
+      if (err) {
+        res.send({ msg: '비밀번호 변경에 실패했습니다.', ok: false })
+        throw(err)
+      } else res.send({ msg: '비밀번호 변경에 성공했습니다.', ok: true, url: '/login' })
+    }
+  )
+})
+
+
+// 아이디 중복 검사
 app.post('/duplicate', function(req, res) {
   var uid = req.body.uid;
   var val = true;
@@ -149,6 +165,9 @@ app.post('/duplicate', function(req, res) {
     )
   }
 })
+
+
+// 일반 및 학생 회원가입
 app.post('/register', function(req, res) {
   var base64crypto = (password) => { return crypto.createHash('sha512').update(password).digest('base64') }
   var level = req.body.level;
@@ -186,157 +205,7 @@ app.post('/register', function(req, res) {
 })
 
 
-app.post('/change_pw', function(req, res) {
-  var base64crypto = (password) => { return crypto.createHash('sha512').update(password).digest('base64') }
-  const id = req.body.id;
-  const pw = base64crypto(req.body.pw);
-  db.query('update members set pw=? where id=?', [pw, id], 
-    function(err) {
-      if (err) {
-        res.send({ msg: '비밀번호 변경에 실패했습니다.', ok: false })
-        throw(err)
-      } else res.send({ msg: '비밀번호 변경에 성공했습니다.', ok: true, url: '/login' })
-    }
-  )
-})
-
-
-// 아이디 저장 체크박스
-app.post('/check_idbox', function(req, res) {
-  const uid = req.cookies['idCookie'];
-  if (uid !== undefined) res.send(uid);
-  else res.send(undefined);
-})
-
-
-// 로그인
-app.post("/session_login", (req, res) => {
-  const check = req.body.cookie;
-  const id = req.body.uid;
-
-  passport.authenticate("local",
-      (err, user, options) => {
-        if (user) {
-          req.login(user, (error)=>{
-            if (error) res.send(error);
-            else {
-              if (check) res.cookie('idCookie', id, { maxAge: 7 * 24 * 60 * 60 * 1000 });
-              else res.clearCookie('idCookie');
-              res.redirect("/");
-            }
-          });
-        } else res.send("<script>alert('로그인에 실패하였습니다. 다시 시도해 주세요.'); location.href='/login';</script>");
-  })(req, res)
-});
-app.get('/session', function(req, res) {
-  var data = [];
-  if (req.isAuthenticated()) {
-    data.push({
-      auth: req.isAuthenticated(),
-      id: req.user.id,
-      level: req.user.level,
-      school: req.user.school,
-      name: req.user.name,
-      grade: req.user.grade,
-      class: req.user.class,
-      number: req.user.number,
-    });
-  }
-  else data.push({auth: req.isAuthenticated()});
-  res.send(data);
-});
-app.post('/session_logout', function(req, res) {
-  req.logout(function(err) {
-    if (err) { return next(err); }
-    req.session.destroy(() => {
-      delete req.session;
-      res.clearCookie('connect.sid');
-      res.redirect('/login');
-    });
-  });
-});
-
-
-app.post('/get_device', function(req, res) {
-  let id = req.body.id;
-  let datas = [];
-
-  db.query('select * from link left join devices on link.device_id = devices.device_id where link.user_id=?', [id], 
-    function(err, data) {
-      if (err) throw(err);
-      if (data.length == 0) res.send();
-      
-      $.each(data, function(i, v) {
-        datas.push({
-          name: v.name,
-          user_id: v.user_id,
-          device_id: v.device_id,
-          time: v.time,
-          link_level: v.link_level,
-          join: v.date,
-          service: v.service
-        })
-
-        if (data.length - 1 == i) res.send(datas);
-      })
-      
-    }
-  )
-});
-
-app.post('/searchTable', function(req, res) {
-  let userLevel = req.body.userLevel;
-  let level = req.body.level;
-  let school = req.body.school;
-  let grade = req.body.grade;
-  let classNum = req.body.class;
-  let name = req.body.name;
-  let start = req.body.start;
-  let end = req.body.end;
-  let sql = '';
-  let data = null;
-
-  if (userLevel == 1) {
-    sql = `select * from members where id not in (?) and school like ? and level like ? and name like ? and grade=? and class=? and level < 3`
-    data = [ req.user.id, '%'+school+'%', '%'+level+'%', '%'+name+'%', grade, classNum]
-  } else if (userLevel == 4) {
-    sql = `select * from members where id not in (?) and school like ? and level like ? and name like ? and level=2`
-    data = [ req.user.id, '%'+school+'%', '%'+level+'%', '%'+name+'%']
-  } 
-  else {
-    sql = `select * from members where id not in (?) and school like ? and level like ? and name like ? and level < 2`
-    data = [ req.user.id, '%'+school+'%', '%'+level+'%', '%'+name+'%']
-  }
-  if (start == end) sql += ` and date='${end}'`
-  else if (start != '' && start != undefined) sql += ` and date between str_to_date('${start}', '%Y-%m-%d') and str_to_date('${end}', '%Y-%m-%d')`
-  db.query(sql, data,
-    function(err, data) {
-      if(err) throw(err);
-      else {
-        let val = [];
-        if (data.length == 0) res.send(null);
-        else {
-            $.each(data, function(i, v) {
-            val.push({
-              id: v.id,
-              level: v.level,
-              school: v.school,
-              name: v.name,
-              grade: v.grade,
-              class: v.class,
-              number: v.number,
-              date: v.date
-            })
-            if (data.length - 1 == i) res.send(val);
-          })
-        }
-      };
-    }
-  )
-})
-
-
-// 교사 회원
+// 교사 회원가입 및 가입승인, 삭제
 app.post('/members_temp', function(req, res) {
   db.query('select * from members_temp', function(err, data) {
     if(err) throw(err);
@@ -403,6 +272,144 @@ app.post('/members_del', function(req, res) {
 })
 
 
+// 아이디 저장 쿠키 생성
+app.post('/check_idbox', function(req, res) {
+  const uid = req.cookies['idCookie'];
+  if (uid !== undefined) res.send(uid);
+  else res.send(undefined);
+})
+
+
+// 로그인
+app.post("/session_login", (req, res) => {
+  const check = req.body.cookie;
+  const id = req.body.uid;
+
+  passport.authenticate("local",
+      (err, user, options) => {
+        if (user) {
+          req.login(user, (error)=>{
+            if (error) res.send(error);
+            else {
+              if (check) res.cookie('idCookie', id, { maxAge: 7 * 24 * 60 * 60 * 1000 });
+              else res.clearCookie('idCookie');
+              res.redirect("/");
+            }
+          });
+        } else res.send("<script>alert('로그인에 실패하였습니다. 다시 시도해 주세요.'); location.href='/login';</script>");
+  })(req, res)
+});
+app.get('/session', function(req, res) {
+  var data = [];
+  if (req.isAuthenticated()) {
+    data.push({
+      auth: req.isAuthenticated(),
+      id: req.user.id,
+      level: req.user.level,
+      school: req.user.school,
+      name: req.user.name,
+      grade: req.user.grade,
+      class: req.user.class,
+      number: req.user.number,
+    });
+  }
+  else data.push({auth: req.isAuthenticated()});
+  res.send(data);
+});
+app.post('/session_logout', function(req, res) {
+  req.logout(function(err) {
+    if (err) { return next(err); }
+    req.session.destroy(() => {
+      delete req.session;
+      res.clearCookie('connect.sid');
+      res.redirect('/login');
+    });
+  });
+});
+
+
+// 인덱스 페이지 디바이스 생성
+app.post('/get_device', function(req, res) {
+  let id = req.body.id;
+  let datas = [];
+
+  db.query('select * from link left join devices on link.device_id = devices.device_id where link.user_id=?', [id], 
+    function(err, data) {
+      if (err) throw(err);
+      if (data.length == 0) res.send();
+      
+      $.each(data, function(i, v) {
+        datas.push({
+          name: v.name,
+          user_id: v.user_id,
+          device_id: v.device_id,
+          time: v.time,
+          link_level: v.link_level,
+          join: v.date,
+          service: v.service
+        })
+
+        if (data.length - 1 == i) res.send(datas);
+      })
+      
+    }
+  )
+});
+
+
+// 회원 정보 테이블 생성
+app.post('/searchTable', function(req, res) {
+  let userLevel = req.body.userLevel;
+  let level = req.body.level;
+  let school = req.body.school;
+  let grade = req.body.grade;
+  let classNum = req.body.class;
+  let name = req.body.name;
+  let start = req.body.start;
+  let end = req.body.end;
+  let sql = '';
+  let data = null;
+
+  if (userLevel == 1) {
+    sql = `select * from members where id not in (?) and school like ? and level like ? and name like ? and grade=? and class=? and level < 3`
+    data = [ req.user.id, '%'+school+'%', '%'+level+'%', '%'+name+'%', grade, classNum]
+  } else if (userLevel == 4) {
+    sql = `select * from members where id not in (?) and school like ? and level like ? and name like ? and level=2`
+    data = [ req.user.id, '%'+school+'%', '%'+level+'%', '%'+name+'%']
+  } 
+  else {
+    sql = `select * from members where id not in (?) and school like ? and level like ? and name like ? and level < 2`
+    data = [ req.user.id, '%'+school+'%', '%'+level+'%', '%'+name+'%']
+  }
+  if (start == end) sql += ` and date='${end}'`
+  else if (start != '' && start != undefined) sql += ` and date between str_to_date('${start}', '%Y-%m-%d') and str_to_date('${end}', '%Y-%m-%d')`
+  db.query(sql, data,
+    function(err, data) {
+      if(err) throw(err);
+      else {
+        let val = [];
+        if (data.length == 0) res.send(null);
+        else {
+            $.each(data, function(i, v) {
+            val.push({
+              id: v.id,
+              level: v.level,
+              school: v.school,
+              name: v.name,
+              grade: v.grade,
+              class: v.class,
+              number: v.number,
+              date: v.date
+            })
+            if (data.length - 1 == i) res.send(val);
+          })
+        }
+      };
+    }
+  )
+})
+
+
 // 회원정보 수정
 app.post('/modify_profile', function(req, res) {
   var base64crypto = (password) => { return crypto.createHash('sha512').update(password).digest('base64') }
@@ -444,7 +451,7 @@ app.post('/device_all', function(req, res) {
 })
 
 
-// 기기 연결정보
+// 기기 연결 추가 및 제어
 app.post('/get_link', function(req, res) {
   let id = req.body.id;
 
@@ -505,6 +512,7 @@ app.post('/insert_link', function(req, res) {
 })
 
 
+// 기기 권한 제어
 app.post('/update_link', function(req, res) {
   let items = JSON.parse(req.body.items);
   let uid = req.body.uid;
@@ -528,6 +536,7 @@ app.post('/update_link', function(req, res) {
 })
 
 
+// 환경정보 데이터
 app.post('/search_envir', function(req, res) {
   const device_id = req.body.device_id;
   const start = req.body.start;
@@ -549,6 +558,8 @@ app.post('/search_envir', function(req, res) {
   })
 })
 
+
+// 온오프 센서 제어
 app.get('/get_sensor', function(req, res) {
   const device_id = req.query.device_id;
 
