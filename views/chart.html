@@ -95,7 +95,6 @@
                     <a id="username" data-bs-toggle="dropdown" role="button" style="height: 28px;"></a>
                     <ul class="dropdown-menu" aria-labelledby="username" style="width: 2rem; min-width: 100px;">
                         <li><a class="dropdown-item" href="/modify_profile">정보수정</a></li>
-                        <li><a class="dropdown-item" href="#">기기정보</a></li>
                         <li>
                             <hr class="dropdown-divider">
                         </li>
@@ -125,10 +124,10 @@
                         <span class="nav_name">차트</span>
                     </a>
                     <!--@if($level->학생용) -->
-                    <a href="/student_manage" class="nav_link" id="stumanag">
+                    <a href="/student_manage" class="nav_link" id="stumanag" title="학생관리">
                         <i class='bx bx-user nav_icon'></i> <span class="nav_name">학생관리</span>
                     </a>
-                    <a href="/admin" class="nav_link" id="settings">
+                    <a href="/admin" class="nav_link" id="settings" title="설정">
                         <i class='bx bx-cog nav_icon'></i>
                         <span class="nav_name">설정</span>
                     </a>
@@ -347,7 +346,7 @@
                     let premium_data = [[], [], []];
                     let time = [];
                     
-                    
+                    if (data.length == 0) alert("검색된 데이터가 존재하지 않습니다.");
                     $.each(data, (i, v) => {
                         temp_data[0].push(v.ex_temp);
                         temp_data[1].push(v.water_temp);
