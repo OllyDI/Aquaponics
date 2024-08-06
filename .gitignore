@@ -186,8 +186,7 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-# DB option
-/lib/db.txt
-/lib/gmail.txt
+# Settings
+settings.env
 
 # End of https://www.toptal.com/developers/gitignore/api/windows,node,visualstudiocode

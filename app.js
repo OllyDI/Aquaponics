@@ -13,14 +13,14 @@ var app = express();
 var indexRouter = require('./routes/index');
 var crypto = require('crypto');
 var flash = require('connect-flash');
-var fs = require('fs');
-
 const { JSDOM } = require("jsdom");
 const { window } = new JSDOM("");
 const $ = require("jquery")(window);
 
 var nodemailer = require('nodemailer');
-var mail = fs.readFileSync('lib/gmail.txt').toString().replace(/\r/g, "").split('\n');
+var randomNumber = function (min, max) { return Math.floor(Math.random() * max - min + 1) + min; };
+require("dotenv").config({ path: "lib/settings.env" })
+
 const transporter = nodemailer.createTransport({
     service: 'gamil',
     host: 'smtp.gmail.com',
@@ -28,21 +28,19 @@ const transporter = nodemailer.createTransport({
     secure: false,
     requireTLS: true,
     auth: {
-        user: mail[0],
-        pass: mail[1]
+        user: process.env.MAIL_ID,
+        pass: process.env.MAIL_PW
     }
 });
-var randomNumber = function (min, max) { return Math.floor(Math.random() * max - min + 1) + min; };
 
 
 // DB 설정
-var txt = fs.readFileSync('lib/db.txt').toString().replace(/\r/g, "").split('\n');
 const options = {
-  host: txt[0], 
-  port: txt[1],
-  user: txt[2],
-  password: txt[3],
-  database: txt[4]
+  host: process.env.DB_HOST, 
+  port: process.env.DB_PORT,
+  user: process.env.DB_ID,
+  password: process.env.DB_PW,
+  database: process.env.DB_NAME
 }
 const db = mysql.createConnection(options);
 const sessionStore = new mysqlStore(options);
@@ -59,7 +57,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // session settings
 app.use(session({
-  secret: txt[5],
+  secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: true,
   store: sessionStore,
@@ -122,8 +120,8 @@ app.post('/authMail', function(req, res) {
   const userNumber = base64crypto(req.body.userNumber);
   const number = req.body.number;
 
-  if (userNumber == number) res.send({msg: '인증에 성공하였습니다.', ok: true });
-  else res.send({msg: '인증에 실패하였습니다.', ok: false });
+  if (userNumber == number) res.send({ msg: '인증에 성공하였습니다.', ok: true });
+  else res.send({ msg: '인증에 실패하였습니다.', ok: false });
 })
 
 
