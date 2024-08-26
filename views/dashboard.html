@@ -94,8 +94,10 @@
                     <div class="row">
                         <div class="video-card">
                             <div class="card-inner card" onclick="display()" style="cursor: pointer;">
-                                <img class="video-item" src="imgs/sample.png" style="border-radius: 10px; margin-bottom: 1rem; position: relative;" id="plant">
-                                <img class="video-item" src="imgs/sample2.png" style="border-radius: 10px; margin-bottom: 1rem; position: relative;" id="fish" hidden>
+                                <canvas class="video-item" id="plant"></canvas>
+                                <canvas class="video-item" id="fish" hidden></canvas>
+                                <!-- <img class="video-item" src="imgs/sample.png" style="border-radius: 10px; margin-bottom: 1rem; position: relative;" id="plant">
+                                <img class="video-item" src="imgs/sample2.png" style="border-radius: 10px; margin-bottom: 1rem; position: relative;" id="fish" hidden> -->
                                 <div class="video-btn" style="position: absolute; margin: 1rem;">
                                     <button type="button" class="btn btn-purple btn-sm" onclick="display()" id="display-btn" value='0' style="pointer-events: none;">전환</button>
                                 </div>
@@ -215,6 +217,24 @@
                     
                 }
             })
+
+            // $.ajax({
+            //     url: 'get_stream',
+            //     method: 'post',
+            //     success: function(data) {
+            //         console.log(data);
+            //         var client = new WebSocket('ws://localhost:9999');
+            //         c1 = $("#plant");
+            //         c2 = $("#fish");
+
+            //         var p1 = new jsmpeg(client, {
+            //             canvas: c1
+            //         });
+            //         var p2 = new jsmpeg(client, {
+            //             canvas: c2
+            //         });
+            //     }
+            // })
         })
 
         function update_pg() {

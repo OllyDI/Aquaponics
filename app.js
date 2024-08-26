@@ -17,6 +17,10 @@ const { JSDOM } = require("jsdom");
 const { window } = new JSDOM("");
 const $ = require("jquery")(window);
 
+const { exec } = require('child_process');
+var Stream = require('node-rtsp-stream')
+
+
 var nodemailer = require('nodemailer');
 var randomNumber = function (min, max) { return Math.floor(Math.random() * max - min + 1) + min; };
 require("dotenv").config({ path: "lib/settings.env" })
@@ -91,7 +95,7 @@ app.post('/smtp', function(req, res) {
   const email = req.body.email;
 
   const mailOptions = {
-    from: mail[0],
+    from: process.env.MAIL_ID,
     to: email,
     subject: "인증관련 메일입니다.",
     attachments: [{
@@ -104,11 +108,11 @@ app.post('/smtp', function(req, res) {
     <h3>\n\n &nbsp;인증번호는 ${number} 입니다.\n</h3>
     `
   }
-
+  
   transporter.sendMail(mailOptions, (err, info) => {
     if (err) {
       res.send({ ok: false, msg: '메일 전송에 실패하였습니다.', key: null });
-      throw(err);
+      console.log(err);
     } else {
       transporter.close();
       res.send({ ok: true, msg: '메일 전송에 성공하였습니다.', key: passkey });
@@ -580,6 +584,23 @@ app.get('/update_sensor', function(req, res) {
     }
   )
 })
+
+
+// 스트리밍
+app.post('/get_stream', function(req, res) {
+  var stream = new Stream({
+    name: 'name',
+    streamUrl: 'rtsp://{aqufarm}:{aqufarm6552}@', // 주소 추가
+    wsPort: 9999,
+    ffmpegOptions: { // options ffmpeg flags
+      '-stats': '', // an option with no neccessary value uses a blank string
+      '-r': 30 // options with required values specify the value after the key
+    }
+  })
+
+  res.send(stream);
+})
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -22,6 +22,7 @@
     "jsdom": "^24.1.0",
     "morgan": "~1.9.1",
     "mysql": "^2.18.1",
+    "node-rtsp-stream": "^0.0.9",
     "nodemailer": "^6.9.14",
     "passport": "0.7.0",
     "passport-local": "^1.0.0",
