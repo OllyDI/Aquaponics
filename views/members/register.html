@@ -198,6 +198,7 @@
 <script src="https://kit.fontawesome.com/57c8b4e229.js"></script>
 <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=826fecb6d8bc041c95f1ebfbd7dedcdc&libraries=services"></script>
 <script src="/js/kakao_map.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.5/axios.min.js"></script>
 <script>
     var gen = ['gen_school', 'gen_grade', 'gen_class', 'gen_number']
     var number = null;
@@ -235,47 +236,42 @@
             return;
         }
 
-        $.ajax({
+        axios({
             url: '/duplicate',
             method: 'post',
             data: {
                 uid: e,
             },
-            datatype: 'json',
-            success: function (data) {
-                if (data) {
-                    $.ajax({
-                        url: '/smtp',
-                        method: 'post',
-                        data: {
-                            email: e
-                        },
-                        success: function(data) {
-                            alert(data.msg);
-                            number = data.key;
-                            $("#valid_div").attr("hidden", false);
-                            if (data.ok) $("#mail_button").attr('disabled', false);
-                        }
-                    })
-                    
-                }
-                else alert('사용할 수 없는 아이디입니다.');
+        }).then(function(data) {
+            if (data.data) {
+                axios({
+                    url: '/smtp',
+                    method: 'post',
+                    data: {
+                        email: e
+                    },
+                }).then(function(data) {
+                    alert(data.data.msg);
+                    number = data.data.key;
+                    $("#valid_div").attr("hidden", false);
+                    if (data.data.ok) $("#mail_button").attr('disabled', false);
+                })          
             }
-        });
+            else alert('사용할 수 없는 아이디입니다.');
+        })
     }
     
     function authMail() {
-        $.ajax({
+        axios({
             url: '/authMail',
             method: 'post',
             data: {
                 userNumber: $("#valid").val(),
                 number: number,
             },
-            success: function(data) {
-                alert(data.msg);
-                if (data.ok) $("#reg").attr('type', 'submit');
-            }
+        }).then(function(data) {
+            alert(data.data.msg);
+            if (data.data.ok) $("#reg").attr('type', 'submit');
         })
     }
 </script>

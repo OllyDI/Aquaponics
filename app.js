@@ -137,9 +137,8 @@ app.post('/change_pw', function(req, res) {
   db.query('update members set pw=? where id=?', [pw, id], 
     function(err) {
       if (err) {
-        res.send({ msg: '비밀번호 변경에 실패했습니다.', ok: false })
-        throw(err)
-      } else res.send({ msg: '비밀번호 변경에 성공했습니다.', ok: true, url: '/login' })
+        res.send("<script>alert('비밀번호 변경에 실패했습니다.');location.href='/forgot_pw';</script>");
+      } else res.send("<script>alert('비밀번호 변경에 성공했습니다.'); location.href='/login';</script>")
     }
   )
 })
@@ -268,7 +267,12 @@ app.post('/members_del', function(req, res) {
   db.query(`delete from members where id=?;`, [id], 
     function(err, data) {
       if(err) throw(err);
-      res.send('회원 삭제가 완료되었습니다.');
+      req.session.destroy(() => {
+        delete req.session;
+        res.clearCookie('connect.sid');
+        res.send('회원 삭제가 완료되었습니다.');
+        res.redirect('/login');
+      });
     }
   )
 })

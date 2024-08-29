@@ -3,16 +3,16 @@ function sign(id, bool, table, idx) {
     if (confirm(msg[idx])) {
         let link = ['suc', 'del']
         let tables = ['members', 'members_temp']
-        $.ajax({
+
+        axios({
             url: `/${tables[table]}_${link[bool]}`,
             method: 'post',
             data: {
                 id: id
             },
-            success: function(msg) {
-                alert(msg);
-                location.reload();
-            }
+        }).then(function(msg) {
+            alert(msg.data);
+            location.reload();
         })
     }
 }

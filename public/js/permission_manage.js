@@ -75,13 +75,14 @@ function modal_func(id, level, select) {
         }
     })
 }
+
+
 function updateDevice(btn) {
     let uid = $(btn).attr('class').split("userid_")[1].split(" ")[0];
     let ulevel = $(btn).attr('class').split("userlevel_")[1].split(" ")[0];
     let selected_item = [];
     let unselected_item = [];
 
-    console.log(ulevel, $(btn).attr('class').split("userlevel_"))
     $.each(multiplelist.options, (i, v) => {
         if (v.selected == true) {
             selected_item.push({
@@ -95,18 +96,18 @@ function updateDevice(btn) {
             })
         }
         if (multiplelist.options.length - 1 == i) {
-            $.ajax({
+            axios({
                 url: '/delete_link',
                 method: 'post',
                 data: {
                     items: JSON.stringify(unselected_item),
                     uid: uid,
                 },
-                success: function(data) {
-                    console.log('del')
-                }
+            }).then(function(data) {
+                console.log('del')
             })
-            $.ajax({
+
+            axios({
                 url: '/insert_link',
                 method: 'post',
                 data: { 
@@ -114,9 +115,8 @@ function updateDevice(btn) {
                     uid: uid,
                     ulevel: ulevel,
                 }, 
-                success: function(data) {
-                    console.log('ins')
-                }
+            }).then(function(data) {
+                console.log('ins');
             })
         }
     })
@@ -135,7 +135,7 @@ function update_link_level(btn) {
             selected: v.selected
         })
         if (multiplelist.options.length - 1 == i) {
-            $.ajax({
+            axios({
                 url: '/update_link',
                 method: 'post',
                 data: {
@@ -143,9 +143,8 @@ function update_link_level(btn) {
                     uid: uid,
                     level: ulevel,
                 },
-                success: function(data) {
-                    console.log('upd');
-                }
+            }).then(function(data) {
+                console.log('upd');
             })
         }
     })

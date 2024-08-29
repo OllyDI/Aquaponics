@@ -3,23 +3,20 @@ $(document).ready(function () {
         var id = $("#uid").val();
         if (id == '' || id.length == 0) { return false; }
 
-        //Ajax로 전송
-        $.ajax({
+        axios({
             url: '/duplicate',
             method: 'post',
             data: {
                 uid: id,
             },
-            datatype: 'json',
-            success: function (data) {
-                if (data == true) {
-                    $("#lUid").attr("hidden", true)
-                    $("#reg").attr("type", "submit");
-                } else {
-                    $("#lUid").attr("hidden", false)
-                    $("#reg").attr("type", "button");
-                }
+        }).then(function(data) {
+            if (data.data) {
+                $("#lUid").attr("hidden", true)
+                $("#reg").attr("type", "submit");
+            } else {
+                $("#lUid").attr("hidden", false)
+                $("#reg").attr("type", "button");
             }
-        });
+        })
     });
 })

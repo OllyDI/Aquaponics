@@ -59,11 +59,11 @@
     <!-- /.login-logo -->
     <div class="card" style="box-shadow: none">
         <div class="card-body login-card-body">
-            <form class="form" name="userRegister" method="post">
+            <form class="form" id="changepw_form" action="/change_pw" method="post">
                 <div class="mb-3">
                     <div class="input-group">
                         <input type="password" name="pw" id="upw" class="form-control" placeholder="비밀번호" title="영숫자 조합으로&#13;6에서 15자리까지만 입력가능합니다." 
-                        pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,15}$" required oninvalid="this.setCustomValidity('비밀번호를 입력하세요.')" oninput="this.setCustomValidity('')">
+                        pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,15}$" required>
                         <div class="input-group-append">
                         </div>
                     </div>
@@ -71,14 +71,14 @@
                 <div class="mb-3">
                     <div class="input-group">
                         <input type="password" name="pw2" id="upw2" class="form-control" placeholder="비밀번호 확인" title="영숫자 조합으로&#13;6에서 15자리까지만 입력가능합니다." 
-                        pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,15}$" required oninvalid="this.setCustomValidity('비밀번호를 입력하세요.')" oninput="this.setCustomValidity('')">
+                        pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,15}$" required>
                         <div class="input-group-append">
                         </div>
                     </div>
                     <label id="lUpw" style="color: red;" hidden>비밀번호를 확인하세요.</label>
                 </div>
                 <div class="mb-3" style="margin-top: 25px;">
-                    <button type="button" class="btn btn-purple btn-block" id="reg2" onclick="change_pw()">비밀번호 변경</button>
+                    <button type="button" class="btn btn-purple btn-block" id="reg2">비밀번호 변경</button>
                 </div>
             </form>
             <div class="mb-3" style="font-size: 11px; ">
@@ -115,6 +115,7 @@
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.5/axios.min.js"></script>
 <script>
     var number = null;
     var auth = false;
@@ -126,49 +127,44 @@
             alert('이메일 형식이 올바르지 않습니다.');
             return;
         }
-
-        $.ajax({
+        axios({
             url: '/duplicate',
             method: 'post',
             data: {
                 uid: $("#uid").val(),
             },
-            datatype: 'json',
-            success: function (data) {
-                if (data) alert('존재하지 않는 회원입니다.');
+        }).then(function(data) {
+            if (data.data) alert('존재하지 않는 회원입니다.');
                 else {
                     $("#valid_div").attr("hidden", false);
-                    $.ajax({
+                    axios({
                         url: '/smtp',
                         method: 'post',
                         data: {
                             email: $("#uid").val()
                         },
-                        success: function(data) {
-                            alert(data.msg);
-                            number = data.key;
-                            if (data.ok) $("#mail_button").attr('disabled', false);
-                        }
+                    }).then(function(data) {
+                        alert(data.data.msg);
+                        number = data.data.key;
+                        if (data.data.ok) $("#mail_button").attr('disabled', false);
                     })
                 }
-            }
-        });
+        })
     }
     
     function authMail() {
-        $.ajax({
+        axios({
             url: '/authMail',
             method: 'post',
             data: {
                 userNumber: $("#valid").val(),
                 number: number,
             },
-            success: function(data) {
-                alert(data.msg);
-                if (data.ok) {
-                    auth = true;
-                    $("#reg").attr('disabled', false);
-                }
+        }).then(function(data) {
+            alert(data.data.msg);
+            if (data.data.ok) {
+                auth = true;
+                $("#reg").attr('disabled', false);
             }
         })
     }
@@ -183,29 +179,27 @@
 
 
     $(document).ready(function() {
-        $("#upw2").on("focusout", function (e) {
-            if ($("#upw").val() != $("#upw2").val())  $("#lUpw").attr("hidden", false)
-            else $("#lUpw").attr("hidden", true)
+        $("#upw").on("focusout", function(e) {
+            if ($("#upw").val() != $("#upw2").val()) {
+                $("#lUpw").attr("hidden", false)
+                $("#reg2").attr('type', 'button');
+            }
+            else {
+                $("#lUpw").attr("hidden", true);
+                $("#reg2").attr('type', 'submit');
+            }
+        })
+        $("#upw2").on("focusout", function(e) {
+            if ($("#upw").val() != $("#upw2").val()) {
+                $("#lUpw").attr("hidden", false)
+                $("#reg2").attr('type', 'button');
+            }
+            else {
+                $("#lUpw").attr("hidden", true);
+                $("#reg2").attr('type', 'submit');
+            }
         })
     })
-
-    function change_pw() {
-        if ($("#upw").val() == $("#upw2").val()) {
-            $.ajax({
-                url: '/change_pw',
-                method: 'post',
-                data: {
-                    id: $("#uid").val(),
-                    pw: $("#upw").val()
-                },
-                success: function(data) {
-                    alert(data.msg);
-                    if (data.ok) window.location = (data.url);
-                    else alert(data.msg);
-                }
-            })
-        }
-    }
 </script>
 </body>
 </html>

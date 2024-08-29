@@ -128,38 +128,36 @@
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.5/axios.min.js"></script>
     <script src="https://unpkg.com/dayjs@1.8.21/dayjs.min.js"></script>
     <script src="js/sidebar.js"></script>
     <script src="js/memberAuth.js"></script>
-    <script src="js/draw_devices.js"></script>
     <script>
         $(document).ready(function() {
-            $.ajax({
+            axios({
                 url: "/get_device",
                 method: "post",
                 data: { id: id },
-                success:function(data) {
-                    let html = '';
-                    console.log(data);
-                    $.each(data, (i, val) => {
-                        html += `<div class="card device_card" style="margin-bottom: 1rem;">
-                                    <a href="#" onclick="window.location = ('/dashboard${val.service==1?'_premium':''}?name=${val.name}&device=${val.device_id}&service=${val.service}&level=${val.link_level}')" style="color: black;">
-                                        <div class="card-body devices" style="display: flex;">
-                                            <img class="device_img" src="imgs/sample.png">
-                                            <div class="row card_row">
-                                                <span style="font-weight: bold; font-size: 16px; padding-bottom: 0.3rem;">기기명: ${val.name}</span>
-                                                <span id="device_date_${i}">설치일: ${dayjs(val.time).format("YYYY-MM-DD")}</span>
-                                                <span id="device_join_${i}">가입일: ${dayjs(val.join).format("YYYY-MM-DD")}</span>
-                                            </div>
-                                            <div class="device_permission">
-                                                ${(val.link_level < 1) ? '<span id="device_per_${i}" style="color: red;">권한여부: N</span>' : '<span id="device_per_${i}" style="color: green;">권한여부: Y</span>'}
-                                            </div>
+            }).then(function(data) {
+                let html = '';
+                $.each(data.data, (i, val) => {
+                    html += `<div class="card device_card" style="margin-bottom: 1rem;">
+                                <a href="#" onclick="window.location = ('/dashboard${val.service==1?'_premium':''}?name=${val.name}&device=${val.device_id}&service=${val.service}&level=${val.link_level}')" style="color: black;">
+                                    <div class="card-body devices" style="display: flex;">
+                                        <img class="device_img" src="imgs/sample.png">
+                                        <div class="row card_row">
+                                            <span style="font-weight: bold; font-size: 16px; padding-bottom: 0.3rem;">기기명: ${val.name}</span>
+                                            <span id="device_date_${i}">설치일: ${dayjs(val.time).format("YYYY-MM-DD")}</span>
+                                            <span id="device_join_${i}">가입일: ${dayjs(val.join).format("YYYY-MM-DD")}</span>
                                         </div>
-                                    </a>
-                                </div>`
-                        if (data.length - 1 == i) $("#device_card").append(html);
-                    })
-                }
+                                        <div class="device_permission">
+                                            ${(val.link_level < 1) ? '<span id="device_per_${i}" style="color: red;">권한여부: N</span>' : '<span id="device_per_${i}" style="color: green;">권한여부: Y</span>'}
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>`
+                    if (data.data.length - 1 == i) $("#device_card").append(html);
+                })
             })
         })
         
