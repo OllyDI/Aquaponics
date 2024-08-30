@@ -331,7 +331,7 @@
 
         var test = null;
         function search_envir() {
-            $.ajax({
+            axios({
                 url: '/search_envir',
                 method: 'post',
                 data: {
@@ -339,39 +339,38 @@
                     start: $("#stdate").val().split(" ~ ")[0],
                     end: $("#stdate").val().split(" ~ ")[1],
                 },
-                success: function(data) {
-                    let temp_data = [[], [], []];
-                    let senor_data = [[], [], []];
-                    let illum_data = [[]];
-                    let premium_data = [[], [], []];
-                    let time = [];
-                    
-                    if (data.length == 0) alert("검색된 데이터가 존재하지 않습니다.");
-                    $.each(data, (i, v) => {
-                        temp_data[0].push(v.ex_temp);
-                        temp_data[1].push(v.water_temp);
-                        temp_data[2].push(v.hum);
-                        senor_data[0].push(v.motor)
-                        senor_data[1].push(v.bubble)
-                        senor_data[2].push(v.led)
-                        illum_data[0].push(v.illum)
-                        premium_data[0].push(v.ec)
-                        premium_data[1].push(v.ph)
-                        premium_data[2].push(v.do)
-                        time.push(dayjs(v.time).format("YY-MM-DD HH:mm"));
-                        if (data.length - 1 == i) {
-                            create_envircard(data, time.at(-1))
-                            create_chart(temp_data, time, "#temp-chart", GROUP[0], 'temp', 3);
-                            create_chart(senor_data, time, "#sensor-chart", GROUP[1], 'sensor', 3);
-                            create_chart(illum_data, time, "#illum-chart", GROUP[2], 'illum', 1);
-                            if (service == 1) create_chart(premium_data, time, "#premium-chart", GROUP[3], 'premium', 3);
-                            create_table(data);
-                        }
-                    })
-                    
-                }
+            }).then(function(data) {
+                let temp_data = [[], [], []];
+                let senor_data = [[], [], []];
+                let illum_data = [[]];
+                let premium_data = [[], [], []];
+                let time = [];
+                
+                if (data.data.length == 0) alert("검색된 데이터가 존재하지 않습니다.");
+                $.each(data.data, (i, v) => {
+                    temp_data[0].push(v.ex_temp);
+                    temp_data[1].push(v.water_temp);
+                    temp_data[2].push(v.hum);
+                    senor_data[0].push(v.motor)
+                    senor_data[1].push(v.bubble)
+                    senor_data[2].push(v.led)
+                    illum_data[0].push(v.illum)
+                    premium_data[0].push(v.ec)
+                    premium_data[1].push(v.ph)
+                    premium_data[2].push(v.do)
+                    time.push(dayjs(v.time).format("YY-MM-DD HH:mm"));
+                    if (data.data.length - 1 == i) {
+                        create_envircard(data.data, time.at(-1))
+                        create_chart(temp_data, time, "#temp-chart", GROUP[0], 'temp', 3);
+                        create_chart(senor_data, time, "#sensor-chart", GROUP[1], 'sensor', 3);
+                        create_chart(illum_data, time, "#illum-chart", GROUP[2], 'illum', 1);
+                        if (service == 1) create_chart(premium_data, time, "#premium-chart", GROUP[3], 'premium', 3);
+                        create_table(data.data);
+                    }
+                })
             })
         }
+
         $(document).ready(function() { 
             if (service==0) $("#premium-tabs").hide()
             search_envir(); 
@@ -442,7 +441,5 @@
             function percentageToDegrees(percentage) { return percentage / 100 * 360 }
         }
     </script>
-    
 </body>
-
 </html>

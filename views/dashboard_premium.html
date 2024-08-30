@@ -191,7 +191,8 @@
         $(document).ready(function () {
             $("#chartlink").on("click", function() { window.location = (`/chart?name=${params.get('name')}&device=${params.get('device')}&service=${params.get('service')}`) });
             $("#dashboard_name").text(params.get('name'));
-            $.ajax({
+
+            axios({
                 url: '/search_envir',
                 method: 'post',
                 data: {
@@ -199,55 +200,51 @@
                     start: ''.split(" ~ ")[0],
                     end: ''.split(" ~ ")[1],
                 },
-                success: function(data) {
-                    let temp_data = [[], [], []];
-                    let sensor_data = [[], [], []];
-                    let illum_data = [[]];
-                    let premium_data = [[], [], []];
-                    let time = [];
-                    
-                    
-                    $.each(data, (i, v) => {
-                        temp_data[0].push(v.ex_temp);
-                        temp_data[1].push(v.water_temp);
-                        temp_data[2].push(v.hum);
-                        sensor_data[0].push(v.motor)
-                        sensor_data[1].push(v.bubble)
-                        sensor_data[2].push(v.led)
-                        illum_data[0].push(v.illum)
-                        premium_data[0].push(v.ec)
-                        premium_data[1].push(v.ph)
-                        premium_data[2].push(v.do)
-                        time.push(dayjs(v.time).format("YY-MM-DD HH:mm"));
-                        if (data.length - 1 == i) {
-                            create_envircard(data, time.at(-1))
-                            create_chart(temp_data, time, "#temp-chart", ['외부온도', '수온', '습도'], 'temp', 3);
-                            create_chart(sensor_data, time, "#sensor-chart", ['모터', '기포', 'LED'], 'sensor', 3);
-                            create_chart(illum_data, time, "#illum-chart", ['조도'], 'illum', 1);
-                            if (service == 1) create_chart(premium_data, time, "#premium-chart", ['EC', 'pH', 'DO'], 'premium', 3);
-                        }
-                    })
-                    
-                }
+            }).then(function(data) {
+                let temp_data = [[], [], []];
+                let sensor_data = [[], [], []];
+                let illum_data = [[]];
+                let premium_data = [[], [], []];
+                let time = [];
+                
+                
+                $.each(data.data, (i, v) => {
+                    temp_data[0].push(v.ex_temp);
+                    temp_data[1].push(v.water_temp);
+                    temp_data[2].push(v.hum);
+                    sensor_data[0].push(v.motor)
+                    sensor_data[1].push(v.bubble)
+                    sensor_data[2].push(v.led)
+                    illum_data[0].push(v.illum)
+                    premium_data[0].push(v.ec)
+                    premium_data[1].push(v.ph)
+                    premium_data[2].push(v.do)
+                    time.push(dayjs(v.time).format("YY-MM-DD HH:mm"));
+                    if (data.data.length - 1 == i) {
+                        create_envircard(data.data, time.at(-1))
+                        create_chart(temp_data, time, "#temp-chart", ['외부온도', '수온', '습도'], 'temp', 3);
+                        create_chart(sensor_data, time, "#sensor-chart", ['모터', '기포', 'LED'], 'sensor', 3);
+                        create_chart(illum_data, time, "#illum-chart", ['조도'], 'illum', 1);
+                        if (service == 1) create_chart(premium_data, time, "#premium-chart", ['EC', 'pH', 'DO'], 'premium', 3);
+                    }
+                })
             })
 
-
-            // $.ajax({
+            // axios({
             //     url: 'get_stream',
             //     method: 'post',
-            //     success: function(data) {
-            //         console.log(data);
-            //         var client = new WebSocket('ws://localhost:9999');
-            //         c1 = $("#plant");
-            //         c2 = $("#fish");
+            // }).then(function(data) {
+            //     console.log(data);
+            //     var client = new WebSocket('ws://localhost:9999');
+            //     c1 = $("#plant");
+            //     c2 = $("#fish");
 
-            //         var p1 = new jsmpeg(client, {
-            //             canvas: c1
-            //         });
-            //         var p2 = new jsmpeg(client, {
-            //             canvas: c2
-            //         });
-            //     }
+            //     var p1 = new jsmpeg(client, {
+            //         canvas: c1
+            //     });
+            //     var p2 = new jsmpeg(client, {
+            //         canvas: c2
+            //     });
             // })
         })
 
@@ -274,6 +271,13 @@
 
         function create_envircard(data, time) {
             let sensors = null;
+            const icons = ['fa-solid fa-temperature-low', 'fa-solid fa-droplet', 'fa-solid fa-cloud', 
+                        'fa-solid fa-solar-panel', 'fa-solid fa-bolt', 'fa-solid fa-pallet', 'fa-solid fa-sliders', 
+                        'fa-solid fa-gauge-high', 'fa-solid fa-water', 'fa-solid fa-lightbulb'];
+            const GROUP = [['외부온도', 'ex_temp', '°C'], ['수온', 'water_temp', '°C'], ['습도', 'hum', '%'], ['조도', 'illum', 'lx'], 
+            ['EC', 'ec', 'μS/cm'], ['pH', 'ph', 'pH'], ['DO', 'do', 'mg/L'], ['모터', 'motor', ''], ['기포', 'bubble', ''], ['LED', 'led', '']]
+            // const colors = ["#FF1654", "#247BA0", "#009000", "#FF1654", "#247BA0", "#FF1654", "#247BA0", "#FF1654", "#247BA0", "#009000"]
+
             $.ajax({
                 url: '/get_sensor',
                 method: 'get',
@@ -281,12 +285,8 @@
                 async: false,
                 success: function(data) { sensors = data; }
             })
-            const icons = ['fa-solid fa-temperature-low', 'fa-solid fa-droplet', 'fa-solid fa-cloud', 
-                        'fa-solid fa-solar-panel', 'fa-solid fa-bolt', 'fa-solid fa-pallet', 'fa-solid fa-sliders', 
-                        'fa-solid fa-gauge-high', 'fa-solid fa-water', 'fa-solid fa-lightbulb'];
-            const GROUP = [['외부온도', 'ex_temp', '°C'], ['수온', 'water_temp', '°C'], ['습도', 'hum', '%'], ['조도', 'illum', 'lx'], 
-            ['EC', 'ec', 'μS/cm'], ['pH', 'ph', 'pH'], ['DO', 'do', 'mg/L'], ['모터', 'motor', ''], ['기포', 'bubble', ''], ['LED', 'led', '']]
-            // const colors = ["#FF1654", "#247BA0", "#009000", "#FF1654", "#247BA0", "#FF1654", "#247BA0", "#FF1654", "#247BA0", "#009000"]
+
+
             $.each(GROUP, (i, v) => {
                 let val = 0, min = 0, max = 0;
                 if (i > 6) {
@@ -347,20 +347,19 @@
 
             if (device_level < 1) alert('기기제어 권한이 없습니다.');
             else {
-                $.ajax({
+                axios({
                     url: '/update_sensor',
                     method: 'get',
-                    data: {
+                    params: {
                         device_id: device_id,
                         sensor: id,
                         val: val,
                     },
-                    success: function(data) {
-                        $("#" + id).attr('value', val);
-                        $("#pg-" + id).attr('data-value', val==0 ? 0 : 100)
-                        $("#progress-hum-text-" + id).text(val==1?'ON':'OFF')
-                        update_pg();
-                    }
+                }).then(function(data) {
+                    $("#" + id).attr('value', val);
+                    $("#pg-" + id).attr('data-value', val==0 ? 0 : 100)
+                    $("#progress-hum-text-" + id).text(val==1?'ON':'OFF')
+                    update_pg();
                 })
             }
         }

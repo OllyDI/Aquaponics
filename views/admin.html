@@ -308,40 +308,40 @@
         // datatables
         function ap_table() {
             var datas = [];
-            $.ajax({
+
+            axios({
                 url: "/members_temp",
                 method: "post",
-                success: function(data) {
-                    $.each(data, (i, v) => {
-                        let level = '';
-                        if (v.level == 0) level = '학생'
-                        else if (v.level == 1) level = '교사'
-                        else if (v.level == 2) level = '일반'
-                        else if (v.level == 3) level = '관리자'
-                        datas.push([
-                            v.id,
-                            v.school,
-                            level,
-                            v.name,
-                            v.grade,
-                            v.class,
-                            v.number,
-                            dayjs(v.date).format("YYYY-MM-DD"),
-                            `<button type="button" class="btn btn-success" onclick="sign('${v.id}', 0, 1, 1)">승인</button>
-                            <button type="button" class="btn btn-danger" onclick="sign('${v.id}', 1, 1, 2)">거절</button>`
-                        ])
-                        if (data.length - 1 == i) {
-                            new DataTable('#ap_tables', 
-                            { 
-                                columnDefs: [
-                                    { className: 'dt-head-center', targets: "_all", },
-                                    { className: 'dt-body-center', targets: "_all", },
-                                ], scrollX: true, paging: true, destroy: true, data: datas 
+            }).then(function(data) {
+                $.each(data.data, (i, v) => {
+                    let level = '';
+                    if (v.level == 0) level = '학생'
+                    else if (v.level == 1) level = '교사'
+                    else if (v.level == 2) level = '일반'
+                    else if (v.level == 3) level = '관리자'
+                    datas.push([
+                        v.id,
+                        v.school,
+                        level,
+                        v.name,
+                        v.grade,
+                        v.class,
+                        v.number,
+                        dayjs(v.date).format("YYYY-MM-DD"),
+                        `<button type="button" class="btn btn-success" onclick="sign('${v.id}', 0, 1, 1)">승인</button>
+                        <button type="button" class="btn btn-danger" onclick="sign('${v.id}', 1, 1, 2)">거절</button>`
+                    ])
+                    if (data.data.length - 1 == i) {
+                        new DataTable('#ap_tables', 
+                        { 
+                            columnDefs: [
+                                { className: 'dt-head-center', targets: "_all", },
+                                { className: 'dt-body-center', targets: "_all", },
+                            ], scrollX: true, paging: true, destroy: true, data: datas 
 
-                            });
-                        }
-                    })
-                }
+                        });
+                    }
+                })
             })
         }
 
@@ -401,7 +401,8 @@
 
         function search() {
             $("#card_search").css('display', '');
-            $.ajax({
+
+            axios({
                 url: "/searchTable",
                 method: "post",
                 data: {
@@ -414,10 +415,9 @@
                     start: $("#stdate").val().split(" ~ ")[0],
                     end: $("#stdate").val().split(" ~ ")[1],
                 },
-                success:function(data) {
-                    if (member[0].level == 4) creatTables(data, 'gen_tables') 
-                    else creatTables(data, 'tables') 
-                }
+            }).then(function(data) {
+                if (member[0].level == 4) creatTables(data.data, 'gen_tables') 
+                else creatTables(data.data, 'tables') 
             })
         }
 
