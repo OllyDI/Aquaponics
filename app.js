@@ -292,7 +292,7 @@ app.post("/session_login", (req, res) => {
   const id = req.body.uid;
 
   passport.authenticate("local",
-      (err, user, options) => {
+      (err, user, msg) => {
         if (user) {
           req.login(user, (error)=>{
             if (error) res.send(error);
@@ -302,7 +302,7 @@ app.post("/session_login", (req, res) => {
               res.redirect("/");
             }
           });
-        } else res.send("<script>alert('로그인에 실패하였습니다. 다시 시도해 주세요.'); location.href='/login';</script>");
+        } else res.send(`<script>alert('${msg.message}'); location.href='/login';</script>`);
   })(req, res)
 });
 app.get('/session', function(req, res) {
