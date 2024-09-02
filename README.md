@@ -74,8 +74,8 @@
 
  - 센서 - 키(PK), 기기명, 모터, 기포, LED, 시간
 
-❍ 논리DB모델
+□ 논리DB모델
 ![논리db모델](https://github.com/OllyDI/Aquaponics/assets/71002104/a1ab1ec4-1fac-4821-8c3b-c1df9af22a7c)
 
-❍ 물리DB모델
+□ 물리DB모델
 ![물리db모델](https://github.com/OllyDI/Aquaponics/assets/71002104/d576723d-bba2-4d80-b187-14ca76278fa5)
