@@ -591,19 +591,19 @@ app.get('/update_sensor', function(req, res) {
 
 
 // 스트리밍
-app.post('/get_stream', function(req, res) {
-  var stream = new Stream({
-    name: 'name',
-    streamUrl: 'rtsp://{aqufarm}:{aqufarm6552}@', // 주소 추가
-    wsPort: 9999,
-    ffmpegOptions: { // options ffmpeg flags
-      '-stats': '', // an option with no neccessary value uses a blank string
-      '-r': 30 // options with required values specify the value after the key
-    }
-  })
+// app.post('/get_stream', function(req, res) {
+//   var stream = new Stream({
+//     name: 'name',
+//     streamUrl: 'rtsp://{aqufarm}:{aqufarm6552}@', // 주소 추가
+//     wsPort: 9999,
+//     ffmpegOptions: { // options ffmpeg flags
+//       '-stats': '', // an option with no neccessary value uses a blank string
+//       '-r': 30 // options with required values specify the value after the key
+//     }
+//   })
 
-  res.send(stream);
-})
+//   res.send(stream);
+// })
 
 
 // catch 404 and forward to error handler

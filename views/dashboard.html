@@ -257,71 +257,74 @@
 
         function create_envircard(data, time) {
             let sensors = null;
-            $.ajax({
+            axios({
                 url: '/get_sensor',
                 method: 'get',
-                data: { device_id: device_id, },
+                params: { device_id: device_id, },
                 async: false,
-                success: function(data) { sensors = data; }
-            })
-            const icons = ['fa-solid fa-temperature-low', 'fa-solid fa-droplet', 'fa-solid fa-cloud', 
+                
+            }).then(function (data) {
+                sensors = data.data;
+                const icons = ['fa-solid fa-temperature-low', 'fa-solid fa-droplet', 'fa-solid fa-cloud', 
                         'fa-solid fa-solar-panel','fa-solid fa-gauge-high', 'fa-solid fa-water', 'fa-solid fa-lightbulb'];
-            const GROUP = [['외부온도', 'ex_temp', '°C'], ['수온', 'water_temp', '°C'], ['습도', 'hum', '%'], ['조도', 'illum', 'lx'], 
-            ['모터', 'motor', ''], ['기포', 'bubble', ''], ['LED', 'led', '']]
-            // const colors = ["#FF1654", "#247BA0", "#009000", "#FF1654", "#247BA0", "#FF1654", "#247BA0", "#FF1654", "#247BA0", "#009000"]
-            
-            $.each(GROUP, (i, v) => {
-                let val = 0, min = 0, max = 0;
-                if (i > 3) {
-                    max = 1;
-                    min = 0;
-                    val = sensors[0][v[1]]
-                    $("#" + v[1]).attr('value', val)
-                } else {
-                    max = data.reduce( (a, b) => { return a[v[1]] >= b[v[1]] ? a : b })[v[1]]
-                    min = data.reduce( (a, b) => { return a[v[1]] <= b[v[1]] ? a : b })[v[1]]
-                    val = data.at(-1)[v[1]]
-                }
-                let html = '';
-                let pg = ((val-min) / (max-min)) * 100
+                const GROUP = [['외부온도', 'ex_temp', '°C'], ['수온', 'water_temp', '°C'], ['습도', 'hum', '%'], ['조도', 'illum', 'lx'], 
+                ['모터', 'motor', ''], ['기포', 'bubble', ''], ['LED', 'led', '']]
+                // const colors = ["#FF1654", "#247BA0", "#009000", "#FF1654", "#247BA0", "#FF1654", "#247BA0", "#FF1654", "#247BA0", "#009000"]
+                
+                $.each(GROUP, (i, v) => {
+                    let val = 0, min = 0, max = 0;
+                    if (i > 3) {
+                        max = 1;
+                        min = 0;
+                        val = sensors[0][v[1]]
+                        $("#" + v[1]).attr('value', val)
+                    } else {
+                        max = data.reduce( (a, b) => { return a[v[1]] >= b[v[1]] ? a : b })[v[1]]
+                        min = data.reduce( (a, b) => { return a[v[1]] <= b[v[1]] ? a : b })[v[1]]
+                        val = data.at(-1)[v[1]]
+                    }
+                    let html = '';
+                    let pg = ((val-min) / (max-min)) * 100
 
-                html = `<div class="card card-inner">
-                            <div class="card-face card-front">
-                                <div class="row col" style="align-items: center; font-size: 35px; color: #25252599;">
-                                    <i class="${icons[i]}" style="padding-bottom: 0.7rem;"></i>
-                                    <h2 class="h6" style="margin: 0; padding: 0;">${v[0]}</h2>
-                                </div>
-                                <div class="col">
-                                    <div class="progress mx-auto" id="pg-${v[1]}" data-value='${pg}'>
-                                        <span class="progress-left">
-                                            <span class="progress-bar border-primary" style="border-color: #25252599 !important;"></span>
-                                        </span>
-                                        <span class="progress-right">
-                                            <span class="progress-bar border-primary" style="border-color: #25252599 !important;"></span>
-                                        </span>
-                                        <div class="progress-value w-100 h-100 rounded-circle d-flex align-items-center justify-content-center">
-                                            <span id="progress-hum-text-${v[1]}" style="font-size: 14px;">${i>3?(val==1?'ON':'OFF'):val}${v[2]}</span>
+                    html = `<div class="card card-inner">
+                                <div class="card-face card-front">
+                                    <div class="row col" style="align-items: center; font-size: 35px; color: #25252599;">
+                                        <i class="${icons[i]}" style="padding-bottom: 0.7rem;"></i>
+                                        <h2 class="h6" style="margin: 0; padding: 0;">${v[0]}</h2>
+                                    </div>
+                                    <div class="col">
+                                        <div class="progress mx-auto" id="pg-${v[1]}" data-value='${pg}'>
+                                            <span class="progress-left">
+                                                <span class="progress-bar border-primary" style="border-color: #25252599 !important;"></span>
+                                            </span>
+                                            <span class="progress-right">
+                                                <span class="progress-bar border-primary" style="border-color: #25252599 !important;"></span>
+                                            </span>
+                                            <div class="progress-value w-100 h-100 rounded-circle d-flex align-items-center justify-content-center">
+                                                <span id="progress-hum-text-${v[1]}" style="font-size: 14px;">${i>3?(val==1?'ON':'OFF'):val}${v[2]}</span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="card-face card-back">
-                                <div class="row col" style="align-items: center; font-size: 35px; color: #25252599;">
-                                    <i class="${icons[i]}" style="padding-bottom: 0.7rem;"></i>
-                                    <h2 class="h6" style="margin: 0; padding: 0;">${v[0]}</h2>
+                                <div class="card-face card-back">
+                                    <div class="row col" style="align-items: center; font-size: 35px; color: #25252599;">
+                                        <i class="${icons[i]}" style="padding-bottom: 0.7rem;"></i>
+                                        <h2 class="h6" style="margin: 0; padding: 0;">${v[0]}</h2>
+                                    </div>
+                                    <div class="row col" style="align-items: center; font-weight: bold;">
+                                        <span class="h6" style="font-size: 14px; font-weight: bold;">최대: ${max}${v[2]}</span>
+                                        <span class="h6" style="font-size: 14px; font-weight: bold;">최소: ${min}${v[2]}</span>
+                                        <span style="font-size: 13px;">${time}</span>
+                                    </div>
                                 </div>
-                                <div class="row col" style="align-items: center; font-weight: bold;">
-                                    <span class="h6" style="font-size: 14px; font-weight: bold;">최대: ${max}${v[2]}</span>
-                                    <span class="h6" style="font-size: 14px; font-weight: bold;">최소: ${min}${v[2]}</span>
-                                    <span style="font-size: 13px;">${time}</span>
-                                </div>
-                            </div>
-                        </div>`;
-                
-                $("#" + v[1]).html('')
-                $("#" + v[1]).append(html)
+                            </div>`;
+                    
+                    $("#" + v[1]).html('')
+                    $("#" + v[1]).append(html)
+                })
+                update_pg();
             })
-            update_pg();
+            
         }
 
         function toggle_sensor(sensor) {
