@@ -10,7 +10,7 @@ function logout() {
     f.submit();
 }
 
-$(document).ready(function() {
+$(document).ready(function() { // 수정필요
     $.ajax({
     url: "/session",
     method: "get",
