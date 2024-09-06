@@ -1,6 +1,6 @@
 var devices = [];
 
-$(document).ready(function() {
+$(document).ready(function() { // 수정필요
     $.ajax({
         url: "/device_all",
         method: "post",
@@ -29,7 +29,7 @@ $(document).ready(function() {
     })
 })
 
-function modal_func(id, level, select) {
+function modal_func(id, level, select) { // 수정필요
     $.ajax({
         url: '/get_link',
         method: 'post',
