@@ -27,6 +27,7 @@
     "passport": "0.7.0",
     "passport-local": "^1.0.0",
     "pm2": "^5.4.0",
+    "project": "file:",
     "session-file-store": "^1.5.0"
   }
 }
