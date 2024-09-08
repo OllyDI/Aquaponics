@@ -590,7 +590,7 @@ app.get('/update_sensor', function(req, res) {
 })
 
 
-// 스트리밍
+// 스트리밍 - 두개 연결 예정
 // app.post('/get_stream', function(req, res) {
 //   var stream = new Stream({
 //     name: 'name',
