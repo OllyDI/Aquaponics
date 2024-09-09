@@ -38,6 +38,8 @@ const transporter = nodemailer.createTransport({
 });
 
 
+/* 전체 throw 수정 에러 제어 필요 */
+
 // DB 설정
 const options = {
   host: process.env.DB_HOST, 
@@ -112,7 +114,6 @@ app.post('/smtp', function(req, res) {
   transporter.sendMail(mailOptions, (err, info) => {
     if (err) {
       res.send({ ok: false, msg: '메일 전송에 실패하였습니다.', key: null });
-      console.log(err);
     } else {
       transporter.close();
       res.send({ ok: true, msg: '메일 전송에 성공하였습니다.', key: passkey });
@@ -151,7 +152,7 @@ app.post('/duplicate', function(req, res) {
 
   db.query('select * from members_temp where id=?' , [uid],
     function(err, data) {
-      if (err) throw(err);
+      if (err) console.log("duplicate members_temp sql error");
       if (data[0]) val = false;
     }
   )
@@ -159,7 +160,7 @@ app.post('/duplicate', function(req, res) {
   else {
     db.query('select * from members where id=?', [uid],
       function(err, data) {
-        if (err) throw(err);
+        if (err) console.log("duplicate members sql error");
         if (data[0]) val = false;
         res.send(val);
       }
@@ -209,7 +210,7 @@ app.post('/register', function(req, res) {
 // 교사 회원가입 및 가입승인, 삭제
 app.post('/members_temp', function(req, res) {
   db.query('select * from members_temp', function(err, data) {
-    if(err) throw(err);
+    if(err) console.log("members_temp select sql error");
     else {
       let datas = [];
 
@@ -237,13 +238,13 @@ app.post('/members_temp_suc', function(req, res) {
 
   db.query('select * from members_temp where id=?;', [id],
     function(err, data) {
-      if(err) throw(err);
+      if(err) console.log("members_temp duplicate sql error");
       db.query('insert into members(level, school, name, grade, class, number, id, pw, date) values(?, ?, ?, ?, ?, ?, ?, ?, ?);', 
       [Number(data[0].level), data[0].school, data[0].name, Number(data[0].grade), Number(data[0].class), Number(data[0].number), data[0].id, data[0].pw, date],
         function(err, data) {
-          if(err) throw(err);
+          if(err) console.log("members_temp insert sql error");
           db.query('delete from members_temp where id=?;', [id], 
-            function(err, data) { if(err) throw(err); }
+            function(err, data) { if(err) console.log("members_temp delete sql error"); }
           )
           res.send('회원가입 승인이 완료되었습니다.');
         }
@@ -256,7 +257,7 @@ app.post('/members_temp_del', function(req, res) {
 
   db.query(`delete from members_temp where id=?;`, [id], 
     function(err, data) {
-      if(err) throw(err);
+      if(err) console.log("members_temp delete sql error"); 
       res.send('회원 삭제가 완료되었습니다.');
     }
   )
@@ -266,7 +267,7 @@ app.post('/members_del', function(req, res) {
 
   db.query(`delete from members where id=?;`, [id], 
     function(err, data) {
-      if(err) throw(err);
+      if(err) console.log("members delete sql error"); 
       req.session.destroy(() => {
         delete req.session;
         res.clearCookie('connect.sid');
@@ -341,7 +342,7 @@ app.post('/get_device', function(req, res) {
 
   db.query('select * from link left join devices on link.device_id = devices.device_id where link.user_id=?', [id], 
     function(err, data) {
-      if (err) throw(err);
+      if (err) console.log("index.html device select sql error");
       if (data.length == 0) res.send();
       
       $.each(data, function(i, v) {
@@ -391,7 +392,7 @@ app.post('/searchTable', function(req, res) {
   else if (start != '' && start != undefined) sql += ` and date between str_to_date('${start}', '%Y-%m-%d') and str_to_date('${end}', '%Y-%m-%d')`
   db.query(sql, data,
     function(err, data) {
-      if(err) throw(err);
+      if(err) console.log("members table select sql error");
       else {
         let val = [];
         if (data.length == 0) res.send(null);
@@ -429,9 +430,7 @@ app.post('/modify_profile', function(req, res) {
 
   db.query('update members set school=?, name=?, grade=?, class=?, number=?, pw=? where id=?', 
     [school, name, grade, classNum, number, pw, id], function(err, data) {
-      if(err) {
-        res.send("회원정보수정에 실패했습니다.");
-        throw(err);
+      if(err) { res.send("회원정보수정에 실패했습니다.");
       } else res.send("<script>alert('회원정보수정이 완료되었습니다.');location.href='/modify_profile';</script>");
     })
 })
@@ -440,7 +439,7 @@ app.post('/modify_profile', function(req, res) {
 // 기기 검색
 app.post('/device_all', function(req, res) {
   db.query('select * from devices', function(err, data) {
-    if (err) throw(err);
+    if (err) console.log("device all select sql error");
     else {
       let datas = [];
 
@@ -463,7 +462,7 @@ app.post('/get_link', function(req, res) {
 
   db.query('select * from link where user_id=?', [id], 
     function(err, data) {
-      if (err) throw(err);
+      if (err) console.log("get_link select sql error");
       else {
         let datas = [];
         if (data.length == 0) res.send(datas);
@@ -488,7 +487,7 @@ app.post('/delete_link', function(req, res) {
 
     db.query(sql, [uid, v.device_id], 
       function(err, data) {
-        if (err) throw(err);
+        if (err) console.log("delete_link delete sql error");
       }
     )
     if (items.length - 1 == i) res.send();
@@ -510,7 +509,7 @@ app.post('/insert_link', function(req, res) {
 
     db.query(sql, [params, Number(v.device_id)],
       function(err, data) {
-        if (err) throw(err);
+        if (err) console.log("insert_link insert sql error");
       }
     )
     if (items.length - 1 == i) res.send();
@@ -534,7 +533,7 @@ app.post('/update_link', function(req, res) {
 
     db.query(sql, params, 
       function(err, data) {
-        if (err) throw(err);
+        if (err) console.log("update_link sql error");
       }
     )
     if (items.length - 1 == i) res.send();
@@ -553,7 +552,7 @@ app.post('/search_envir', function(req, res) {
   if (start == end) sql += ` and time='${end}'`
   else if (start != '' && start != undefined) sql += ` and time between str_to_date('${start}', '%Y-%m-%d %H:%i:%s') and str_to_date('${end}', '%Y-%m-%d %H:%i:%s')`
   db.query(sql, [Number(device_id)], function(err, data) {
-    if (err) throw(err);
+    if (err) console.log("environment select sql error");
     else {
       if (data.length == 0) res.send();
       else {
@@ -571,7 +570,7 @@ app.get('/get_sensor', function(req, res) {
 
   db.query('select * from sensor where sd_id=?', [Number(device_id)],
     function(err, data) {
-      if (err) throw(err);
+      if (err) console.log("get_sensor error");
       res.send(data);
     }
   )
@@ -583,7 +582,7 @@ app.get('/update_sensor', function(req, res) {
 
   db.query(`update sensor set ${sensor}=? where sd_id=?`, [Number(val), Number(device_id)], 
     function(err, data) {
-      if (err) throw(err);
+      if (err) console.log("update_sensor error");
       res.send();
     }
   )
