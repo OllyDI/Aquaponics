@@ -582,7 +582,7 @@ app.get('/update_sensor', function(req, res) {
 
   db.query(`update sensor set ${sensor}=? where sd_id=?`, [Number(val), Number(device_id)], 
     function(err, data) {
-      if (err) console.log("update_sensor error");
+      if (err) console.log("update_sensor error"); // 수정필요
       res.send();
     }
   )
