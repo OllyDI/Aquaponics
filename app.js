@@ -600,7 +600,6 @@ app.get('/update_sensor', function(req, res) {
 //       '-r': 30 // options with required values specify the value after the key
 //     }
 //   })
-
 //   res.send(stream);
 // })
 // app.post('/get_stream_plant', function(req, res) {
@@ -616,6 +615,7 @@ app.get('/update_sensor', function(req, res) {
 
 //   res.send(stream);
 // })
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
