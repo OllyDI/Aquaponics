@@ -38,8 +38,6 @@ const transporter = nodemailer.createTransport({
 });
 
 
-/* 전체 throw 수정 에러 제어 필요 */
-
 // DB 설정
 const options = {
   host: process.env.DB_HOST, 
