@@ -59,6 +59,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+
 // 세션 설정
 app.use(session({
   secret: process.env.SESSION_SECRET,
