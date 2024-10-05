@@ -180,7 +180,8 @@
         const device_level = params.get('level');
         const colors = ["#FF1654", "#247BA0", "#009000"]
         
-        $(document).ready(function () {
+        $(document).ready(async function () {
+            await profile(); // 사용자 프로필 불러오기
             $("#chartlink").on("click", function() { window.location = (`/chart?name=${params.get('name')}&device=${params.get('device')}&service=${params.get('service')}`) });
             $("#dashboard_name").text(params.get('name'));
 
@@ -263,8 +264,8 @@
                 params: { device_id: device_id, },
                 async: false,
                 
-            }).then(function (data) {
-                sensors = data.data;
+            }).then(function (get_data) {
+                sensors = get_data.data;
                 const icons = ['fa-solid fa-temperature-low', 'fa-solid fa-droplet', 'fa-solid fa-cloud', 
                         'fa-solid fa-solar-panel','fa-solid fa-gauge-high', 'fa-solid fa-water', 'fa-solid fa-lightbulb'];
                 const GROUP = [['외부온도', 'ex_temp', '°C'], ['수온', 'water_temp', '°C'], ['습도', 'hum', '%'], ['조도', 'illum', 'lx'], 

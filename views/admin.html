@@ -421,7 +421,8 @@
             })
         }
 
-        $(document).ready(function() {
+        $(document).ready(async function() {
+            await profile(); // 사용자 프로필 불러오기
             if (member[0].level == 4) {
                 $("#region").attr('disabled', false);
                 $("#region").attr('disabled', false);

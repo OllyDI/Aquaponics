@@ -10,23 +10,24 @@ function logout() {
     f.submit();
 }
 
-$(document).ready(function() { // 수정필요
-    $.ajax({
-    url: "/session",
-    method: "get",
-    async: false,
-    success:function(data) {
+
+async function profile() {
+    await axios({
+        url: "/session",
+        method: "get",
+    }).then(function(data) {
+        var data = data.data;
+
         if (data[0].auth == false) {
             alert("로그인 후 이용해주세요.");
             location.replace('/login');
-        }
-        else {
+        } else {
             member = data;
             id = data[0].id;
             $("#level").text(level[data[0].level]);
             $("#username").text(data[0].name.slice(0, 1));
-            if (level[data[0].level] == '학생용' || level[data[0].level] == '일반용' || data[0].level == 4) $('#stumanag').hide();
             if (level[data[0].level] !== '관리자') $('#settings').hide();
+            if (level[data[0].level] == '학생용' || level[data[0].level] == '일반용' || data[0].level == 4) $('#stumanag').hide();
 
             axios({
                 url: "/get_device",
@@ -43,6 +44,5 @@ $(document).ready(function() { // 수정필요
                 })
             })
         }
-    }
     })
-})   
+}

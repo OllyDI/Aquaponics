@@ -133,7 +133,10 @@
     <script src="js/sidebar.js"></script>
     <script src="js/memberAuth.js"></script>
     <script>
-        $(document).ready(function() {
+        $(document).ready(async function() {
+            await profile();
+            
+            console.log(id, member)       
             axios({
                 url: "/get_device",
                 method: "post",
@@ -160,7 +163,6 @@
                 })
             })
         })
-        
     </script>
 </body>
 </html>

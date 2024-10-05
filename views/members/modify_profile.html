@@ -270,7 +270,9 @@
     <script>
         var gen = ['gen_school', 'gen_grade', 'gen_class', 'gen_number']
 
-        $(document).ready(function () {
+        $(document).ready(async function () {
+            await profile(); // 사용자 프로필 불러오기
+
             $("#userlevel").val(member[0].level).prop("selected", true);
 
             if (member[0].level == 3 || member[0].level == 4) {

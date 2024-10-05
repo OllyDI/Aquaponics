@@ -1,80 +1,152 @@
 var devices = [];
 
 $(document).ready(function() { // 수정필요
-    $.ajax({
+    axios({
         url: "/device_all",
         method: "post",
-        async: false, 
-        success: function(data) {
-            $.each(data, (i, v) => {
-                devices.push({
-                    text: v.name, 
-                    value: (v.id).toString(),
-                    selected: false
-                })
-                if (data.length - 1 == i) {
-                    multiplelist = new DualListbox("#modal-select" , {
-                        sortable: true,
-                        options: devices,
-                        availableTitle: "권한 미부여 기기",
-                        selectedTitle: "권한 부여 기기",
-                        addButtonText: "추가",
-                        addAllButtonText: "전체추가",
-                        removeButtonText: "삭제",
-                        removeAllButtonText: "전체삭제"
-                    });
-                }
+    }).then(function(data) {
+        $.each(data.data, (i, v) => {
+            devices.push({
+                text: v.name, 
+                value: (v.id).toString(),
+                selected: false
             })
-        }
+            if (data.data.length - 1 == i) {
+                multiplelist = new DualListbox("#modal-select" , {
+                    sortable: true,
+                    options: devices,
+                    availableTitle: "권한 미부여 기기",
+                    selectedTitle: "권한 부여 기기",
+                    addButtonText: "추가",
+                    addAllButtonText: "전체추가",
+                    removeButtonText: "삭제",
+                    removeAllButtonText: "전체삭제"
+                });
+            }
+        })
     })
 })
 
 function modal_func(id, level, select) { // 수정필요
-    $.ajax({
+    axios({
         url: '/get_link',
         method: 'post',
         data: { id: id },
-        async: false,
-        success: function(data) {
-            let options = [];
+    }).then(function(data) {
+        let options = [];
 
-            $.each(devices, (i, v) => {
-                if (select == 0) {
-                    if (data.filter(it => it.device_id == v.value).length != 0) devices[i].selected = true
-                    else devices[i].selected = false
-                } else {
-                    let dataFilter = data.filter(it => it.device_id == v.value);
-                    if (dataFilter.length != 0) {
-                        options.push({
-                            text: v.text,
-                            value: v.value,
-                            selected: (dataFilter[0].link_level != 0)
-                        })
-                    }
-                }
-                if (devices.length - 1 == i) {
-                    if (select == 0) {
-                        multiplelist.options = devices;
-                        $("#modal_success_btn").attr('onclick', 'updateDevice(this)');
-                    }
-                    else {
-                        multiplelist.options = options;
-                        $("#modal_success_btn").attr('onclick', 'update_link_level(this)');
-                    }
-                    multiplelist.redraw();
-                    $("#modal_title").html("ID: " + id + " 권한설정");
-                    $("#modal_success_btn").addClass(`userid_${id}`);
-                    $("#modal_success_btn").addClass(`userlevel_${level}`);
-                    $('#device_modal').on('hidden.bs.modal', function (e) { 
-                        $("#modal_success_btn").removeClass(`userid_${id}`); 
-                        $("#modal_success_btn").removeClass(`userlevel_${level}`);
+        $.each(devices, (i, v) => {
+            if (select == 0) {
+                if (data.data.filter(it => it.device_id == v.value).length != 0) devices[i].selected = true
+                else devices[i].selected = false
+            } else {
+                let dataFilter = data.data.filter(it => it.device_id == v.value);
+                if (dataFilter.length != 0) {
+                    options.push({
+                        text: v.text,
+                        value: v.value,
+                        selected: (dataFilter[0].link_level != 0)
                     })
-                    $("#device_modal").modal('show');
                 }
-            })
-        }
+            }
+            if (devices.length - 1 == i) {
+                if (select == 0) {
+                    multiplelist.options = devices;
+                    $("#modal_success_btn").attr('onclick', 'updateDevice(this)');
+                }
+                else {
+                    multiplelist.options = options;
+                    $("#modal_success_btn").attr('onclick', 'update_link_level(this)');
+                }
+                multiplelist.redraw();
+                $("#modal_title").html("ID: " + id + " 권한설정");
+                $("#modal_success_btn").addClass(`userid_${id}`);
+                $("#modal_success_btn").addClass(`userlevel_${level}`);
+                $('#device_modal').on('hidden.bs.modal', function (e) { 
+                    $("#modal_success_btn").removeClass(`userid_${id}`); 
+                    $("#modal_success_btn").removeClass(`userlevel_${level}`);
+                })
+                $("#device_modal").modal('show');
+            }
+        })
     })
 }
+
+// $(document).ready(function() { // 수정필요
+//     $.ajax({
+//         url: "/device_all",
+//         method: "post",
+//         async: false, 
+//         success: function(data) {
+//             $.each(data, (i, v) => {
+//                 devices.push({
+//                     text: v.name, 
+//                     value: (v.id).toString(),
+//                     selected: false
+//                 })
+//                 if (data.length - 1 == i) {
+//                     multiplelist = new DualListbox("#modal-select" , {
+//                         sortable: true,
+//                         options: devices,
+//                         availableTitle: "권한 미부여 기기",
+//                         selectedTitle: "권한 부여 기기",
+//                         addButtonText: "추가",
+//                         addAllButtonText: "전체추가",
+//                         removeButtonText: "삭제",
+//                         removeAllButtonText: "전체삭제"
+//                     });
+//                 }
+//             })
+//         }
+//     })
+// })
+
+// function modal_func(id, level, select) { // 수정필요
+//     $.ajax({
+//         url: '/get_link',
+//         method: 'post',
+//         data: { id: id },
+//         async: false,
+//         success: function(data) {
+//             let options = [];
+
+//             $.each(devices, (i, v) => {
+//                 if (select == 0) {
+//                     if (data.filter(it => it.device_id == v.value).length != 0) devices[i].selected = true
+//                     else devices[i].selected = false
+//                 } else {
+//                     let dataFilter = data.filter(it => it.device_id == v.value);
+//                     if (dataFilter.length != 0) {
+//                         options.push({
+//                             text: v.text,
+//                             value: v.value,
+//                             selected: (dataFilter[0].link_level != 0)
+//                         })
+//                     }
+//                 }
+//                 if (devices.length - 1 == i) {
+//                     if (select == 0) {
+//                         multiplelist.options = devices;
+//                         $("#modal_success_btn").attr('onclick', 'updateDevice(this)');
+//                     }
+//                     else {
+//                         multiplelist.options = options;
+//                         $("#modal_success_btn").attr('onclick', 'update_link_level(this)');
+//                     }
+//                     multiplelist.redraw();
+//                     $("#modal_title").html("ID: " + id + " 권한설정");
+//                     $("#modal_success_btn").addClass(`userid_${id}`);
+//                     $("#modal_success_btn").addClass(`userlevel_${level}`);
+//                     $('#device_modal').on('hidden.bs.modal', function (e) { 
+//                         $("#modal_success_btn").removeClass(`userid_${id}`); 
+//                         $("#modal_success_btn").removeClass(`userlevel_${level}`);
+//                     })
+//                     $("#device_modal").modal('show');
+//                 }
+//             })
+//         }
+//     })
+// }
 
 
 function updateDevice(btn) {

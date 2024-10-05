@@ -371,8 +371,9 @@
             })
         }
 
-        $(document).ready(function() { 
-            if (service==0) $("#premium-tabs").hide()
+        $(document).ready(async function() { 
+            await profile(); // 사용자 프로필 불러오기
+            if (service==0) $("#premium-tabs").hide();
             search_envir(); 
         })
 

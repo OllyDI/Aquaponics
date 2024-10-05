@@ -206,11 +206,12 @@
     <script src="js/member_control.js"></script>
     <script>
         var multiplelist = null;
+        
+        $(document).ready(async function() { await profile(); })
 
         function search() {
             $("#card_search").css('display', '');
             var datas = [];
-
 
             axios({
                 url: "/searchTable",
