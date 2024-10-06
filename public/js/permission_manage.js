@@ -1,6 +1,6 @@
 var devices = [];
 
-$(document).ready(function() { // 수정필요
+$(document).ready(function() {
     axios({
         url: "/device_all",
         method: "post",
@@ -27,7 +27,7 @@ $(document).ready(function() { // 수정필요
     })
 })
 
-function modal_func(id, level, select) { // 수정필요
+function modal_func(id, level, select) {
     axios({
         url: '/get_link',
         method: 'post',
@@ -72,7 +72,7 @@ function modal_func(id, level, select) { // 수정필요
     })
 }
 
-// $(document).ready(function() { // 수정필요
+// $(document).ready(function() { // 제거 예정
 //     $.ajax({
 //         url: "/device_all",
 //         method: "post",
@@ -101,7 +101,7 @@ function modal_func(id, level, select) { // 수정필요
 //     })
 // })
 
-// function modal_func(id, level, select) { // 수정필요
+// function modal_func(id, level, select) { // 제거 예정
 //     $.ajax({
 //         url: '/get_link',
 //         method: 'post',
