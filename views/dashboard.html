@@ -181,6 +181,7 @@
         const device_level = params.get('level');
         const colors = ["#FF1654", "#247BA0", "#009000"]
         
+        
         $(document).ready(async function () {
             await profile(); // 사용자 프로필 불러오기
             $("#chartlink").on("click", function() { window.location = (`/chart?name=${params.get('name')}&device=${params.get('device')}&service=${params.get('service')}`) });
@@ -224,6 +225,7 @@
             });
         })
 
+
         function update_pg() {
             $(".progress").each(function() {
                 var value = $(this).attr('data-value');
@@ -244,6 +246,7 @@
             })
             function percentageToDegrees(percentage) { return percentage / 100 * 360 }
         }
+
 
         function create_envircard(data, time) {
             let sensors = null;
